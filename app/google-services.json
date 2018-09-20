@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "823859929887",
+    "firebase_url": "https://allinwallet-13453.firebaseio.com",
+    "project_id": "allinwallet-13453",
+    "storage_bucket": "allinwallet-13453.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:823859929887:android:3b8bc99f44ac8255",
+        "android_client_info": {
+          "package_name": "group26.cs307.allinwallet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "823859929887-6r2nlf18hg8s5u8mn05t0hq2roae053q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "group26.cs307.allinwallet",
+            "certificate_hash": "1b27395dfaafd36e616ff4b0118770cb1d50332a"
+          }
+        },
+        {
+          "client_id": "823859929887-shqv8c4o9p948dvtmcg8rr84qf9v7au1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMGyRf5ZRumSNhdSB2DpH0LuineYxnZ_E"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "823859929887-shqv8c4o9p948dvtmcg8rr84qf9v7au1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
