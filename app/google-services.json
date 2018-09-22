@@ -23,6 +23,22 @@
           }
         },
         {
+          "client_id": "823859929887-odp1ecfn8ghhta3leliombnh927h2d6g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "group26.cs307.allinwallet",
+            "certificate_hash": "5c577cbd345815b570b026728f0ae9191a123cbb"
+          }
+        },
+        {
+          "client_id": "823859929887-ngg3dk739600slp41rdok0j7uloi8nq2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "group26.cs307.allinwallet",
+            "certificate_hash": "bb98eab9f2ccddab5a8ac6a940a246ad07cbf0cf"
+          }
+        },
+        {
           "client_id": "823859929887-shqv8c4o9p948dvtmcg8rr84qf9v7au1.apps.googleusercontent.com",
           "client_type": 3
         }
