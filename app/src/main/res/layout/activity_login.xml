@@ -17,8 +17,13 @@
 
 
         <ImageView
+<<<<<<< HEAD
             android:layout_height="100dp"
             
+=======
+            android:layout_width="@dimen/logo_w_h"
+            android:layout_height="100dp"
+>>>>>>> parent of 5e99851... Revert "changed some colors"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="30dp"
             android:src="@mipmap/ic_launcher" />
