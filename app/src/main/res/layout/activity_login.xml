@@ -13,14 +13,10 @@
         android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin">
 
 
         <ImageView
-<<<<<<< HEAD
             android:layout_height="100dp"
-            
-=======
             android:layout_width="@dimen/logo_w_h"
             android:layout_height="100dp"
 >>>>>>> parent of 5e99851... Revert "changed some colors"
