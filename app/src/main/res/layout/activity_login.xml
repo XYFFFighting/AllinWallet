@@ -10,19 +10,14 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@color/colorPrimary"
+        android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin">
 
 
         <ImageView
-            android:layout_width="@dimen/logo_w_h"
-<<<<<<< HEAD
             android:layout_height="100dp"
-=======
-            android:layout_height="@dimen/logo_w_h"
->>>>>>> parent of c9fdbdc... changed dimensions
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="30dp"
             android:src="@mipmap/ic_launcher" />
@@ -88,22 +83,10 @@
             android:background="@null"
             android:text="@string/btn_link_to_register"
             android:textAllCaps="false"
-<<<<<<< HEAD
-<<<<<<< HEAD
+
             android:textColor="@color/white"
-            android:textSize="15dp" />
-=======
-            android:textColor="@android:color/black"
-=======
-            android:textColor="@color/white"
-<<<<<<< HEAD
->>>>>>> parent of 246cc6f... changed some colors
             android:textSize="15sp" />
->>>>>>> 246cc6f065482c8fe138edf48c2f5b39b626eb51
-=======
-            android:textSize="15dp" />
->>>>>>> parent of c9fdbdc... changed dimensions
-    </LinearLayout>
+</LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressBar"
