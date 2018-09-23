@@ -11,6 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@color/white"
+        android:background="@color/colorPrimary"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin">
@@ -36,6 +37,8 @@
                 android:inputType="textEmailAddress"
                 android:textColor="@android:color/black"
                 android:textColorHint="@android:color/black" />
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -51,6 +54,7 @@
                 android:inputType="textPassword"
                 android:textColor="@android:color/white"
                 android:textColorHint="@android:color/black" />
+                android:textColorHint="@android:color/white" />
         </android.support.design.widget.TextInputLayout>
 
         <!-- Login Button -->
@@ -61,8 +65,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
             android:background="@color/colorPrimaryDark"
+            android:background="@color/colorAccent"
             android:text="@string/btn_login"
             android:textColor="@android:color/white" />
+            android:textColor="@android:color/black" />
 
         <Button
             android:id="@+id/btn_reset_password"
@@ -73,6 +79,7 @@
             android:text="@string/btn_forgot_password"
             android:textAllCaps="false"
             android:textColor="@android:color/black" />
+            android:textColor="@color/colorAccent" />
 
         <!-- Link to Login Screen -->
 
@@ -85,10 +92,14 @@
             android:text="@string/btn_link_to_register"
             android:textAllCaps="false"
 <<<<<<< HEAD
+<<<<<<< HEAD
             android:textColor="@color/white"
             android:textSize="15dp" />
 =======
             android:textColor="@android:color/black"
+=======
+            android:textColor="@color/white"
+>>>>>>> parent of 246cc6f... changed some colors
             android:textSize="15sp" />
 >>>>>>> 246cc6f065482c8fe138edf48c2f5b39b626eb51
     </LinearLayout>
