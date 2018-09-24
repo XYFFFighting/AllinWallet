@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="group26.cs307.allinwallet.LoginActivity">
+    tools:context=".LoginActivity">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -13,12 +13,11 @@
         android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin">
-
+        android:padding="16dp">
 
         <ImageView
-            android:layout_width="@dimen/logo_w_h"
             android:layout_height="100dp"
+            android:layout_width="100dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="30dp"
             android:src="@mipmap/ic_launcher" />
@@ -34,8 +33,8 @@
                 android:layout_marginBottom="10dp"
                 android:hint="@string/hint_email"
                 android:inputType="textEmailAddress"
-                android:textColor="@android:color/black"
-                android:textColorHint="@android:color/black" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="@color/colorPrimaryDark" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -49,8 +48,8 @@
                 android:layout_marginBottom="10dp"
                 android:hint="@string/hint_password"
                 android:inputType="textPassword"
-                android:textColor="@android:color/white"
-                android:textColorHint="@android:color/black" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="@color/colorPrimaryDark" />
         </android.support.design.widget.TextInputLayout>
 
         <!-- Login Button -->
@@ -60,9 +59,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/colorAccent"
             android:text="@string/btn_login"
-            android:textColor="@android:color/white" />
+            android:textColor="@color/white" />
 
         <Button
             android:id="@+id/btn_reset_password"
@@ -72,7 +71,7 @@
             android:background="@null"
             android:text="@string/btn_forgot_password"
             android:textAllCaps="false"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/colorBlue" />
 
         <!-- Link to Login Screen -->
 
@@ -84,20 +83,16 @@
             android:background="@null"
             android:text="@string/btn_link_to_register"
             android:textAllCaps="false"
-<<<<<<< HEAD
-            android:textColor="@color/white"
-            android:textSize="15dp" />
-=======
-            android:textColor="@android:color/black"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="15sp" />
->>>>>>> 246cc6f065482c8fe138edf48c2f5b39b626eb51
-    </LinearLayout>
+</LinearLayout>
+
 
     <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_gravity="center|bottom"
-        android:layout_marginBottom="20dp"
-        android:visibility="gone" />
+    android:id="@+id/progressBar"
+    android:layout_width="30dp"
+    android:layout_height="30dp"
+    android:layout_gravity="center|bottom"
+    android:layout_marginBottom="20dp"
+    android:visibility="gone" />
 </android.support.design.widget.CoordinatorLayout>
