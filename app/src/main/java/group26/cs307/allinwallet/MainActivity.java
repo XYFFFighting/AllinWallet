@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAnalytics mFirebaseAnalytics;
     private Button signup, login, main, dataget, dataput, addpurchase;
+    private EditText authtext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         dataget = (Button) findViewById(R.id.data_get);
         dataput = (Button) findViewById(R.id.data_put);
         addpurchase=(Button)findViewById(R.id.add_purchase);
+        authtext = (EditText) findViewById(R.id.auth_text);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
