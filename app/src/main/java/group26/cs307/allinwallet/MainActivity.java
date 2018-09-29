@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "AllinWallet";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAnalytics mFirebaseAnalytics;
-    private Button signup, login, main, dataget, dataput;
+    private Button signup, login, main, dataget, dataput, addpurchase;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         main = (Button) findViewById(R.id.btn_dashboard);
         dataget = (Button) findViewById(R.id.data_get);
         dataput = (Button) findViewById(R.id.data_put);
+        addpurchase=(Button)findViewById(R.id.add_purchase);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,6 +71,13 @@ public class MainActivity extends AppCompatActivity {
                 addAlanTuring();
             }
         });
+        addpurchase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, AddPurchase.class));
+            }
+        });
+
     }
 
 
