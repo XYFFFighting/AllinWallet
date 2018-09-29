@@ -23,7 +23,8 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="65" />
+                                                <entry key="scalingPercent" value="119" />
+                                                <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -33,7 +34,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="foregroundImage" value="$PROJECT_DIR$/picture/logo.png" />
+                                      <entry key="backgroundAssetType" value="COLOR" />
+                                      <entry key="backgroundColor" value="fff7f2" />
+                                      <entry key="foregroundImage" value="$PROJECT_DIR$/picture/IMG_0441.PNG" />
                                     </map>
                                   </option>
                                 </PersistentState>
