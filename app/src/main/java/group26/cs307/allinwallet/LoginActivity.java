@@ -32,8 +32,8 @@ public class LoginActivity extends AppCompatActivity {
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
 
-//        if (auth.getCurrentUser() != null) {
-//            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+ //       if (auth.getCurrentUser() != null) {
+//            startActivity(new Intent(LoginActivity.this, MainPage.class));
 //            finish();
 //        }
 
@@ -104,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 } else {
                                     Log.d(TAG, "User ID: " + auth.getUid());
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    Intent intent = new Intent(LoginActivity.this, MainPage.class);
                                     startActivity(intent);
                                     finish();
                                 }
