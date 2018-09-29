@@ -24,6 +24,7 @@ public class AddPurchase extends AppCompatActivity {
     private static final String TAG = "AllinWallet";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        auth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_purchase);
         add = (Button) findViewById(R.id.add_item_button);
@@ -36,6 +37,7 @@ public class AddPurchase extends AppCompatActivity {
                 String price = inputPrice.getText().toString();
                 Log.d(TAG, "Item Name: " + name);
                 Log.d(TAG, "Item Price: " + price);
+                addPurchase(name, price);
 
             }
         });
@@ -50,6 +52,7 @@ public class AddPurchase extends AppCompatActivity {
         purchaselist.put("price", price);
         CollectionReference purchase = db.collection("purchase");
         purchase.document(uid).set(purchaselist);
+        Log.d(TAG, uid+" send purchase data");
 
     }
 
