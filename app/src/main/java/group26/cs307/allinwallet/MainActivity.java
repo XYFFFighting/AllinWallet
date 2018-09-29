@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         user.put("middle", "");
         user.put("last", "Ray");
         user.put("born", 1998);
-        user.put("uid", )
+        //user.put("uid", )
 
 // Add a new document with a generated ID
         db.collection("users")
