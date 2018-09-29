@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -28,11 +29,13 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAnalytics mFirebaseAnalytics;
     private Button signup, login, main, dataget, dataput, addpurchase;
     private EditText authtext;
+    private FirebaseAuth auth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // Obtain the FirebaseAnalytics instance.
+        auth = FirebaseAuth.getInstance();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         signup = (Button) findViewById(R.id.btn_signup);
         login = (Button) findViewById(R.id.btn_login);
@@ -41,6 +44,15 @@ public class MainActivity extends AppCompatActivity {
         dataput = (Button) findViewById(R.id.data_put);
         addpurchase=(Button)findViewById(R.id.add_purchase);
         authtext = (EditText) findViewById(R.id.auth_text);
+
+        if(auth.getCurrentUser() == null){
+            authtext.setText("no user log in");
+        }
+        else{
+            String email = auth.getCurrentUser().getEmail();
+            authtext.setText(email);
+        }
+
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, MainPage.class));
             }
         });
-
         dataget.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
