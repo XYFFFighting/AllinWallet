@@ -35,13 +35,20 @@
             android:textSize="30sp" />
 
         <ScrollView
-            android:layout_width="370dp"
+            android:layout_width="match_parent"
             android:layout_height="440dp"
             android:layout_margin="10dp"
             android:background="@color/colorLightPink"
             android:scrollbars="vertical"
             tools:layout_editor_absoluteX="7dp"
             tools:layout_editor_absoluteY="104dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="440dp"
+                android:orientation="vertical"
+                android:text="ff"
+                />
+
 
 
         </ScrollView>
