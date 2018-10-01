@@ -2,6 +2,7 @@ package group26.cs307.allinwallet;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -38,6 +39,15 @@ public class AddPurchase extends AppCompatActivity {
             public void onClick(View view) {
                 String name = inputName.getText().toString();
                 String price = inputPrice.getText().toString();
+
+                if(TextUtils.isEmpty(name)){
+                    inputName.setError("name cannot be empty");
+                    return;
+                }
+                if(TextUtils.isEmpty(price)){
+                    inputPrice.setError("price cannot be empty");
+                    return;
+                }
                 Log.d(TAG, "Item Name: " + name);
                 Log.d(TAG, "Item Price: " + price);
                 addPurchase(name, price);
