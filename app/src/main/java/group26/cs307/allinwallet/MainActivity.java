@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "AllinWallet";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAnalytics mFirebaseAnalytics;
-    private Button signup, login, main, dataget, dataput, addpurchase;
+    private Button signup, login, main, addpurchase, reset;
     private EditText authtext;
     private FirebaseAuth auth;
     @Override
@@ -40,9 +40,8 @@ public class MainActivity extends AppCompatActivity {
         signup = (Button) findViewById(R.id.btn_signup);
         login = (Button) findViewById(R.id.btn_login);
         main = (Button) findViewById(R.id.btn_dashboard);
-        dataget = (Button) findViewById(R.id.data_get);
-        dataput = (Button) findViewById(R.id.data_put);
         addpurchase=(Button)findViewById(R.id.add_purchase);
+        reset = (Button)findViewById(R.id.btn_reset);
         authtext = (EditText) findViewById(R.id.auth_text);
 
         if(auth.getCurrentUser() == null){
@@ -72,23 +71,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, MainPage.class));
             }
         });
-        dataget.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getInfor();
-            }
-        });
 
-        dataput.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addAlanTuring();
-            }
-        });
         addpurchase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, AddPurchase.class));
+            }
+        });
+
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, ResetPasswordActivity.class));
             }
         });
 
@@ -111,31 +105,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-    }
-    public void addAlanTuring() {
-        // Create a new user with a first, middle, and last name
-        Map<String, Object> user = new HashMap<>();
-        user.put("first", "Chen");
-        user.put("middle", "");
-        user.put("last", "Ray");
-        user.put("born", 1998);
-        //user.put("uid", )
-
-// Add a new document with a generated ID
-        db.collection("users")
-                .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
     }
 
 

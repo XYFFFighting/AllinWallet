@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="551dp"
         android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical"
@@ -34,29 +34,20 @@
             android:id="@+id/addPurchase"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_alignParentRight="true"
             android:background="@drawable/round_button"
             android:gravity="center_vertical|center_horizontal"
             android:text="@string/plus"
             android:textColor="@color/colorzise"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:layout_alignParentEnd="true" />
 
-        <ScrollView
+        <EditText
+            android:id="@+id/purchase_list"
             android:layout_width="match_parent"
-            android:layout_height="440dp"
-            android:layout_margin="10dp"
-            android:background="@color/colorLightPink"
-            android:scrollbars="vertical"
-            tools:layout_editor_absoluteX="7dp"
-            tools:layout_editor_absoluteY="104dp">
+            android:layout_height="358dp"
+            android:ems="10"
+            android:inputType="textMultiLine" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="440dp"
-                android:orientation="vertical"
-                android:text="ff" />
-
-        </ScrollView>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
