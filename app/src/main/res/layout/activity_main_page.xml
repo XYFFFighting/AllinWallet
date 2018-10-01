@@ -22,20 +22,27 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
-        <Button
-            android:layout_width="60dp"
+        <TextView
+            android:id="@+id/welcomeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/welcome"
+            android:textSize="16sp" />
 
+        <Button
+            android:id="@+id/addPurchase"
+            android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_alignParentRight="true"
             android:background="@drawable/round_button"
             android:gravity="center_vertical|center_horizontal"
             android:text="@string/plus"
             android:textColor="@color/colorzise"
-
             android:textSize="30sp" />
 
         <ScrollView
-            android:layout_width="370dp"
+            android:layout_width="match_parent"
             android:layout_height="440dp"
             android:layout_margin="10dp"
             android:background="@color/colorLightPink"
@@ -43,6 +50,11 @@
             tools:layout_editor_absoluteX="7dp"
             tools:layout_editor_absoluteY="104dp">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="440dp"
+                android:orientation="vertical"
+                android:text="ff" />
 
         </ScrollView>
     </LinearLayout>

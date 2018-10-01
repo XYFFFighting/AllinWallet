@@ -2,6 +2,7 @@
     <string name="app_name">Firebase Auth</string>
     <string name="action_sign_in_short">Register</string>
     <string name="email">Email</string>
+    <string name="welcome">Welcome! Today is\u0020</string>
     <string name="minimum_password">Password too short, enter minimum 6 characters!</string>
     <string name="auth_failed">Authentication failed, check your email and password or sign up</string>
     <string name="change_email">Change Email</string>
@@ -30,6 +31,11 @@
     <string name="btn_sign_out">Sign Out</string>
     <string name="lbl_forgot_password">Forgot password?</string>
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
+<<<<<<< HEAD
     <string name="prompt_password">Prompt password</string>
     <string name="plus">plus</string>
+=======
+    <string name="plus">+</string>
+    <string name="title_activity_add_purchase">AddPurchase</string>
+>>>>>>> origin/master
 </resources>
