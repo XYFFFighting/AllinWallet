@@ -12,6 +12,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.sql.Time;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,13 +48,18 @@ public class AddPurchase extends AppCompatActivity {
     }
 
     public void addPurchase(String name, String price) {
+        Date currentTime = Calendar.getInstance().getTime();
+        String time = currentTime.toString();
+        Log.d(TAG, "purchase sending time is: "+ time);
         String uid = auth.getUid();
         Map<String, Object> purchaselist = new HashMap<>();
-        purchaselist.put("uid", uid);
+        //purchaselist.put("uid", uid);
         purchaselist.put("name", name);
         purchaselist.put("price", price);
+        //purchaselist.put("time", time);
+
         CollectionReference purchase = db.collection("purchase");
-        purchase.document(uid).set(purchaselist);
+        purchase.document(uid).collection(time).add(purchaselist);
         Log.d(TAG, uid+" send purchase data");
 
     }
