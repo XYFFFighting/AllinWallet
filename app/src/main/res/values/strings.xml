@@ -31,11 +31,7 @@
     <string name="btn_sign_out">Sign Out</string>
     <string name="lbl_forgot_password">Forgot password?</string>
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
-<<<<<<< HEAD
     <string name="prompt_password">Prompt password</string>
-    <string name="plus">plus</string>
-=======
     <string name="plus">+</string>
     <string name="title_activity_add_purchase">AddPurchase</string>
->>>>>>> origin/master
 </resources>

@@ -32,23 +32,16 @@ public class LoginActivity extends AppCompatActivity {
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
 
-<<<<<<< HEAD
-        if (auth.getCurrentUser() != null) {
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            finish();
-        }
-=======
  //       if (auth.getCurrentUser() != null) {
 //            startActivity(new Intent(LoginActivity.this, MainPage.class));
 //            finish();
 //        }
->>>>>>> origin/master
 
         // set the view now
         setContentView(R.layout.activity_login);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
@@ -108,12 +101,8 @@ public class LoginActivity extends AppCompatActivity {
                                         Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                                     }
                                 } else {
-<<<<<<< HEAD
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-=======
                                     Log.d(TAG, "User ID: " + auth.getUid());
                                     Intent intent = new Intent(LoginActivity.this, MainPage.class);
->>>>>>> origin/master
                                     startActivity(intent);
                                     finish();
                                 }
