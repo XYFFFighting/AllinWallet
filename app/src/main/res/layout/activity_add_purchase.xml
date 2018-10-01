@@ -11,19 +11,21 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="339dp"
         android:layout_marginEnd="2dp"
         android:layout_marginRight="2dp"
-        android:layout_marginTop="9dp"
         android:text="purchase name:"
-        app:layout_constraintEnd_toStartOf="@+id/item_name"
-        app:layout_constraintTop_toTopOf="@+id/item_name" />
+        android:textColor="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/item_name" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="34dp"
         android:text="price:"
+        android:textColor="@color/colorAccent"
         app:layout_constraintStart_toStartOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -59,5 +61,6 @@
         android:inputType="numberDecimal"
         app:layout_constraintStart_toStartOf="@+id/item_name"
         app:layout_constraintTop_toBottomOf="@+id/item_name" />
+
 
 </android.support.constraint.ConstraintLayout>
