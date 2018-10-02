@@ -57,7 +57,7 @@ public class MainPage extends AppCompatActivity {
     }
 
     public String getPurchase(String uid){
-        db.collection(uid)
+        db.collection("users").document(uid).collection("purchase")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

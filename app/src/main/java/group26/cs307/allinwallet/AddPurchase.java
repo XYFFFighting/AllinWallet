@@ -68,8 +68,8 @@ public class AddPurchase extends AppCompatActivity {
         purchaselist.put("price", price);
         //purchaselist.put("time", time);
 
-        CollectionReference purchase = db.collection(uid);
-        purchase.document(time).set(purchaselist);
+        CollectionReference purchase = db.collection("users");
+        purchase.document(uid).collection("purchase").document(time).set(purchaselist);
         Log.d(TAG, uid+" send purchase data");
 
     }
