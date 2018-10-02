@@ -28,8 +28,11 @@
             android:name=".MainPage"
             android:label="@string/title_activity_main_page" />
         <activity
+            android:name=".ResetPasswordActivity"
+            android:label="@string/title_activity_reset_password" />
+        <activity
             android:name=".AddPurchase"
-            android:label="@string/title_activity_add_purchase"></activity>
+            android:label="@string/title_activity_add_purchase" />
     </application>
 
 </manifest>

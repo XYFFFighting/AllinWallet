@@ -10,9 +10,9 @@
         android:id="@+id/btn_signup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="117dp"
         android:layout_marginEnd="91dp"
         android:layout_marginRight="91dp"
-        android:layout_marginTop="117dp"
         android:text="signup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -21,8 +21,8 @@
         android:id="@+id/btn_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="6dp"
         android:layout_marginStart="6dp"
+        android:layout_marginLeft="6dp"
         android:text="Login"
         app:layout_constraintBottom_toBottomOf="@+id/btn_signup"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,53 +32,44 @@
         android:id="@+id/btn_dashboard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="6dp"
         android:layout_marginStart="6dp"
+        android:layout_marginLeft="6dp"
         android:layout_marginTop="27dp"
         android:text="Main"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_login" />
 
     <Button
-        android:id="@+id/data_get"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:text="getdata"
-        app:layout_constraintStart_toStartOf="@+id/btn_signup"
-        app:layout_constraintTop_toBottomOf="@+id/btn_signup" />
-
-    <Button
-        android:id="@+id/data_put"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="43dp"
-        android:text="putdata"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_dashboard" />
-
-    <Button
         android:id="@+id/add_purchase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="55dp"
+        android:layout_marginTop="92dp"
 
-        android:layout_marginRight="55dp"
-        android:layout_marginTop="45dp"
+        android:layout_marginEnd="252dp"
+        android:layout_marginRight="252dp"
         android:text="addpurchase"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/data_get" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_signup" />
 
     <EditText
         android:id="@+id/auth_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Auth"
-        tools:layout_editor_absoluteX="77dp"
-        tools:layout_editor_absoluteY="16dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/btn_reset_password"
+        app:layout_constraintStart_toStartOf="@+id/btn_signup"
+        app:layout_constraintTop_toBottomOf="@+id/btn_signup" />
 
 </android.support.constraint.ConstraintLayout>

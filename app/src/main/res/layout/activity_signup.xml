@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="group26.cs307.allinwallet.LoginActivity">
+    tools:context=".LoginActivity">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -34,7 +34,7 @@
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="@color/btn_logut_bg" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -53,7 +53,7 @@
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="@color/btn_logut_bg" />
 
         </android.support.design.widget.TextInputLayout>
 
