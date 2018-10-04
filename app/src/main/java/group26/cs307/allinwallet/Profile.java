@@ -57,7 +57,7 @@ public class Profile extends AppCompatActivity {
                                 count++;
                                 Log.d(TAG, "" + count);
                             }
-                            userinfo.append(count + " Current user\n");
+                            userinfo.append("Number of active users: " + count + "\n");
                         } else {
                             Log.d(TAG, "Error getting number of user", task.getException());
                         }
