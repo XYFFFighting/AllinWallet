@@ -7,7 +7,7 @@
     tools:context=".Profile"
     tools:layout_editor_absoluteY="25dp">
 
-    <ImageView
+    <ImageButton
         android:id="@+id/profile_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,6 +39,7 @@
             android:id="@+id/user_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:textSize="16sp" />
 
         <Button
