@@ -72,4 +72,13 @@
         app:layout_constraintStart_toStartOf="@+id/btn_signup"
         app:layout_constraintTop_toBottomOf="@+id/btn_signup" />
 
+    <Button
+        android:id="@+id/btn_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:text="profile"
+        app:layout_constraintStart_toStartOf="@+id/btn_reset"
+        app:layout_constraintTop_toBottomOf="@+id/btn_reset" />
+
 </android.support.constraint.ConstraintLayout>

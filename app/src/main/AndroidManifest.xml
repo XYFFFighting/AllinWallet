@@ -33,6 +33,8 @@
         <activity
             android:name=".AddPurchase"
             android:label="@string/title_activity_add_purchase" />
+        <activity android:name=".Profile"
+            android:label="@string/title_activity_profile"></activity>
     </application>
 
 </manifest>

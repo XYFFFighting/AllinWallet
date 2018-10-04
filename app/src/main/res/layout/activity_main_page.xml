@@ -39,7 +39,8 @@
             android:text="@string/plus"
             android:textColor="@color/colorzise"
             android:textSize="30sp"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true" />
 
         <EditText
             android:id="@+id/purchase_list"
