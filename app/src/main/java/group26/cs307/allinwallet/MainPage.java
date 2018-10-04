@@ -30,6 +30,7 @@ public class MainPage extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "AllinWallet";
     private FirebaseAuth auth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         auth = FirebaseAuth.getInstance();
@@ -56,25 +57,38 @@ public class MainPage extends AppCompatActivity {
         view.append(date);
     }
 
-    public String getPurchase(String uid){
+    public String getPurchase(String uid) {
         db.collection("users").document(uid).collection("purchase")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + "-->" + document.getData());
                                 String purchase = document.getId() + " " + document.getData().toString() + '\n';
                                 purchaseList.append(purchase);
                             }
-                        }
-                        else {
-                            Log.e(TAG,"Error getting documents: ", task.getException() );
+                        } else {
+                            Log.e(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 });
         return "";
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //
+        //
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //
+        //
     }
 
 }

@@ -45,45 +45,42 @@ public class Profile extends AppCompatActivity {
         addNumUser();
     }
 
-    public void addNumUser(){
+    public void addNumUser() {
         db.collection("users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    int count = 0;
-                    for(QueryDocumentSnapshot document : task.getResult()){
-                        count++;
-                        Log.d(TAG, "" + count);
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            int count = 0;
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                count++;
+                                Log.d(TAG, "" + count);
+                            }
+                            userinfo.append("Number of active users: " + count + "\n");
+                        } else {
+                            Log.d(TAG, "Error getting number of user", task.getException());
+                        }
                     }
-                    userinfo.append( count + " Current user\n");
-                }
-                else{
-                    Log.d(TAG, "Error getting number of user", task.getException());
-                }
-            }
-        });
+                });
     }
 
-    public void adduserInfo(){
+    public void adduserInfo() {
         String uid = auth.getUid();
         DocumentReference document = db.collection("users").document(uid);
         document.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     DocumentSnapshot documentSnapshot = task.getResult();
-                    if(documentSnapshot.exists()){
+                    if (documentSnapshot.exists()) {
                         Map<String, Object> data = documentSnapshot.getData();
                         userinfo.append("Email:" + data.get("email") + "\n");
 //                        Log.d(TAG, "email: " + data.get("email"));
-                    }
-                    else {
+                    } else {
                         Log.d(TAG, "no such document");
                     }
-                }
-                else {
+                } else {
                     Log.d(TAG, "error in add userInfo");
                 }
             }

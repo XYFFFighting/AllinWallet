@@ -4,62 +4,161 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".AddPurchase"
     tools:layout_editor_absoluteY="25dp">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="2dp"
-        android:layout_marginRight="2dp"
-        android:text="purchase name:"
-        android:textColor="@color/colorAccent"
-        app:layout_constraintBaseline_toBaselineOf="@+id/item_name"
-        app:layout_constraintEnd_toStartOf="@+id/item_name" />
+    <!--   <TextView
+           android:id="@+id/textView"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginEnd="2dp"
+           android:layout_marginRight="2dp"
+           android:text="purchase name:"
+           android:textColor="@color/colorAccent"
+           app:layout_constraintBaseline_toBaselineOf="@+id/item_name"
+           app:layout_constraintEnd_toStartOf="@+id/item_name" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="33dp"
-        android:text="price:"
-        android:textColor="@color/colorAccent"
-        app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+       <TextView
+           android:id="@+id/textView2"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="33dp"
+           android:text="price:"
+           android:textColor="@color/colorAccent"
+           app:layout_constraintStart_toStartOf="@+id/textView"
+           app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <EditText
-        android:id="@+id/item_name"
-        android:layout_width="wrap_content"
-        android:layout_height="41dp"
-        android:layout_marginTop="199dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+       <EditText
+           android:id="@+id/item_name"
+           android:layout_width="wrap_content"
+           android:layout_height="41dp"
+           android:layout_marginTop="199dp"
+           android:layout_marginEnd="16dp"
+           android:layout_marginRight="16dp"
+           android:ems="10"
+           android:inputType="textPersonName"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintTop_toTopOf="parent" />
 
 
-    <Button
-        android:id="@+id/add_item_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="34dp"
-        android:layout_marginLeft="34dp"
-        android:layout_marginTop="48dp"
-        android:text="add purchase"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/item_price" />
+       <Button
+           android:id="@+id/add_item_button"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginStart="34dp"
+           android:layout_marginLeft="34dp"
+           android:layout_marginTop="48dp"
+           android:text="add purchase"
+           app:layout_constraintStart_toEndOf="@+id/textView2"
+           app:layout_constraintTop_toBottomOf="@+id/item_price" />
 
-    <EditText
-        android:id="@+id/item_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="numberDecimal"
-        app:layout_constraintStart_toStartOf="@+id/item_name"
-        app:layout_constraintTop_toBottomOf="@+id/item_name" />
+       <EditText
+           android:id="@+id/item_price"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:ems="10"
+           android:inputType="numberDecimal"
+           app:layout_constraintStart_toStartOf="@+id/item_name"
+           app:layout_constraintTop_toBottomOf="@+id/item_name" /> -->
 
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorAccent"
+            android:paddingBottom="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:text="Choose a category:"
+                android:textColor="@color/colorPrimaryDark" />
+
+            <Spinner
+                android:id="@+id/category_picker"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5" />
+        </LinearLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/item_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="Purchase title:"
+                android:inputType="textPersonName"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="@color/colorPrimaryDark" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/item_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="Purchase amount:"
+                android:inputType="numberDecimal"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="@color/colorPrimaryDark" />
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/cancel_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".475"
+                android:background="@color/colorAccent"
+                android:padding="10dp"
+                android:text="CANCEL"
+                android:textColor="@color/white" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="0.05" />
+
+            <Button
+                android:id="@+id/add_item_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".475"
+                android:background="@color/colorAccent"
+                android:padding="10dp"
+                android:text="ADD"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
