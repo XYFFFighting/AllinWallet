@@ -34,4 +34,7 @@
     <string name="plus">+</string>
     <string name="title_activity_add_purchase">AddPurchase</string>
     <string name="title_activity_profile">Profile</string>
+    <string name="action_example">Example action</string>
+
+    <string name="action_settings">Settings</string>
 </resources>
