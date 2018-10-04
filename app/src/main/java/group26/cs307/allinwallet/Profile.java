@@ -12,9 +12,13 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.Map;
 
 public class Profile extends AppCompatActivity {
     private FirebaseAuth auth;
@@ -37,6 +41,7 @@ public class Profile extends AppCompatActivity {
                 startActivity(new Intent(Profile.this, LoginActivity.class));
             }
         });
+        adduserInfo();
         addNumUser();
     }
 
@@ -52,13 +57,38 @@ public class Profile extends AppCompatActivity {
                         count++;
                         Log.d(TAG, "" + count);
                     }
-                    userinfo.append( count + " Current user");
+                    userinfo.append( count + " Current user\n");
                 }
                 else{
                     Log.d(TAG, "Error getting number of user", task.getException());
                 }
             }
         });
+    }
+
+    public void adduserInfo(){
+        String uid = auth.getUid();
+        DocumentReference document = db.collection("users").document(uid);
+        document.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    if(documentSnapshot.exists()){
+                        Map<String, Object> data = documentSnapshot.getData();
+                        userinfo.append("Email:" + data.get("email") + "\n");
+//                        Log.d(TAG, "email: " + data.get("email"));
+                    }
+                    else {
+                        Log.d(TAG, "no such document");
+                    }
+                }
+                else {
+                    Log.d(TAG, "error in add userInfo");
+                }
+            }
+        });
+
     }
 
 }
