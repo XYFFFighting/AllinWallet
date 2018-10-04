@@ -17,11 +17,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "AllinWallet";
     private EditText inputEmail, inputPassword;
     private FirebaseAuth auth;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ProgressBar progressBar;
     private Button btnSignup, btnLogin, btnReset;
 
@@ -69,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = inputEmail.getText().toString();
+                final String email = inputEmail.getText().toString();
                 final String password = inputPassword.getText().toString();
 
                 if (TextUtils.isEmpty(email)) {
@@ -102,6 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 } else {
                                     Log.d(TAG, "User ID: " + auth.getUid());
+                                    addEmail(email);
                                     Intent intent = new Intent(LoginActivity.this, MainPage.class);
                                     startActivity(intent);
                                     finish();
@@ -110,5 +117,13 @@ public class LoginActivity extends AppCompatActivity {
                         });
             }
         });
+    }
+
+    public void addEmail(String email){
+        String uid = auth.getUid();
+        Map<String, Object> userInfo = new HashMap<>();
+        userInfo.put("email", email);
+        CollectionReference users = db.collection("users");
+        users.document(uid).set(userInfo);
     }
 }

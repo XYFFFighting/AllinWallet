@@ -16,6 +16,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -23,11 +28,12 @@ public class SignupActivity extends AppCompatActivity {
     private Button btnSignIn, btnSignUp, btnResetPassword;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
-
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
@@ -57,7 +63,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String email = inputEmail.getText().toString().trim();
+                final String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
 
                 if (TextUtils.isEmpty(email)) {
@@ -88,6 +94,7 @@ public class SignupActivity extends AppCompatActivity {
                                 if (!task.isSuccessful()) {
                                     inputEmail.setError("Authentication failed. This email is already in use by another account.");
                                 } else {
+                                    addEmail(email);
                                     Toast.makeText(SignupActivity.this, "Sign up successfully!", Toast.LENGTH_SHORT).show();
                                     startActivity(new Intent(SignupActivity.this, MainPage.class));
                                     finish();
@@ -99,6 +106,13 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
+    public void addEmail(String email){
+        String uid = auth.getUid();
+        Map<String, Object> userInfo = new HashMap<>();
+        userInfo.put("email", email);
+        CollectionReference users = db.collection("users");
+        users.document(uid).set(userInfo);
+    }
     @Override
     protected void onResume() {
         super.onResume();
