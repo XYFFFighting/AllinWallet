@@ -34,7 +34,7 @@ public class AddPurchase extends AppCompatActivity {
     private static final String TAG = "AllinWallet";
 
     public static List<String> defaultCategories = new ArrayList<>(Arrays.asList("Grocery",
-            "Clothes", "House","Personal", "General" , "Transport" , "Fun"  ));
+            "Clothes", "House", "Personal", "General", "Transport", "Fun"));
     private List<String> categories;
 
     @Override
@@ -73,7 +73,7 @@ public class AddPurchase extends AppCompatActivity {
                 Log.d(TAG, "Item Name: " + name);
                 Log.d(TAG, "Item Price: " + price);
                 Log.d(TAG, "Item Category: " + category);
-                addPurchase(name, price, category);
+                addPurchase(name, Double.parseDouble(price), category);
 
                 onBackPressed();
             }
@@ -87,7 +87,7 @@ public class AddPurchase extends AppCompatActivity {
         });
     }
 
-    public void addPurchase(String name, String price, String category) {
+    public void addPurchase(String name, double price, String category) {
         Date currentTime = Calendar.getInstance().getTime();
         String time = currentTime.toString();
         Log.d(TAG, "purchase sending time is: " + time);
