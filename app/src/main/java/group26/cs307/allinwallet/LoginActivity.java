@@ -3,13 +3,16 @@ package group26.cs307.allinwallet;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +32,12 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ProgressBar progressBar;
     private Button btnSignup, btnLogin, btnReset;
+
+    ImageView head;
+    Button conti, logbut,reset_password,signupbut;
+    EditText emaill, pw;
+    TextView tips;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +63,20 @@ public class LoginActivity extends AppCompatActivity {
         btnSignup = (Button) findViewById(R.id.btn_signup);
         btnLogin = (Button) findViewById(R.id.btn_login);
         btnReset = (Button) findViewById(R.id.btn_reset_password);
+
+        //zhang
+        conti = (Button) findViewById(R.id.continuebutton);
+        tips = (TextView) findViewById(R.id.tipview);
+
+        //zhang modify
+        conti.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, MainPage.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
@@ -108,9 +131,31 @@ public class LoginActivity extends AppCompatActivity {
                                 } else {
                                     Log.d(TAG, "User ID: " + auth.getUid());
                                     addEmail(email);
-                                    Intent intent = new Intent(LoginActivity.this, MainPage.class);
-                                    startActivity(intent);
-                                    finish();
+//                                    Intent intent = new Intent(LoginActivity.this, MainPage.class);
+//                                    startActivity(intent);
+                                    Toast.makeText(LoginActivity.this, "Succ", Toast.LENGTH_LONG).show();
+//                                    finish();
+                                    head = findViewById(R.id.head);
+                                    head.setVisibility(View.INVISIBLE);
+                                    reset_password = findViewById(R.id.btn_reset_password);
+                                    reset_password.setVisibility(View.INVISIBLE);
+                                    signupbut = findViewById(R.id.btn_signup);
+                                    signupbut.setVisibility(View.INVISIBLE);
+                                    logbut = findViewById(R.id.btn_login);
+                                    logbut.setVisibility(View.INVISIBLE);
+                                    emaill = (EditText) findViewById(R.id.email);
+                                    pw = (EditText) findViewById(R.id.password);
+                                    TextInputLayout til = findViewById(R.id.passw);
+                                    til.setVisibility(View.INVISIBLE);
+                                    emaill.setHint("");
+                                    pw.setHint("");
+                                    emaill.setVisibility(View.INVISIBLE);
+                                    pw.setVisibility(View.INVISIBLE);
+                                    TextInputLayout em = findViewById(R.id.em);
+                                    em.setVisibility(View.INVISIBLE);
+                                    conti.setVisibility(View.VISIBLE);
+                                    tips.setVisibility(View.VISIBLE);
+//                                    finish();
                                 }
                             }
                         });
