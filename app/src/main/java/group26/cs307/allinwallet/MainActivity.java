@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         login = (Button) findViewById(R.id.btn_login);
         main = (Button) findViewById(R.id.btn_dashboard);
         report = (Button) findViewById(R.id.btn_report);
-=======
         addpurchase = (Button) findViewById(R.id.add_purchase);
         reset = (Button) findViewById(R.id.btn_reset);
         authtext = (EditText) findViewById(R.id.auth_text);
