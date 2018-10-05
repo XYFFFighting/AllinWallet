@@ -9,14 +9,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -36,7 +34,7 @@ public class AddPurchase extends AppCompatActivity {
     private static final String TAG = "AllinWallet";
 
     public static List<String> defaultCategories = new ArrayList<>(Arrays.asList("Grocery",
-            "Clothing", "Utility"));
+            "Clothes", "House","Personal", "General" , "Transport" , "Fun"  ));
     private List<String> categories;
 
     @Override
