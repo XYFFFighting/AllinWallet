@@ -57,7 +57,7 @@ public class MainPage extends AppCompatActivity {
         view.append(date);
     }
 
-    public String getPurchase(String uid) {
+    public void getPurchase(String uid) {
         db.collection("users").document(uid).collection("purchase")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -74,7 +74,6 @@ public class MainPage extends AppCompatActivity {
                         }
                     }
                 });
-        return "";
     }
 
     @Override
