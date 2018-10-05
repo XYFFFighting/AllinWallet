@@ -77,8 +77,7 @@ public class AddPurchase extends AppCompatActivity {
                 Log.d(TAG, "Item Category: " + category);
                 addPurchase(name, price, category);
 
-                //update main page
-                //onBackPressed();
+                onBackPressed();
             }
         });
 

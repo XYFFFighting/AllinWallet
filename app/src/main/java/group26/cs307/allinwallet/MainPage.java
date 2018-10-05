@@ -26,7 +26,7 @@ import java.util.Locale;
 
 public class MainPage extends AppCompatActivity {
     private Button purchaseButton;
-    private TextView welcomeMessage, purchaseList;
+    private TextView welcomeMessage, budgetText, purchaseList;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "AllinWallet";
     private FirebaseAuth auth;
@@ -39,8 +39,9 @@ public class MainPage extends AppCompatActivity {
         String uid = auth.getUid();
         purchaseButton = (Button) findViewById(R.id.addPurchase);
         welcomeMessage = (TextView) findViewById(R.id.welcomeText);
+        budgetText = (TextView) findViewById(R.id.budgetText);
         purchaseList = (TextView) findViewById(R.id.purchase_list);
-        setDate(welcomeMessage);
+        setDate();
         getPurchase(uid);
         purchaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,15 +51,20 @@ public class MainPage extends AppCompatActivity {
         });
     }
 
-    public void setDate(TextView view) {
+    public void setDate() {
         Date today = Calendar.getInstance().getTime();//getting date
         SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM dd yyyy", Locale.getDefault());
         String date = formatter.format(today);
-        view.append(date);
+        welcomeMessage.append(date);
+    }
+
+    public void setBudgetText() {
+        budgetText.setText(null);
+        budgetText.append("");
     }
 
     public void getPurchase(String uid) {
-        purchaseList.clearComposingText();
+        purchaseList.setText(null);
         db.collection("users").document(uid).collection("purchase")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -77,12 +83,9 @@ public class MainPage extends AppCompatActivity {
                 });
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
-        //
-        //
         String uid = auth.getUid();
         getPurchase(uid);
     }
@@ -90,8 +93,6 @@ public class MainPage extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        //
-        //
+        // TBA
     }
-
 }
