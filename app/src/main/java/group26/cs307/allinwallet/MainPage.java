@@ -71,8 +71,11 @@ public class MainPage extends AppCompatActivity {
 
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d(TAG, document.getId() + "-->" + document.getData());
                         sum += document.getDouble("price");
                     }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
                 }
 
                 budgetText.append(Double.toString(sum));
@@ -88,6 +91,7 @@ public class MainPage extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
+                        Log.d(TAG, document.getId() + "-->" + document.getData());
                         budgetText.append(document.getString("budget"));
                     } else {
                         Log.d(TAG, "No such document");
