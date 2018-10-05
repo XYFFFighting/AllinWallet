@@ -43,7 +43,6 @@ public class MainPage extends AppCompatActivity {
         budgetText = (TextView) findViewById(R.id.budgetText);
         purchaseList = (TextView) findViewById(R.id.purchase_list);
         setDate();
-        getPurchase(uid);
         purchaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,9 +81,7 @@ public class MainPage extends AppCompatActivity {
             }
         });
 
-        budgetText.append(" / ");
-
-        db.collection("users").document(uid)
+      /*  db.collection("users").document(uid)
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -92,7 +89,7 @@ public class MainPage extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d(TAG, document.getId() + "-->" + document.getData());
-                        budgetText.append(document.getString("budget"));
+                        budgetText.append(" / " + document.getString("budget"));
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -100,7 +97,7 @@ public class MainPage extends AppCompatActivity {
                     Log.d(TAG, "get failed with ", task.getException());
                 }
             }
-        });
+        }); */
     }
 
     public void getPurchase(String uid) {
