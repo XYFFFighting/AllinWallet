@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,7 +50,6 @@ public class AddPurchase extends AppCompatActivity {
         categoryPicker = (Spinner) findViewById(R.id.category_picker);
         inputName = (EditText) findViewById(R.id.item_name);
         inputPrice = (EditText) findViewById(R.id.item_price);
-
         categories = new ArrayList<>();
         categories.addAll(defaultCategories);
         // get categories from firebase
@@ -101,7 +101,6 @@ public class AddPurchase extends AppCompatActivity {
         purchaselist.put("price", price);
         purchaselist.put("category", category);
         //purchaselist.put("time", time);
-
         CollectionReference purchase = db.collection("users");
         purchase.document(uid).collection("purchase").document(time).set(purchaselist);
         Log.d(TAG, uid + " send purchase data");

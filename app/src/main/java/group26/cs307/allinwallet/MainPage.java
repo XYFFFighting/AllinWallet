@@ -58,6 +58,7 @@ public class MainPage extends AppCompatActivity {
     }
 
     public void getPurchase(String uid) {
+        purchaseList.clearComposingText();
         db.collection("users").document(uid).collection("purchase")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -76,11 +77,14 @@ public class MainPage extends AppCompatActivity {
                 });
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
         //
         //
+        String uid = auth.getUid();
+        getPurchase(uid);
     }
 
     @Override
