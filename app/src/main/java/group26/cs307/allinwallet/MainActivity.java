@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                             Map<String, Object> budget_info = new HashMap<>();
                             budget_info.put("budget", budget_num);
                             CollectionReference users = db.collection("users");
-                            users.document(uid).set(budget_info);
+                            users.document(uid).update(budget_info);
                         }
                         
                         dialog.dismiss();
