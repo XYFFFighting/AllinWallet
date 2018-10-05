@@ -125,14 +125,14 @@ public class MainActivity extends AppCompatActivity {
                         String uid = auth.getUid();
 
                         if (!TextUtils.isEmpty(uid)) {
-                            String budget_num = input.getText().toString();
+                            String budget_text = input.getText().toString();
 
-                            if (TextUtils.isEmpty(budget_num)) {
+                            if (TextUtils.isEmpty(budget_text)) {
                                 Toast.makeText(getApplicationContext(), "Budget field is empty!",
                                         Toast.LENGTH_SHORT).show();
                             } else {
                                 Map<String, Object> budget_info = new HashMap<>();
-                                budget_info.put("budget", budget_num);
+                                budget_info.put("budget", Double.parseDouble(budget_text));
                                 CollectionReference users = db.collection("users");
                                 users.document(uid).update(budget_info);
                             }
