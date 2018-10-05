@@ -18,6 +18,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -58,9 +59,44 @@ public class MainPage extends AppCompatActivity {
         welcomeMessage.append(date);
     }
 
-    public void setBudgetText() {
+    public void setBudgetText(String uid) {
         budgetText.setText(null);
-        budgetText.append("");
+        budgetText.append("Current budget: ");
+
+        db.collection("users").document(uid).collection("purchase")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                double sum = 0.0;
+
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        sum += document.getDouble("price");
+                    }
+                }
+
+                budgetText.append(Double.toString(sum));
+            }
+        });
+
+        budgetText.append(" / ");
+
+        db.collection("users").document(uid)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        budgetText.append(document.getString("budget"));
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 
     public void getPurchase(String uid) {
@@ -87,6 +123,7 @@ public class MainPage extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         String uid = auth.getUid();
+        setBudgetText(uid);
         getPurchase(uid);
     }
 

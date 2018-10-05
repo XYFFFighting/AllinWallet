@@ -6,12 +6,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.text.InputType;
 import android.content.res.Configuration;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -121,14 +123,21 @@ public class MainActivity extends AppCompatActivity {
                 builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String uid = auth.getUid();
-                        if (uid != null) {
+
+                        if (!TextUtils.isEmpty(uid)) {
                             String budget_num = input.getText().toString();
-                            Map<String, Object> budget_info = new HashMap<>();
-                            budget_info.put("budget", budget_num);
-                            CollectionReference users = db.collection("users");
-                            users.document(uid).update(budget_info);
+
+                            if (TextUtils.isEmpty(budget_num)) {
+                                Toast.makeText(getApplicationContext(), "Budget field is empty!",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                Map<String, Object> budget_info = new HashMap<>();
+                                budget_info.put("budget", budget_num);
+                                CollectionReference users = db.collection("users");
+                                users.document(uid).update(budget_info);
+                            }
                         }
-                        
+
                         dialog.dismiss();
                     }
                 });
