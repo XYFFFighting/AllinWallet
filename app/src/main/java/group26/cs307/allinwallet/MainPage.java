@@ -85,8 +85,11 @@ public class MainPage extends AppCompatActivity {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
                                 Log.d(TAG, document.getId() + "-->" + document.getData());
-                                double budge_limit = document.getDouble("budget");
-                                budgetText.append(" / " + budge_limit);
+
+                                if (document.contains("budget")) {
+                                    double budge_limit = document.getDouble("budget");
+                                    budgetText.append(" / " + budge_limit);
+                                }
                             } else {
                                 Log.d(TAG, "No such document");
                             }

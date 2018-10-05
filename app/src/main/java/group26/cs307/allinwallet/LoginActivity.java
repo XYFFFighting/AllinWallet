@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
 
- //       if (auth.getCurrentUser() != null) {
+        //       if (auth.getCurrentUser() != null) {
 //            startActivity(new Intent(LoginActivity.this, MainPage.class));
 //            finish();
 //        }
@@ -163,11 +163,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void addEmail(String email){
+    public void addEmail(String email) {
         String uid = auth.getUid();
         Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("email", email);
         CollectionReference users = db.collection("users");
-        users.document(uid).set(userInfo);
+        users.document(uid).update(userInfo);
     }
 }
