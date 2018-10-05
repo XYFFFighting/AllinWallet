@@ -61,8 +61,9 @@ public class MainPage extends AppCompatActivity {
     public void setBudgetText(String uid) {
         budgetText.setText(null);
         budgetText.append("Current budget: ");
+        final DocumentReference dRef = db.collection("users").document(uid);
 
-        db.collection("users").document(uid).collection("purchase")
+        dRef.collection("purchase")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -78,26 +79,25 @@ public class MainPage extends AppCompatActivity {
                 }
 
                 budgetText.append(Double.toString(sum));
+
+                dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                Log.d(TAG, document.getId() + "-->" + document.getData());
+                                budgetText.append(" / " + document.getString("budget"));
+                            } else {
+                                Log.d(TAG, "No such document");
+                            }
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
+                        }
+                    }
+                });
             }
         });
-
-      /*  db.collection("users").document(uid)
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, document.getId() + "-->" + document.getData());
-                        budgetText.append(" / " + document.getString("budget"));
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        }); */
     }
 
     public void getPurchase(String uid) {
