@@ -34,7 +34,7 @@
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textColor="@color/btn_logut_bg" />
+                android:textColor="@color/colorPrimaryDark" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -53,7 +53,7 @@
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textColor="@color/btn_logut_bg" />
+                android:textColor="@color/colorPrimaryDark" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -78,8 +78,8 @@
             android:background="@null"
             android:text="@string/btn_link_to_login"
             android:textAllCaps="false"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="15dp" />
+            android:textColor="@color/colorBlue"
+            android:textSize="15sp" />
     </LinearLayout>
 
     <ProgressBar
