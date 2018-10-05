@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -87,8 +86,11 @@ public class MainPage extends AppCompatActivity {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
                                 Log.d(TAG, document.getId() + "-->" + document.getData());
-                                double budge_limit = document.getDouble("budget");
-                                budgetText.append(" / " + budge_limit);
+
+                                if (document.contains("budget")) {
+                                    double budge_limit = document.getDouble("budget");
+                                    budgetText.append(" / " + budge_limit);
+                                }
                             } else {
                                 Log.d(TAG, "No such document");
                             }
