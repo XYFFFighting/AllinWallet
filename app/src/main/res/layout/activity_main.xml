@@ -112,4 +112,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_report" />
 
+    <Button
+        android:id="@+id/btn_search_by_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Search By Type"
+        app:layout_constraintStart_toStartOf="@+id/btn_budget"
+        app:layout_constraintTop_toBottomOf="@+id/btn_budget" />
+
 </android.support.constraint.ConstraintLayout>
