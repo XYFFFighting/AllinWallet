@@ -55,6 +55,14 @@
           }
         },
         {
+          "client_id": "823859929887-1p89d93p07na1llo0nh7tgdfarv8iv6n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "group26.cs307.allinwallet",
+            "certificate_hash": "42f1d77462de1679d4eff6b407d7bd4fd635cc50"
+          }
+        },
+        {
           "client_id": "823859929887-shqv8c4o9p948dvtmcg8rr84qf9v7au1.apps.googleusercontent.com",
           "client_type": 3
         }
