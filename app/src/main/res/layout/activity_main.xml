@@ -91,6 +91,7 @@
         android:text="report"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_purchase" />
+
     <Button
         android:id="@+id/btn_budget"
         android:layout_width="wrap_content"
@@ -99,5 +100,16 @@
         android:text="Budget"
         app:layout_constraintStart_toStartOf="@+id/btn_profile"
         app:layout_constraintTop_toBottomOf="@+id/btn_profile" />
+
+    <Button
+        android:id="@+id/btn_search_by_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="9dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginTop="23dp"
+        android:text="Search By Name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_report" />
 
 </android.support.constraint.ConstraintLayout>

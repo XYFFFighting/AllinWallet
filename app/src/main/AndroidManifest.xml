@@ -36,7 +36,10 @@
         <activity
             android:name=".Profile"
             android:label="@string/title_activity_profile" />
-        <activity android:name=".Report"></activity>
+        <activity android:name=".Report" />
+        <activity
+            android:name=".Search_by_name"
+            android:label="@string/title_activity_search_by_name"></activity>
     </application>
 
 </manifest>
