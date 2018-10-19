@@ -43,7 +43,6 @@ public class MainPage extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
-        String uid = auth.getUid();
         purchaseButton = (Button) findViewById(R.id.addPurchase);
         welcomeMessage = (TextView) findViewById(R.id.welcomeText);
         budgetText = (TextView) findViewById(R.id.budgetText);
@@ -60,25 +59,8 @@ public class MainPage extends AppCompatActivity {
         purchaseListLayoutManager = new LinearLayoutManager(MainPage.this);
         purchaseList.setLayoutManager(purchaseListLayoutManager);
         purchases = new ArrayList<>();
-
-        db.collection("users").document(uid).collection("purchase")
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, document.getId() + "-->" + document.getData());
-                        purchases.add(new PurchaseItem(document.getString("category"),
-                                document.getString("name"), document.getDouble("price")));
-                    }
-
-                    purchaseListAdapter = new PurchaseAdapter(purchases);
-                    purchaseList.setAdapter(purchaseListAdapter);
-                } else {
-                    Log.e(TAG, "Error getting documents: ", task.getException());
-                }
-            }
-        });
+        purchaseListAdapter = new PurchaseAdapter(purchases);
+        purchaseList.setAdapter(purchaseListAdapter);
     }
 
     public void setDate() {
@@ -88,80 +70,66 @@ public class MainPage extends AppCompatActivity {
         welcomeMessage.append(date);
     }
 
-    public void setBudgetText(String uid) {
+    public void updateBudgetText(String uid) {
         budgetText.setText(null);
-        budgetText.append("Current budget: ");
-        final DocumentReference dRef = db.collection("users").document(uid);
+        budgetText.append("Current spending: ");
 
-        dRef.collection("purchase")
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        double sum = 0.0;
+        for (PurchaseItem p : purchases) {
+            sum += p.getAmount();
+        }
+
+        budgetText.append(Double.toString(sum));
+
+        db.collection("users").document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                double sum = 0.0;
-
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
                         Log.d(TAG, document.getId() + "-->" + document.getData());
-                        sum += document.getDouble("price");
+
+                        if (document.contains("budget")) {
+                            budgetText.append(" / " + document.getDouble("budget"));
+                        }
+                    } else {
+                        Log.d(TAG, "No such document");
                     }
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
                 }
-
-                budgetText.append(Double.toString(sum));
-
-                dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                Log.d(TAG, document.getId() + "-->" + document.getData());
-
-                                if (document.contains("budget")) {
-                                    double budge_limit = document.getDouble("budget");
-                                    budgetText.append(" / " + budge_limit);
-                                }
-                            } else {
-                                Log.d(TAG, "No such document");
-                            }
-                        } else {
-                            Log.d(TAG, "get failed with ", task.getException());
-                        }
-                    }
-                });
             }
         });
     }
 
     public void updatePurchase(String uid) {
-        purchases.clear();
         db.collection("users").document(uid).collection("purchase")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + "-->" + document.getData());
-                                purchases.add(new PurchaseItem(document.getString("category"),
-                                        document.getString("name"), document.getDouble("price")));
-                            }
-                        } else {
-                            Log.e(TAG, "Error getting documents: ", task.getException());
-                        }
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    purchases.clear();
 
-                        purchaseListAdapter.notifyDataSetChanged();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d(TAG, document.getId() + "-->" + document.getData());
+                        purchases.add(new PurchaseItem(document.getString("category"),
+                                document.getString("name"), document.getDouble("price")));
                     }
-                });
+
+                    purchaseListAdapter.notifyDataSetChanged();
+                } else {
+                    Log.e(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         String uid = auth.getUid();
-        setBudgetText(uid);
         updatePurchase(uid);
+        updateBudgetText(uid);
     }
 
     @Override
