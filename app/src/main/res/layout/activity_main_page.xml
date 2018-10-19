@@ -50,20 +50,12 @@
             android:textColor="@color/colorzise"
             android:textSize="30sp" />
 
-      <!--  <TextView
-            android:id="@+id/purchase_list"
-            android:layout_width="match_parent"
-            android:layout_height="358dp"
-            android:layout_marginTop="15dp"
-            android:clickable="false"
-            android:textSize="16sp" /> -->
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/purchase_list"
-            android:scrollbars="vertical"
-            android:layout_marginTop="15dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:scrollbars="vertical" />
 
     </LinearLayout>
 

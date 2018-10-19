@@ -19,7 +19,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -34,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnSignup, btnLogin, btnReset;
 
     ImageView head;
-    Button conti, logbut,reset_password,signupbut;
+    Button conti, logbut, reset_password, signupbut;
     EditText emaill, pw;
     TextView tips;
 
@@ -133,7 +134,8 @@ public class LoginActivity extends AppCompatActivity {
                                     addEmail(email);
 //                                    Intent intent = new Intent(LoginActivity.this, MainPage.class);
 //                                    startActivity(intent);
-                                    Toast.makeText(LoginActivity.this, "Succ", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(LoginActivity.this, "Success", Toast
+                                            .LENGTH_LONG).show();
 //                                    finish();
                                     head = findViewById(R.id.head);
                                     head.setVisibility(View.INVISIBLE);
@@ -163,11 +165,29 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void addEmail(String email) {
+    public void addEmail(final String email) {
         String uid = auth.getUid();
-        Map<String, Object> userInfo = new HashMap<>();
-        userInfo.put("email", email);
-        CollectionReference users = db.collection("users");
-        users.document(uid).update(userInfo);
+        final DocumentReference dRef = db.collection("users").document(uid);
+
+        dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    Map<String, Object> userInfo = new HashMap<>();
+                    userInfo.put("email", email);
+
+                    if (document.exists()) {
+                        Log.d(TAG, document.getId() + "-->" + document.getData());
+                        dRef.update(userInfo);
+                    } else {
+                        Log.d(TAG, "Creating new document");
+                        dRef.set(userInfo);
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 }
