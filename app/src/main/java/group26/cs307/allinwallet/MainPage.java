@@ -70,53 +70,47 @@ public class MainPage extends AppCompatActivity {
         welcomeMessage.append(date);
     }
 
-    public void updateBudgetText(String uid) {
-        budgetText.setText(null);
-        budgetText.append("Current spending: ");
+    public void updateMainPage(String uid) {
+        final DocumentReference dRef = db.collection("users").document(uid);
 
-        double sum = 0.0;
-        for (PurchaseItem p : purchases) {
-            sum += p.getAmount();
-        }
-
-        budgetText.append(Double.toString(sum));
-
-        db.collection("users").document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, document.getId() + "-->" + document.getData());
-
-                        if (document.contains("budget")) {
-                            budgetText.append(" / " + document.getDouble("budget"));
-                        }
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
-    }
-
-    public void updatePurchase(String uid) {
-        db.collection("users").document(uid).collection("purchase")
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        dRef.collection("purchase").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     purchases.clear();
+                    budgetText.setText("Current spending: ");
+                    double sum = 0.0, amount;
 
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, document.getId() + "-->" + document.getData());
+                        amount = document.getDouble("price");
+                        sum += amount;
                         purchases.add(new PurchaseItem(document.getString("category"),
-                                document.getString("name"), document.getDouble("price")));
+                                document.getString("name"), amount));
                     }
 
                     purchaseListAdapter.notifyDataSetChanged();
+                    budgetText.append(Double.toString(sum));
+
+                    dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    Log.d(TAG, document.getId() + "-->" + document.getData());
+
+                                    if (document.contains("budget")) {
+                                        budgetText.append(" / " + document.getDouble("budget"));
+                                    }
+                                } else {
+                                    Log.d(TAG, "No such document");
+                                }
+                            } else {
+                                Log.d(TAG, "get failed with ", task.getException());
+                            }
+                        }
+                    });
                 } else {
                     Log.e(TAG, "Error getting documents: ", task.getException());
                 }
@@ -128,8 +122,7 @@ public class MainPage extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         String uid = auth.getUid();
-        updatePurchase(uid);
-        updateBudgetText(uid);
+        updateMainPage(uid);
     }
 
     @Override
