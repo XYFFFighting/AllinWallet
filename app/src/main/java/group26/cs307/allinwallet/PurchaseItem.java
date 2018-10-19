@@ -6,11 +6,13 @@ public class PurchaseItem implements Serializable {
     private String category;
     private String title;
     private double amount;
+    private String date;
 
-    public PurchaseItem(String category, String title, double amount) {
+    public PurchaseItem(String category, String title, double amount, String date) {
         this.category = category;
         this.title = title;
         this.amount = amount;
+        this.date = date;
     }
 
     public String getCategory() {
@@ -41,12 +43,21 @@ public class PurchaseItem implements Serializable {
         this.amount = amount;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     @Override
     public String toString() {
         return "PurchaseItem{" +
                 "category='" + category + '\'' +
                 ", title='" + title + '\'' +
                 ", amount=" + amount +
+                ", date='" + date + '\'' +
                 '}';
     }
 }

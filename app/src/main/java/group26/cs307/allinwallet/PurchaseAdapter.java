@@ -17,12 +17,14 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.Purcha
         private TextView categoryTextView;
         private TextView titleTextView;
         private TextView amountTextView;
+        private TextView dateTextView;
 
         public PurchaseViewHolder(View v) {
             super(v);
             categoryTextView = (TextView) v.findViewById(R.id.category);
             titleTextView = (TextView) v.findViewById(R.id.title);
             amountTextView = (TextView) v.findViewById(R.id.amount);
+            dateTextView = (TextView) v.findViewById(R.id.date);
         }
 
         public TextView getCategoryTextView() {
@@ -35,6 +37,10 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.Purcha
 
         public TextView getAmountTextView() {
             return amountTextView;
+        }
+
+        public TextView getDateTextView() {
+            return dateTextView;
         }
     }
 
@@ -57,6 +63,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.Purcha
         holder.getCategoryTextView().setText(purchaseItemList.get(position).getCategory());
         holder.getTitleTextView().setText(purchaseItemList.get(position).getTitle());
         holder.getAmountTextView().setText(purchaseItemList.get(position).getAmountString());
+        holder.getDateTextView().setText(purchaseItemList.get(position).getDate());
     }
 
     @Override

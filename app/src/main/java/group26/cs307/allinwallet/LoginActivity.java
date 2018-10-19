@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
                                     addEmail(email);
 //                                    Intent intent = new Intent(LoginActivity.this, MainPage.class);
 //                                    startActivity(intent);
-                                    Toast.makeText(LoginActivity.this, "Success", Toast
+                                    Toast.makeText(LoginActivity.this, "Success!", Toast
                                             .LENGTH_LONG).show();
 //                                    finish();
                                     head = findViewById(R.id.head);
