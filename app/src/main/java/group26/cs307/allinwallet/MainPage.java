@@ -3,12 +3,12 @@ package group26.cs307.allinwallet;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainPage extends AppCompatActivity {
-    private Button purchaseButton;
+    private FloatingActionButton purchaseButton;
     private TextView welcomeMessage, budgetText;
     private RecyclerView purchaseList;
     private RecyclerView.Adapter purchaseListAdapter;
@@ -43,13 +43,15 @@ public class MainPage extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
-        purchaseButton = (Button) findViewById(R.id.addPurchase);
+
         welcomeMessage = (TextView) findViewById(R.id.welcomeText);
         budgetText = (TextView) findViewById(R.id.budgetText);
         setDate();
+
+        purchaseButton = (FloatingActionButton) findViewById(R.id.fab);
         purchaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 startActivity(new Intent(MainPage.this, AddPurchase.class));
             }
         });
