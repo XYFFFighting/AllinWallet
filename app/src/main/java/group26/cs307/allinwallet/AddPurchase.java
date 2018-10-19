@@ -1,4 +1,5 @@
 package group26.cs307.allinwallet;
+
 import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -19,12 +20,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class AddPurchase extends AppCompatActivity {
@@ -144,12 +147,12 @@ public class AddPurchase extends AppCompatActivity {
                         AddPurchase.this,
                         android.R.style.Theme_Holo_Light_Dialog_MinWidth,
                         mDateSetListener,
-                        year,month,day);
+                        year, month, day);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.show();
             }
         });
-        mDateSetListener = new DatePickerDialog.OnDateSetListener(){
+        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
@@ -161,20 +164,21 @@ public class AddPurchase extends AppCompatActivity {
         };
 
 
-
     }
 
     public void addPurchase(String name, double price, String category) {
         Date currentTime = Calendar.getInstance().getTime();
-        String time = currentTime.toString();
+        SimpleDateFormat formatter = new SimpleDateFormat("E MMM d yyyy h:mm a",
+                Locale.getDefault());
+        String time = formatter.format(currentTime);
+
         Log.d(TAG, "purchase sending time is: " + time);
         String uid = auth.getUid();
         Map<String, Object> purchaselist = new HashMap<>();
-        //purchaselist.put("uid", uid);
         purchaselist.put("name", name);
         purchaselist.put("price", price);
         purchaselist.put("category", category);
-        //purchaselist.put("time", time);
+
         CollectionReference purchase = db.collection("users");
         purchase.document(uid).collection("purchase").document(time).set(purchaselist);
         Log.d(TAG, uid + " send purchase data");

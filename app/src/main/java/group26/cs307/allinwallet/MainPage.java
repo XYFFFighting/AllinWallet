@@ -65,7 +65,7 @@ public class MainPage extends AppCompatActivity {
 
     public void setDate() {
         Date today = Calendar.getInstance().getTime();//getting date
-        SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM dd yyyy", Locale.getDefault());
+        SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d yyyy", Locale.getDefault());
         String date = formatter.format(today);
         welcomeMessage.append(date);
     }
