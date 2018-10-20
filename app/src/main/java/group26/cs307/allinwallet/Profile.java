@@ -1,7 +1,9 @@
 package group26.cs307.allinwallet;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -22,7 +25,7 @@ import java.util.Map;
 
 public class Profile extends AppCompatActivity {
     private FirebaseAuth auth;
-    private Button logout;
+    private Button logout, btn_dlt_act;
     private TextView userinfo;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "AllinWallet";
@@ -33,16 +36,63 @@ public class Profile extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         auth = FirebaseAuth.getInstance();
         logout = (Button) findViewById(R.id.btn_logout);
+        btn_dlt_act = (Button) findViewById(R.id.btn_dlt_account);
         userinfo = (TextView) findViewById(R.id.user_info);
+        adduserInfo();
+        addNumUser();
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                auth.signOut();
-                startActivity(new Intent(Profile.this, LoginActivity.class));
+                AlertDialog alertDialog = new AlertDialog.Builder(Profile.this).create();
+                alertDialog.setTitle("Log Out");
+                alertDialog.setMessage("Are you sure to log out?");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                auth.signOut();
+                                startActivity(new Intent(Profile.this, LoginActivity.class));
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
             }
         });
-        adduserInfo();
-        addNumUser();
+        btn_dlt_act.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog alertDialog = new AlertDialog.Builder(Profile.this).create();
+                alertDialog.setTitle("Delete Account");
+                alertDialog.setMessage("Are you sure to delete your account?");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                user.delete()
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Log.d(TAG, "user account deleted.");
+                                                    startActivity(new Intent(Profile.this, LoginActivity.class));
+                                                    }
+                                            }
+                                        });
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }
+        });
     }
 
     public void addNumUser() {
