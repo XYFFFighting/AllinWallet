@@ -107,6 +107,7 @@ public class AddPurchase extends AppCompatActivity {
                 String name = inputName.getText().toString();
                 String price = inputPrice.getText().toString();
                 String category = categoryPicker.getSelectedItem().toString();
+                String date = mDisplayDate.getText().toString();
 
                 if (TextUtils.isEmpty(name)) {
                     inputName.setError("name cannot be empty");
@@ -119,7 +120,8 @@ public class AddPurchase extends AppCompatActivity {
                 Log.d(TAG, "Item Name: " + name);
                 Log.d(TAG, "Item Price: " + price);
                 Log.d(TAG, "Item Category: " + category);
-                addPurchase(name, Double.parseDouble(price), category);
+                Log.d(TAG, "data: " + date);
+                addPurchase(name, Double.parseDouble(price), category, date);
 
                 onBackPressed();
             }
@@ -166,7 +168,7 @@ public class AddPurchase extends AppCompatActivity {
 
     }
 
-    public void addPurchase(String name, double price, String category) {
+    public void addPurchase(String name, double price, String category, String date) {
         Date currentTime = Calendar.getInstance().getTime();
         SimpleDateFormat formatter = new SimpleDateFormat("E MMM d yyyy h:mm a",
                 Locale.getDefault());
@@ -178,6 +180,7 @@ public class AddPurchase extends AppCompatActivity {
         purchaselist.put("name", name);
         purchaselist.put("price", price);
         purchaselist.put("category", category);
+        purchaselist.put("date", date);
 
         CollectionReference purchase = db.collection("users");
         purchase.document(uid).collection("purchase").document(time).set(purchaselist);
