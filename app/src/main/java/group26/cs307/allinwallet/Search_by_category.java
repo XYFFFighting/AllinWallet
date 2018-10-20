@@ -15,7 +15,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ public class Search_by_category extends Activity {
 
         categoryPicker = (Spinner)findViewById(R.id.category_picker);
         btn_search = (Button)findViewById(R.id.btn_search);
-        search_rst = (TextView)findViewById(R.id.rst_search_by_type);
+        search_rst = (TextView)findViewById(R.id.rst_search);
 
 
         categories = new ArrayList<>();

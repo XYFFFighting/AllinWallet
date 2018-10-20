@@ -42,7 +42,10 @@
             android:label="@string/title_activity_search_by_name" />
         <activity
             android:name=".Search_by_category"
-            android:label="@string/title_activity_search_by_category"></activity>
+            android:label="@string/title_activity_search_by_category" />
+        <activity
+            android:name=".Searching"
+            android:label="@string/title_activity_searching"></activity>
     </application>
 
 </manifest>

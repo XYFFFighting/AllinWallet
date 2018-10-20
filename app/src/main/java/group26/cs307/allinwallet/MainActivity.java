@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "AllinWallet";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAnalytics mFirebaseAnalytics;
-    private Button signup, login, main, addpurchase, reset, profile, report, budget, search_by_name, search_by_type;
+    private Button signup, login, main, addpurchase, reset, profile, report, budget, search;
     private EditText authtext;
     private FirebaseAuth auth;
 
@@ -45,8 +45,7 @@ public class MainActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         signup = (Button) findViewById(R.id.btn_signup);
-        search_by_name = (Button) findViewById(R.id.btn_search_by_name);
-        search_by_type = (Button) findViewById(R.id.btn_search_by_type);
+        search= (Button) findViewById(R.id.btn_search);
         profile = (Button) findViewById(R.id.btn_profile);
         login = (Button) findViewById(R.id.btn_login);
         main = (Button) findViewById(R.id.btn_dashboard);
@@ -77,16 +76,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        search_by_name.setOnClickListener(new View.OnClickListener() {
+        search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, Search_by_name.class));
-            }
-        });
-        search_by_type.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, Search_by_category.class));
+                startActivity(new Intent(MainActivity.this, Searching.class));
             }
         });
 
