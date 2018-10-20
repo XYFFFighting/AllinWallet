@@ -35,7 +35,7 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_img">
 
@@ -47,14 +47,7 @@
             android:layout_centerInParent="true"
             android:src="@drawable/logo" />
 
-        <Button
-            android:id="@+id/btn_change"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:background="@color/colorAccent"
-            android:text="change your avatar"
-            android:textColor="@android:color/white" />
+
 
 
         <TextView
@@ -64,7 +57,14 @@
 
             android:textSize="16sp" />
 
-
+        <Button
+            android:id="@+id/btn_change"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:background="@color/colorAccent"
+            android:text="change your avatar"
+            android:textColor="@android:color/white" />
         <Button
             android:id="@+id/btn_logout"
             style="?android:textAppearanceSmall"
