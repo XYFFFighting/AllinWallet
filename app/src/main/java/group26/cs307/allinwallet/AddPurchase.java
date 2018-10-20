@@ -98,7 +98,30 @@ public class AddPurchase extends AppCompatActivity {
                     addPurchase(name, Double.parseDouble(price), category, date);
                 } else {
                     updatePurchase(name, Double.parseDouble(price), category, date, item.getDocumentUID());
-                }
+                    dateSetListener = new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                            calendar.set(Calendar.YEAR, year);
+                            calendar.set(Calendar.MONTH, month);
+                            calendar.set(Calendar.DAY_OF_MONTH, day);
+
+                            String date = formatter.format(calendar.getTime());
+                            inputDate.setText(date);
+                            Log.d(TAG, "onDateSet: mm/dd/yyy:" + date);
+                        }
+                    };
+
+                    inputDate.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            int year = calendar.get(Calendar.YEAR);
+                            int month = calendar.get(Calendar.MONTH);
+                            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                            new DatePickerDialog(AddPurchase.this,
+                                    dateSetListener, year, month, day).show();
+                        }
+                    });                }
                 onBackPressed();
             }
         });
@@ -111,30 +134,7 @@ public class AddPurchase extends AppCompatActivity {
             }
         });
 
-        dateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, day);
 
-                String date = formatter.format(calendar.getTime());
-                inputDate.setText(date);
-                Log.d(TAG, "onDateSet: mm/dd/yyy:" + date);
-            }
-        };
-
-        inputDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-                new DatePickerDialog(AddPurchase.this,
-                        dateSetListener, year, month, day).show();
-            }
-        });
 
         if (passedPurchaseIndex != -1) {
             setTitle(R.string.title_activity_edit_purchase);
