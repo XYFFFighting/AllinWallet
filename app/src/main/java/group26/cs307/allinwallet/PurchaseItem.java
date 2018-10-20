@@ -1,15 +1,18 @@
 package group26.cs307.allinwallet;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class PurchaseItem implements Serializable {
     private String category;
     private String title;
     private double amount;
-    private String date;
+    private Date date;
     private String documentUID;
 
-    public PurchaseItem(String category, String title, double amount, String date, String documentUID) {
+    public PurchaseItem(String category, String title, double amount, Date date, String documentUID) {
         this.category = category;
         this.title = title;
         this.amount = amount;
@@ -45,11 +48,15 @@ public class PurchaseItem implements Serializable {
         this.amount = amount;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public String getDateString() {
+        return new SimpleDateFormat("E, MM/dd/yy", Locale.getDefault()).format(date);
+    }
+
+    public void setDate(Date date) {
         this.date = date;
     }
 
