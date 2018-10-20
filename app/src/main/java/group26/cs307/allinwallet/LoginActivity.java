@@ -23,7 +23,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
@@ -39,9 +42,37 @@ public class LoginActivity extends AppCompatActivity {
     EditText emaill, pw;
     TextView tips;
 
+    //5 TIPS FOR NOW
+
+    List<String> tipList = new ArrayList<>();
+
+    String tip1 = "TIP:\n Buy store-brand products, as they are generally cheaper, yet the same.";
+    String tip2 = "TIP:\n Check retailmenot.com, as the website contains many coupons.";
+    String tip3 = "TIP:\n Try cooking more at home than eating out, as it is usually more expensive.";
+    String tip4 = "TIP:\n You can download music for free on numerous mp3 websites instead of purchasing via iTunes.";
+    String tip5 = "TIP:\n Stream TV shows and movies for free using putlocker.com.";
+
+    //start at initial index of arrayList: tipList
+
+    int i = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //insert all tips into tipList
+
+        tipList.add(tip1);
+        tipList.add(tip2);
+        tipList.add(tip3);
+        tipList.add(tip4);
+        tipList.add(tip5);
+
+        //if we're at the end of the tipList, start from the beginning
+
+        if (i > 4) {
+            i = 0;
+        }
+
         super.onCreate(savedInstanceState);
 
         //Get Firebase auth instance
@@ -156,6 +187,8 @@ public class LoginActivity extends AppCompatActivity {
                                     TextInputLayout em = findViewById(R.id.em);
                                     em.setVisibility(View.INVISIBLE);
                                     conti.setVisibility(View.VISIBLE);
+                                    tips.setText(tipList.get(i)); //get string at tipList index
+                                    i++; //increment the index
                                     tips.setVisibility(View.VISIBLE);
 //                                    finish();
                                 }
