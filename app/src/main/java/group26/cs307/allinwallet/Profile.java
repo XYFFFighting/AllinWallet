@@ -94,7 +94,6 @@ public class Profile extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                 String uid = user.getUid();
-                                deleteData(uid);
                                 user.delete()
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
@@ -105,6 +104,7 @@ public class Profile extends AppCompatActivity {
                                                     }
                                             }
                                         });
+                                deleteData(uid);
                             }
                         });
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Cancel",

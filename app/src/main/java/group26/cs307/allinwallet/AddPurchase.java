@@ -70,7 +70,6 @@ public class AddPurchase extends AppCompatActivity {
         categoryPicker.setAdapter(spinnerAA);
         calendar = Calendar.getInstance();
         formatter = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
-        inputDate.setText(formatter.format(calendar.getTime()));
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,8 +77,7 @@ public class AddPurchase extends AppCompatActivity {
                 String name = inputName.getText().toString();
                 String price = inputPrice.getText().toString();
                 String category = categoryPicker.getSelectedItem().toString();
-                String date = inputDate.getText().toString();
-                //Date date = calendar.getTime();
+                Date date = calendar.getTime();
 
                 if (TextUtils.isEmpty(name)) {
                     inputName.setError("Title cannot be empty");
@@ -121,7 +119,8 @@ public class AddPurchase extends AppCompatActivity {
                             new DatePickerDialog(AddPurchase.this,
                                     dateSetListener, year, month, day).show();
                         }
-                    });                }
+                    });
+                }
                 onBackPressed();
             }
         });
@@ -135,19 +134,20 @@ public class AddPurchase extends AppCompatActivity {
         });
 
 
-
         if (passedPurchaseIndex != -1) {
             setTitle(R.string.title_activity_edit_purchase);
             inputName.setText(item.getTitle());
             inputPrice.setText(item.getAmountString());
-            inputDate.setText(item.getDate());
+            inputDate.setText(item.getDateString());
 
             delete.setVisibility(View.VISIBLE);
             delete.setClickable(true);
+        } else {
+            inputDate.setText(formatter.format(calendar.getTime()));
         }
     }
 
-    public void addPurchase(String name, double price, String category, String date) {
+    public void addPurchase(String name, double price, String category, Date date) {
         String time = Calendar.getInstance().getTime().toString();
 
         Log.d(TAG, "purchase sending time is: " + time);
@@ -164,7 +164,7 @@ public class AddPurchase extends AppCompatActivity {
         Log.d(TAG, uid + " send purchase data");
     }
 
-    public void updatePurchase(String name, double price, String category, String date, String
+    public void updatePurchase(String name, double price, String category, Date date, String
             documentUID) {
         String uid = auth.getUid();
 
