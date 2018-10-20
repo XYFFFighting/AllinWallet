@@ -56,7 +56,7 @@ public class Report extends AppCompatActivity {
         report.setText("");
         String currenttime = Calendar.getInstance().getTime().toString();
         final String year = getYear(currenttime);
-        Log.d(TAG, "year: " + year);
+        //Log.d(TAG, "year: " + year);
         final String month = getMonth(currenttime);
         final String date = getDate(currenttime);
         //1 for week, 2 for month, 3 for year
@@ -72,7 +72,7 @@ public class Report extends AppCompatActivity {
                                 Object price = document.getData().get("price");
                                 Object name = document.getData().get("name");
                                 if(type == 3){
-//                                    Log.d(TAG, "year2: " + getYear(time));
+                                    Log.d(TAG, "year2: " + getYear(time));
                                     if(year.equals(getYear(time))){
                                         report.append(time + " price: " + price + " name: " + name + "\n");
                                     }

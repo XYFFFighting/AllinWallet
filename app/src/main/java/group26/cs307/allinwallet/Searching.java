@@ -58,25 +58,33 @@ public class Searching extends Activity {
                 String name = inputName.getText().toString();
                 String category = categoryPicker.getSelectedItem().toString();
                 Log.d(TAG, "Item Category" + category);
-                if(!name.equals("") && !category.equals("any")){
-                    search_by_both(category, name);
-                }
-                else if(name.equals("") && !category.equals("any")){
-                    search_by_type(category);
-                }
-                else if(!name.equals("") && category.equals("any")){
-                    search_by_name(name);
-                }
+//                if(!name.equals("") && !category.equals("any")){
+//                    search_by_both(category, name);
+//                }
+//                else if(name.equals("") && !category.equals("any")){
+//                    search_by_type(category);
+//                }
+//                else if(!name.equals("") && category.equals("any")){
+//                    search_by_name(name);
+//                }
+                search_by_all(category, name);
 
             }
         });
     }
 
-    public void search_by_both(String category, String name){
+    public void search_by_all(String category, String name){
         result_text.setText(null);
         String uid = auth.getUid();
         CollectionReference col_purchase = db.collection("users").document(uid).collection("purchase");
-        Query result = col_purchase.whereEqualTo("name", name).whereEqualTo("category", category);
+        //Query result = col_purchase.whereEqualTo("name", name).whereEqualTo("category", category);
+        Query result = col_purchase;
+        if(!category.equals("any")){
+            result = result.whereEqualTo("category", category);
+        }
+        if(!name.equals("")){
+            result = result.whereEqualTo("name", name);
+        }
         result.get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -91,43 +99,43 @@ public class Searching extends Activity {
                 });
     }
 
-    public void search_by_type(String type){
-        result_text.setText(null);
-        String uid = auth.getUid();
-        CollectionReference col_purchase = db.collection("users").document(uid).collection("purchase");
-        Query result = col_purchase.whereEqualTo("category", type);
-        result.get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                            Log.d(TAG, document.getId() + "-->" + document.getData());
-                            String text = document.getId() + " " + document.getData().toString() + '\n';
-                            result_text.append(text);
-                        }
-
-                    }
-                });
-    }
-
-    public void search_by_name(String name){
-        result_text.setText(null);
-        String uid = auth.getUid();
-        CollectionReference col_purchase = db.collection("users").document(uid).collection("purchase");
-        Query result = col_purchase.whereEqualTo("name", name);
-        result.get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                            Log.d(TAG, document.getId() + "-->" + document.getData());
-                            String text = document.getId() + " " + document.getData().toString() + '\n';
-                            result_text.append(text);
-                        }
-
-                    }
-                });
-    }
+//    public void search_by_type(String type){
+//        result_text.setText(null);
+//        String uid = auth.getUid();
+//        CollectionReference col_purchase = db.collection("users").document(uid).collection("purchase");
+//        Query result = col_purchase.whereEqualTo("category", type);
+//        result.get()
+//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+//                            Log.d(TAG, document.getId() + "-->" + document.getData());
+//                            String text = document.getId() + " " + document.getData().toString() + '\n';
+//                            result_text.append(text);
+//                        }
+//
+//                    }
+//                });
+//    }
+//
+//    public void search_by_name(String name){
+//        result_text.setText(null);
+//        String uid = auth.getUid();
+//        CollectionReference col_purchase = db.collection("users").document(uid).collection("purchase");
+//        Query result = col_purchase.whereEqualTo("name", name);
+//        result.get()
+//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+//                            Log.d(TAG, document.getId() + "-->" + document.getData());
+//                            String text = document.getId() + " " + document.getData().toString() + '\n';
+//                            result_text.append(text);
+//                        }
+//
+//                    }
+//                });
+//    }
 
 
 }
