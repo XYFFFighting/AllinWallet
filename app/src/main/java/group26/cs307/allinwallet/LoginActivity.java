@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "AllinWallet";
@@ -52,10 +53,6 @@ public class LoginActivity extends AppCompatActivity {
     String tip4 = "TIP:\n You can download music for free on numerous mp3 websites instead of purchasing via iTunes.";
     String tip5 = "TIP:\n Stream TV shows and movies for free using putlocker.com.";
 
-    //start at initial index of arrayList: tipList
-
-    int i = 0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -66,12 +63,6 @@ public class LoginActivity extends AppCompatActivity {
         tipList.add(tip3);
         tipList.add(tip4);
         tipList.add(tip5);
-
-        //if we're at the end of the tipList, start from the beginning
-
-        if (i > 4) {
-            i = 0;
-        }
 
         super.onCreate(savedInstanceState);
 
@@ -187,8 +178,15 @@ public class LoginActivity extends AppCompatActivity {
                                     TextInputLayout em = findViewById(R.id.em);
                                     em.setVisibility(View.INVISIBLE);
                                     conti.setVisibility(View.VISIBLE);
-                                    tips.setText(tipList.get(i)); //get string at tipList index
-                                    i++; //increment the index
+
+                                    //RANDOMIZE THE INDEX HERE:
+
+                                    Random indexGenerator = new Random();
+                                    int i = indexGenerator.nextInt(tipList.size());
+
+                                    //get string at generated index from tipList
+
+                                    tips.setText(tipList.get(i));
                                     tips.setVisibility(View.VISIBLE);
 //                                    finish();
                                 }
