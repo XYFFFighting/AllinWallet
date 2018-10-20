@@ -1,45 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".AddPurchase"
-    tools:layout_editor_absoluteY="25dp">
+    tools:context=".AddPurchase">
 
     <LinearLayout
-        android:id="@+id/linearLayout4"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@color/white"
-        android:gravity="center"
+        android:gravity="top"
         android:orientation="vertical"
-        android:padding="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-
-
-
-
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="327dp"
-            android:layout_height="47dp">
-
-            <TextView
-                android:id="@+id/tvDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="0dp"
-                android:hint="Select Date"
-                android:textSize="15sp" />
-
-        </android.support.constraint.ConstraintLayout>
-
+        android:padding="16dp">
 
         <View
             android:layout_width="match_parent"
@@ -55,7 +29,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight=".5"
+                android:layout_weight="1"
                 android:text="Choose a category:"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="17sp" />
@@ -64,8 +38,24 @@
                 android:id="@+id/category_picker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight=".5" />
+                android:layout_weight="1" />
         </LinearLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/item_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:focusable="false"
+                android:hint="Purchase date:"
+                android:longClickable="false"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="@color/colorPrimaryDark" />
+        </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -100,18 +90,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/cancel_button"
+                android:id="@+id/delete_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".475"
                 android:background="@color/colorAccent"
+                android:clickable="false"
                 android:padding="10dp"
-                android:text="CANCEL"
-                android:textColor="@color/white" />
+                android:text="DELETE"
+                android:textColor="@color/white"
+                android:visibility="invisible" />
 
             <View
                 android:layout_width="0dp"
@@ -119,17 +110,15 @@
                 android:layout_weight="0.05" />
 
             <Button
-                android:id="@+id/add_item_button"
+                android:id="@+id/save_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".475"
                 android:background="@color/colorAccent"
                 android:padding="10dp"
-                android:text="ADD"
+                android:text="SAVE"
                 android:textColor="@color/white" />
 
         </LinearLayout>
-
     </LinearLayout>
-
-</android.support.constraint.ConstraintLayout>
+</android.support.design.widget.CoordinatorLayout>

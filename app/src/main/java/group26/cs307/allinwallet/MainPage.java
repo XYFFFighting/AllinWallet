@@ -33,7 +33,7 @@ public class MainPage extends AppCompatActivity {
     private RecyclerView purchaseList;
     private RecyclerView.Adapter purchaseListAdapter;
     private RecyclerView.LayoutManager purchaseListLayoutManager;
-    private List<PurchaseItem> purchases;
+    public static List<PurchaseItem> purchases;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "AllinWallet";
     private FirebaseAuth auth;
@@ -61,7 +61,16 @@ public class MainPage extends AppCompatActivity {
         purchaseListLayoutManager = new LinearLayoutManager(MainPage.this);
         purchaseList.setLayoutManager(purchaseListLayoutManager);
         purchases = new ArrayList<>();
-        purchaseListAdapter = new PurchaseAdapter(purchases);
+
+        purchaseListAdapter = new PurchaseAdapter(purchases, new PurchaseClickListener() {
+            @Override
+            public void purchaseListClicked(View v, int position) {
+                Intent intent = new Intent(MainPage.this, AddPurchase.class);
+                intent.putExtra("item_key", position);
+                startActivity(intent);
+            }
+        });
+
         purchaseList.setAdapter(purchaseListAdapter);
     }
 
@@ -88,7 +97,8 @@ public class MainPage extends AppCompatActivity {
                         amount = document.getDouble("price");
                         sum += amount;
                         purchases.add(new PurchaseItem(document.getString("category"),
-                                document.getString("name"), amount, document.getId()));
+                                document.getString("name"), amount,
+                                document.getString("date"), document.getId()));
                     }
 
                     purchaseListAdapter.notifyDataSetChanged();

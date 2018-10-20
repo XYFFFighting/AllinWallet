@@ -12,19 +12,51 @@ import java.util.List;
 public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.PurchaseViewHolder> {
     private static final String TAG = "PurchaseAdapter";
     private List<PurchaseItem> purchaseItemList;
+    private PurchaseClickListener listener;
 
-    public static class PurchaseViewHolder extends RecyclerView.ViewHolder {
+    public PurchaseAdapter(List<PurchaseItem> purchaseItemList, PurchaseClickListener listener) {
+        this.purchaseItemList = purchaseItemList;
+        this.listener = listener;
+    }
+
+    @Override
+    @NonNull
+    public PurchaseAdapter.PurchaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
+                                                                 int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.purchase_row_item, parent, false);
+
+        return new PurchaseViewHolder(v, listener);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull PurchaseViewHolder holder, int position) {
+        holder.getCategoryTextView().setText(purchaseItemList.get(position).getCategory());
+        holder.getTitleTextView().setText(purchaseItemList.get(position).getTitle());
+        holder.getAmountTextView().setText(purchaseItemList.get(position).getAmountString());
+        holder.getDateTextView().setText(purchaseItemList.get(position).getDate());
+    }
+
+    @Override
+    public int getItemCount() {
+        return purchaseItemList.size();
+    }
+
+    public static class PurchaseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView categoryTextView;
         private TextView titleTextView;
         private TextView amountTextView;
         private TextView dateTextView;
+        private PurchaseClickListener listener;
 
-        public PurchaseViewHolder(View v) {
+        public PurchaseViewHolder(View v, PurchaseClickListener listener) {
             super(v);
             categoryTextView = (TextView) v.findViewById(R.id.category);
             titleTextView = (TextView) v.findViewById(R.id.title);
             amountTextView = (TextView) v.findViewById(R.id.amount);
             dateTextView = (TextView) v.findViewById(R.id.date);
+            this.listener = listener;
+            v.setOnClickListener(this);
         }
 
         public TextView getCategoryTextView() {
@@ -42,32 +74,10 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.Purcha
         public TextView getDateTextView() {
             return dateTextView;
         }
-    }
 
-    public PurchaseAdapter(List<PurchaseItem> purchaseItemList) {
-        this.purchaseItemList = purchaseItemList;
-    }
-
-    @Override
-    @NonNull
-    public PurchaseAdapter.PurchaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
-                                                                 int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.purchase_row_item, parent, false);
-
-        return new PurchaseViewHolder(v);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull PurchaseViewHolder holder, int position) {
-        holder.getCategoryTextView().setText(purchaseItemList.get(position).getCategory());
-        holder.getTitleTextView().setText(purchaseItemList.get(position).getTitle());
-        holder.getAmountTextView().setText(purchaseItemList.get(position).getAmountString());
-        holder.getDateTextView().setText(purchaseItemList.get(position).getDate());
-    }
-
-    @Override
-    public int getItemCount() {
-        return purchaseItemList.size();
+        @Override
+        public void onClick(View view) {
+            listener.purchaseListClicked(view, getLayoutPosition());
+        }
     }
 }

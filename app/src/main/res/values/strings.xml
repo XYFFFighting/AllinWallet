@@ -32,7 +32,8 @@
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
     <string name="prompt_password">Prompt password</string>
     <string name="plus">+</string>
-    <string name="title_activity_add_purchase">Add a Purchase</string>
+    <string name="title_activity_add_purchase">Add Purchase</string>
+    <string name="title_activity_edit_purchase">Edit Purchase</string>
     <string name="title_activity_profile">Profile</string>
     <string name="action_example">Example action</string>
 

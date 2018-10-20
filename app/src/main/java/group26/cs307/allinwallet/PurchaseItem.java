@@ -7,12 +7,14 @@ public class PurchaseItem implements Serializable {
     private String title;
     private double amount;
     private String date;
+    private String documentUID;
 
-    public PurchaseItem(String category, String title, double amount, String date) {
+    public PurchaseItem(String category, String title, double amount, String date, String documentUID) {
         this.category = category;
         this.title = title;
         this.amount = amount;
         this.date = date;
+        this.documentUID = documentUID;
     }
 
     public String getCategory() {
@@ -51,6 +53,14 @@ public class PurchaseItem implements Serializable {
         this.date = date;
     }
 
+    public String getDocumentUID() {
+        return documentUID;
+    }
+
+    public void setDocumentUID(String documentUID) {
+        this.documentUID = documentUID;
+    }
+
     @Override
     public String toString() {
         return "PurchaseItem{" +
@@ -58,6 +68,7 @@ public class PurchaseItem implements Serializable {
                 ", title='" + title + '\'' +
                 ", amount=" + amount +
                 ", date='" + date + '\'' +
+                ", documentUID='" + documentUID + '\'' +
                 '}';
     }
 }
