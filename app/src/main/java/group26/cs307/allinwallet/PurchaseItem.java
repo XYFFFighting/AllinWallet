@@ -53,7 +53,11 @@ public class PurchaseItem implements Serializable {
     }
 
     public String getDateString() {
-        return new SimpleDateFormat("E, MM/dd/yy", Locale.getDefault()).format(date);
+        return new SimpleDateFormat("MM/dd/yy", Locale.getDefault()).format(date);
+    }
+
+    public String getExtendedDateString() {
+        return new SimpleDateFormat("E, MMM d, yyyy", Locale.getDefault()).format(date);
     }
 
     public void setDate(Date date) {

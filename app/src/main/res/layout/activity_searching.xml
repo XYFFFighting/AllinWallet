@@ -12,7 +12,7 @@
         android:background="@color/white"
         android:gravity="top"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="10dp">
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -22,7 +22,7 @@
                 android:id="@+id/item_name2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="5dp"
                 android:hint="Purchase title:"
                 android:inputType="textPersonName"
                 android:textColor="@color/colorPrimaryDark"
@@ -33,7 +33,6 @@
             android:id="@+id/linearLayout4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:orientation="horizontal">
 
@@ -55,7 +54,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:orientation="horizontal">
 
@@ -96,6 +94,7 @@
             android:id="@+id/btn_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:background="@color/colorAccent"
             android:padding="10dp"
             android:text="Search"
@@ -105,8 +104,6 @@
             android:id="@+id/rst_search"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:padding="5dp"
             android:scrollbars="vertical" />
     </LinearLayout>
 

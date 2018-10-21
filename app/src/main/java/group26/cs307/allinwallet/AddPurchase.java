@@ -68,8 +68,8 @@ public class AddPurchase extends AppCompatActivity {
         ArrayAdapter spinnerAA = new ArrayAdapter(AddPurchase.this,
                 android.R.layout.simple_spinner_dropdown_item, categories);
         categoryPicker.setAdapter(spinnerAA);
-        calendar = Calendar.getInstance();
         formatter = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
+        calendar = Calendar.getInstance();
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,30 +96,6 @@ public class AddPurchase extends AppCompatActivity {
                     addPurchase(name, Double.parseDouble(price), category, date);
                 } else {
                     updatePurchase(name, Double.parseDouble(price), category, date, item.getDocumentUID());
-                    dateSetListener = new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                            calendar.set(Calendar.YEAR, year);
-                            calendar.set(Calendar.MONTH, month);
-                            calendar.set(Calendar.DAY_OF_MONTH, day);
-
-                            String date = formatter.format(calendar.getTime());
-                            inputDate.setText(date);
-                            Log.d(TAG, "onDateSet: mm/dd/yyy:" + date);
-                        }
-                    };
-
-                    inputDate.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            int year = calendar.get(Calendar.YEAR);
-                            int month = calendar.get(Calendar.MONTH);
-                            int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-                            new DatePickerDialog(AddPurchase.this,
-                                    dateSetListener, year, month, day).show();
-                        }
-                    });
                 }
                 onBackPressed();
             }
@@ -133,12 +109,38 @@ public class AddPurchase extends AppCompatActivity {
             }
         });
 
+        dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, day);
+
+                String date = formatter.format(calendar.getTime());
+                inputDate.setText(date);
+                Log.d(TAG, "onDateSet: mm/dd/yyy:" + date);
+            }
+        };
+
+        inputDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                new DatePickerDialog(AddPurchase.this,
+                        dateSetListener, year, month, day).show();
+            }
+        });
 
         if (passedPurchaseIndex != -1) {
             setTitle(R.string.title_activity_edit_purchase);
             inputName.setText(item.getTitle());
             inputPrice.setText(item.getAmountString());
             inputDate.setText(item.getDateString());
+            calendar.setTime(item.getDate());
+            categoryPicker.setSelection(categories.indexOf(item.getCategory()));
 
             delete.setVisibility(View.VISIBLE);
             delete.setClickable(true);
