@@ -102,7 +102,7 @@ public class Profile extends AppCompatActivity {
         changeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //uploadImage();
+                uploadImage();
             }
         });
 
