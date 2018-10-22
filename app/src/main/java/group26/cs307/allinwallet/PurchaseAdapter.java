@@ -34,7 +34,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.Purcha
         holder.getCategoryTextView().setText(purchaseItemList.get(position).getCategory());
         holder.getTitleTextView().setText(purchaseItemList.get(position).getTitle());
         holder.getAmountTextView().setText(purchaseItemList.get(position).getAmountString());
-        holder.getDateTextView().setText(purchaseItemList.get(position).getDate());
+        holder.getDateTextView().setText(purchaseItemList.get(position).getExtendedDateString());
     }
 
     @Override

@@ -40,5 +40,5 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_search_by_name">Search_by_name</string>
     <string name="title_activity_search_by_category">Search_by_category</string>
-    <string name="title_activity_searching">Searching</string>
+    <string name="title_activity_searching">Search and Filter</string>
 </resources>
