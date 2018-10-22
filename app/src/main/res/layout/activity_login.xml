@@ -17,10 +17,10 @@
 
         <TextView
             android:id="@+id/tipview"
-            android:layout_width="124dp"
+            android:layout_width="236dp"
             android:layout_height="wrap_content"
-            android:visibility="invisible"
-            android:text="        Welcome! \nTips: In the first fall in front of the crisis is Moonlight family." />
+            android:text=""
+            android:visibility="invisible" />
 
         <ImageView
             android:id="@+id/head"
