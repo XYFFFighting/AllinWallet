@@ -27,7 +27,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class AddPurchase extends AppCompatActivity {
-    private Button save, delete;
+    private Button save, cancel;
     private Spinner categoryPicker;
     private EditText inputName, inputPrice, inputDate;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -57,7 +57,7 @@ public class AddPurchase extends AppCompatActivity {
         }
 
         save = (Button) findViewById(R.id.save_button);
-        delete = (Button) findViewById(R.id.delete_button);
+        cancel = (Button) findViewById(R.id.cancel_button);
         categoryPicker = (Spinner) findViewById(R.id.category_picker);
         inputName = (EditText) findViewById(R.id.item_name);
         inputPrice = (EditText) findViewById(R.id.item_price);
@@ -101,10 +101,9 @@ public class AddPurchase extends AppCompatActivity {
             }
         });
 
-        delete.setOnClickListener(new View.OnClickListener() {
+        cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TO-DO
                 onBackPressed();
             }
         });
@@ -141,9 +140,6 @@ public class AddPurchase extends AppCompatActivity {
             inputDate.setText(item.getDateString());
             calendar.setTime(item.getDate());
             categoryPicker.setSelection(categories.indexOf(item.getCategory()));
-
-            delete.setVisibility(View.VISIBLE);
-            delete.setClickable(true);
         } else {
             inputDate.setText(formatter.format(calendar.getTime()));
         }

@@ -1,17 +1,22 @@
 package group26.cs307.allinwallet;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -72,6 +77,42 @@ public class MainPage extends AppCompatActivity {
         });
 
         purchaseList.setAdapter(purchaseListAdapter);
+
+        ItemTouchHelper.SimpleCallback purchaseItemCallback = new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                //Remove swiped item from list and notify the RecyclerView
+                final int position = viewHolder.getLayoutPosition();
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainPage.this);
+                builder.setTitle("Delete Purchase?");
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        deletePurchaseItem(position);
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("CANCEL", new DialogInterface
+                        .OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        purchaseListAdapter.notifyDataSetChanged();
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.show();
+            }
+        };
+
+        ItemTouchHelper purchaseItemTouchHelper = new ItemTouchHelper(purchaseItemCallback);
+        purchaseItemTouchHelper.attachToRecyclerView(purchaseList);
     }
 
     public void setDate() {
@@ -128,6 +169,28 @@ public class MainPage extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void deletePurchaseItem(int position) {
+        String uid = auth.getUid();
+        String documentUID = purchases.get(position).getDocumentUID();
+        purchases.remove(position);
+        purchaseListAdapter.notifyItemRemoved(position);
+
+        db.collection("users").document(uid).collection("purchase")
+                .document(documentUID).delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "purchase delete successful");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "purchase delete unsuccessful");
+                    }
+                });
     }
 
     @Override
