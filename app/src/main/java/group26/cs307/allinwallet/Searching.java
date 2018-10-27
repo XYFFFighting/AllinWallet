@@ -91,10 +91,12 @@ public class Searching extends AppCompatActivity {
         clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputName.setText("");
-                inputStart.setText("");
-                inputEnd.setText("");
+                inputName.setText(null);
+                inputStart.setText(null);
+                inputEnd.setText(null);
                 categoryPicker.setSelection(0);
+                purchases.clear();
+                purchaseListAdapter.notifyDataSetChanged();
             }
         });
 
@@ -136,7 +138,7 @@ public class Searching extends AppCompatActivity {
             result = result.whereEqualTo("name", name);
         }
 
-        result.orderBy("name").get()
+        result.orderBy("date", Query.Direction.DESCENDING).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
