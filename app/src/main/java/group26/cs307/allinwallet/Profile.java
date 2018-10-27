@@ -388,7 +388,7 @@ public class Profile extends AppCompatActivity {
             @Override
             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                 progressDialog.dismiss();
-                Toast.makeText(Profile.this, "success ", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(Profile.this, "success ", Toast.LENGTH_SHORT).show();
                 Bitmap bitmap = BitmapFactory.decodeFile(local2.getAbsolutePath());
                 profileImage.setImageBitmap(bitmap);
             }

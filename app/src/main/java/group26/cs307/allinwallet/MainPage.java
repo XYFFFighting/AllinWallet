@@ -11,6 +11,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -114,6 +116,22 @@ public class MainPage extends AppCompatActivity {
 
         ItemTouchHelper purchaseItemTouchHelper = new ItemTouchHelper(purchaseItemCallback);
         purchaseItemTouchHelper.attachToRecyclerView(purchaseList);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.profile_menu){
+            startActivity(new Intent(MainPage.this, Profile.class));
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+        return true;
     }
 
     public void setDate() {
