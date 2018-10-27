@@ -19,6 +19,7 @@
     <string name="btn_link_to_login">Already registered. Login Me!</string>
     <string name="title_activity_signup">AllinWallet - Sign up</string>
     <string name="title_activity_main_page">Dashboard</string>
+    <string name="title_activity_categories">Categories Information</string>
     <string name="title_activity_reset_password">AllinWallet - Reset password</string>
     <string name="btn_forgot_password">Forgot your password?</string>
     <string name="btn_reset_password">Reset Password</string>
@@ -26,6 +27,8 @@
     <string name="hint_new_email">New Email</string>
     <string name="btn_change">Change</string>
     <string name="profile">Profile</string>
+    <string name="report">Report</string>
+    <string name="search">Search</string>
     <string name="btn_send">Send</string>
     <string name="btn_remove">Remove</string>
     <string name="btn_sign_out">Sign Out</string>
