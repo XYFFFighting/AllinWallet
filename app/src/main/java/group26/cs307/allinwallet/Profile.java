@@ -3,6 +3,7 @@ package group26.cs307.allinwallet;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -43,6 +44,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -58,6 +60,7 @@ public class Profile extends AppCompatActivity {
     private Button changeImage;
     private FirebaseAuth auth;
     private Button logout, btn_dlt_act;
+    private Button refreshbutton;
     private TextView userinfo;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "AllinWallet";
@@ -83,7 +86,15 @@ public class Profile extends AppCompatActivity {
 
         btnChoose = (Button) findViewById(R.id.btn_choose);
 
+        refreshbutton = (Button) findViewById(R.id.btn_refresh);
 
+
+//        refreshbutton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                getImage();
+//            }
+//        });
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -169,7 +180,7 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-
+        getImage();
     }
 
     private void chooseImage() {
@@ -213,6 +224,45 @@ public class Profile extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    private void getImage() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Getting...");
+        progressDialog.show();
+        String uid = auth.getUid();
+        StorageReference ref = storageReference.child("images/"+ uid + "/" + "profile");
+        File localFile = null;
+
+        try {
+            localFile = File.createTempFile("images", "jpg");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        final File local2 = localFile;
+        ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                progressDialog.dismiss();
+                Toast.makeText(Profile.this, "success ", Toast.LENGTH_SHORT).show();
+                Bitmap bitmap = BitmapFactory.decodeFile(local2.getAbsolutePath());
+                profileImage.setImageBitmap(bitmap);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(Profile.this, "Failed ", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                        .getTotalByteCount());
+                progressDialog.setMessage("Uploaded "+(int)progress+"%");
+            }
+        });
     }
 
 
