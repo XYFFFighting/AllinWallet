@@ -29,11 +29,9 @@ public class Report extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "AllinWallet";
 
-    private Calendar calendar;
     private Date startofWeek, startofMonth, startofYear;
 
     private Button week, month, annual;
-    private EditText report;
     private String uid;
     private String[] Month = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"};
 
@@ -42,28 +40,30 @@ public class Report extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
         auth = FirebaseAuth.getInstance();
+        uid = auth.getUid();
+
         week = (Button) findViewById(R.id.btn_rpt_week);
         month = (Button) findViewById(R.id.btn_rpt_month);
         annual = (Button) findViewById(R.id.btn_rpt_annul);
-        report = (EditText) findViewById(R.id.text_report);
-        uid = auth.getUid();
+
+        initializeDateReport();
 
         annual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getPurchase(uid, 3);
+                getPurchases(uid, view.getId());
             }
         });
         month.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getPurchase(uid, 2);
+                getPurchases(uid, view.getId());
             }
         });
     }
 
-    public void getPurchase(String uid, final int type) {
-        report.setText("");
+    public void getPurchases(String uid, final int type) {
+        /*report.setText("");
         String currenttime = Calendar.getInstance().getTime().toString();
         final String year = getYear(currenttime);
         //Log.d(TAG, "year: " + year);
@@ -97,7 +97,7 @@ public class Report extends AppCompatActivity {
                             Log.e(TAG, "Error getting documents: ", task.getException());
                         }
                     }
-                });
+                }); */
     }
 
     public String getMonth(String ctime) {
@@ -115,13 +115,21 @@ public class Report extends AppCompatActivity {
         return timelist[5];
     }
 
-    public void initializeDateSearch() {
-        calendar = Calendar.getInstance();
+    public void initializeDateReport() {
+        Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 
+        Calendar temp = (Calendar) calendar.clone();
+        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+        startofWeek = calendar.getTime();
 
+        temp.set(Calendar.DAY_OF_MONTH, 1);
+        startofMonth = temp.getTime();
+
+        temp.set(Calendar.MONTH, 1);
+        startofYear = temp.getTime();
     }
 }
