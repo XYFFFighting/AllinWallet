@@ -54,7 +54,7 @@ public class Report extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         uid = auth.getUid();
 
-        purchaseList = (RecyclerView) findViewById(R.id.rst_search);
+        purchaseList = (RecyclerView) findViewById(R.id.report_result);
         purchaseList.setHasFixedSize(true);
         purchaseListLayoutManager = new LinearLayoutManager(Report.this);
         purchaseList.setLayoutManager(purchaseListLayoutManager);
@@ -77,25 +77,24 @@ public class Report extends AppCompatActivity {
         week.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getPurchases(uid, view.getId());
+                getPurchases(R.id.btn_rpt_week);
             }
         });
-
         month.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getPurchases(uid, view.getId());
+                getPurchases(R.id.btn_rpt_month);
             }
         });
         annual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getPurchases(uid, view.getId());
+                getPurchases(R.id.btn_rpt_annul);
             }
         });
     }
 
-    public void getPurchases(String uid, int whichButton) {
+    public void getPurchases(int whichButton) {
         purchases.clear();
         Query result = db.collection("users").document(uid).collection("purchase");
 
