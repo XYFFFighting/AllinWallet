@@ -3,14 +3,18 @@ package group26.cs307.allinwallet;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 //jenny
@@ -40,6 +44,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -60,7 +65,7 @@ public class Profile extends AppCompatActivity {
     private ImageView profileImage;
     private Button changeImage;
     private FirebaseAuth auth;
-    private Button logout, btn_dlt_act;
+    private Button logout, btn_dlt_act, incomeBotton;
     //private Button refreshbutton;
     private TextView userinfo;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -84,7 +89,7 @@ public class Profile extends AppCompatActivity {
         //jenny
         profileImage = (ImageView) findViewById(R.id.profile_img);
         changeImage = (Button)findViewById(R.id.btn_change);
-
+        incomeBotton = (Button)findViewById(R.id.btn_income);
         btnChoose = (Button) findViewById(R.id.btn_choose);
 
         //refreshbutton = (Button) findViewById(R.id.btn_refresh);
@@ -182,6 +187,49 @@ public class Profile extends AppCompatActivity {
                             }
                         });
                 alertDialog.show();
+            }
+        });
+
+        incomeBotton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
+                builder.setTitle("Enter a income");
+                final EditText input = new EditText(Profile.this);
+                input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                input.setRawInputType(Configuration.KEYBOARD_12KEY);
+                builder.setView(input);
+
+                builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String uid = auth.getUid();
+
+                        if (!TextUtils.isEmpty(uid)) {
+                            String income_text = input.getText().toString();
+
+                            if (TextUtils.isEmpty(income_text)) {
+                                Toast.makeText(getApplicationContext(), "Budget field is empty!",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                Map<String, Object> income_info = new HashMap<>();
+                                income_info.put("income", Double.parseDouble(income_text));
+                                CollectionReference users = db.collection("users");
+                                users.document(uid).update(income_info);
+                            }
+                        }
+
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("CANCEL", new DialogInterface
+                        .OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.show();
             }
         });
 
