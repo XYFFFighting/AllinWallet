@@ -202,7 +202,7 @@ public class Profile extends AppCompatActivity {
                 builder.setTitle("Enter your budget");
                 View mView = getLayoutInflater().inflate(R.layout.activity_budget,null);
                 final EditText input = (EditText)mView.findViewById(R.id.budgetText);
-                Spinner spinner =(Spinner)mView.findViewById(R.id.budgetSpinner);
+                final Spinner spinner =(Spinner)mView.findViewById(R.id.budgetSpinner);
 
                 input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 input.setRawInputType(Configuration.KEYBOARD_12KEY);
@@ -219,15 +219,32 @@ public class Profile extends AppCompatActivity {
 
                         if (!TextUtils.isEmpty(uid)) {
                             String budget_text = input.getText().toString();
+                            String text = spinner.getSelectedItem().toString();
+
 
                             if (TextUtils.isEmpty(budget_text)) {
                                 Toast.makeText(getApplicationContext(), "Budget field is empty!",
                                         Toast.LENGTH_SHORT).show();
                             } else {
-                                Map<String, Object> budget_info = new HashMap<>();
-                                budget_info.put("budget", Double.parseDouble(budget_text));
-                                CollectionReference users = db.collection("users");
-                                users.document(uid).update(budget_info);
+                                if(TextUtils.equals(text,"Weekly")){
+                                    Map<String, Object> budget_info = new HashMap<>();
+                                    budget_info.put(text+"budget", Double.parseDouble(budget_text));
+                                    CollectionReference users = db.collection("users");
+                                    users.document(uid).update(budget_info);
+                                }
+                                if(TextUtils.equals(text,"Monthly")){
+                                    Map<String, Object> budget_info = new HashMap<>();
+                                    budget_info.put(text+"budget", Double.parseDouble(budget_text));
+                                    CollectionReference users = db.collection("users");
+                                    users.document(uid).update(budget_info);
+                                }
+                                if(TextUtils.equals(text,"Yearly")){
+                                    Map<String, Object> budget_info = new HashMap<>();
+                                    budget_info.put(text+"budget", Double.parseDouble(budget_text));
+                                    CollectionReference users = db.collection("users");
+                                    users.document(uid).update(budget_info);
+                                }
+
                             }
                         }
 
