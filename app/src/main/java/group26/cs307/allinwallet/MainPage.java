@@ -141,7 +141,7 @@ public class MainPage extends AppCompatActivity {
                         sum += amount;
                         purchases.add(new PurchaseItem(document.getString("category"),
                                 document.getString("name"), amount,
-                                document.getDate("date"), document.getId()));
+                                document.getDate("date"), document.getString("location"), document.getId()));
                     }
 
                     purchaseListAdapter.notifyDataSetChanged();

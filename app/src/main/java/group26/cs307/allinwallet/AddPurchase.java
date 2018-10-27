@@ -1,6 +1,7 @@
 package group26.cs307.allinwallet;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -95,6 +96,10 @@ public class AddPurchase extends AppCompatActivity {
                 String name = inputName.getText().toString();
                 String price = inputPrice.getText().toString();
                 String category = categoryPicker.getSelectedItem().toString();
+                String location = txt_location.getText().toString();
+                if(location.equals("Location")){
+                    location = "";
+                }
                 Date date = calendar.getTime();
 
                 if (TextUtils.isEmpty(name)) {
@@ -109,11 +114,12 @@ public class AddPurchase extends AppCompatActivity {
                 Log.d(TAG, "Item Amount: " + price);
                 Log.d(TAG, "Item Category: " + category);
                 Log.d(TAG, "Item Date: " + date);
+                Log.d(TAG, "location: " + location);
 
                 if (passedPurchaseIndex == -1) {
-                    addPurchase(name, Double.parseDouble(price), category, date);
+                    addPurchase(name, Double.parseDouble(price), category, date, location);
                 } else {
-                    updatePurchase(name, Double.parseDouble(price), category, date, item.getDocumentUID());
+                    updatePurchase(name, Double.parseDouble(price), category, date, location, item.getDocumentUID());
                 }
                 onBackPressed();
             }
@@ -178,13 +184,19 @@ public class AddPurchase extends AppCompatActivity {
             inputPrice.setText(item.getAmountString());
             inputDate.setText(item.getDateString());
             calendar.setTime(item.getDate());
+            if(!item.getLocation().equals("")){
+                txt_location.setText(item.getLocation());
+            } else {
+                txt_location.setText("");
+            }
             categoryPicker.setSelection(categories.indexOf(item.getCategory()));
+            getlocation.setVisibility(View.INVISIBLE);
         } else {
             inputDate.setText(formatter.format(calendar.getTime()));
         }
     }
 
-    public void addPurchase(String name, double price, String category, Date date) {
+    public void addPurchase(String name, double price, String category, Date date, String location) {
         String time = Calendar.getInstance().getTime().toString();
 
         Log.d(TAG, "purchase sending time is: " + time);
@@ -195,13 +207,14 @@ public class AddPurchase extends AppCompatActivity {
         purchaselist.put("price", price);
         purchaselist.put("category", category);
         purchaselist.put("date", date);
+        purchaselist.put("location", location);
 
         db.collection("users").document(uid)
                 .collection("purchase").document(time).set(purchaselist);
         Log.d(TAG, uid + " send purchase data");
     }
 
-    public void updatePurchase(String name, double price, String category, Date date, String
+    public void updatePurchase(String name, double price, String category, Date date, String location, String
             documentUID) {
         String uid = auth.getUid();
 
@@ -210,6 +223,7 @@ public class AddPurchase extends AppCompatActivity {
         purchaselist.put("price", price);
         purchaselist.put("category", category);
         purchaselist.put("date", date);
+        purchaselist.put("location", location);
 
         db.collection("users").document(uid)
                 .collection("purchase").document(documentUID).update(purchaselist);
@@ -223,7 +237,7 @@ public class AddPurchase extends AppCompatActivity {
             case 1000:{
                 if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                     try {
                         String city = getCityName(location.getLatitude(), location.getLongitude());
                         txt_location.setText(city);
