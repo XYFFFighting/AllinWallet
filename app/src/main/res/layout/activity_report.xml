@@ -79,7 +79,7 @@
                 android:textSize="17sp" />
 
             <Spinner
-                android:id="@+id/category_picker"
+                android:id="@+id/sort_by_picker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".25" />
@@ -91,7 +91,7 @@
             android:background="@color/colorAccent" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rst_search"
+            android:id="@+id/report_result"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="5dp"
