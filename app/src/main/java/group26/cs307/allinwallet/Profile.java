@@ -271,7 +271,7 @@ public class Profile extends AppCompatActivity {
                             String income_text = input.getText().toString();
 
                             if (TextUtils.isEmpty(income_text)) {
-                                Toast.makeText(getApplicationContext(), "Budget field is empty!",
+                                Toast.makeText(getApplicationContext(), "Income field is empty!",
                                         Toast.LENGTH_SHORT).show();
                             } else {
                                 Map<String, Object> income_info = new HashMap<>();
