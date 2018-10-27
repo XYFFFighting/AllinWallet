@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -90,7 +91,7 @@ public class MainPage extends AppCompatActivity {
                 //Remove swiped item from list and notify the RecyclerView
                 final int position = viewHolder.getLayoutPosition();
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainPage.this);
-                builder.setTitle("Delete Purchase?");
+                builder.setTitle("Delete this purchase?");
 
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -125,7 +126,8 @@ public class MainPage extends AppCompatActivity {
     public void updateMainPage(String uid) {
         final DocumentReference dRef = db.collection("users").document(uid);
 
-        dRef.collection("purchase").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        dRef.collection("purchase").orderBy("date", Query.Direction.DESCENDING)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
