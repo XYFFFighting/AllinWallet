@@ -45,6 +45,7 @@ public class AddPurchase extends AppCompatActivity {
             "Clothes", "Housing", "Personal", "General", "Transport", "Fun"));
     private List<String> categories;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         auth = FirebaseAuth.getInstance();
