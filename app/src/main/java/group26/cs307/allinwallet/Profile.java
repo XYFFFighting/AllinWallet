@@ -1,7 +1,9 @@
 package group26.cs307.allinwallet;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -27,9 +29,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 //jenny
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,26 +45,81 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class Profile extends AppCompatActivity {
+    private ImageView profileImage;
+    private Button changeImage;
     private FirebaseAuth auth;
     private Button logout, btn_dlt_act;
     private TextView userinfo;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "AllinWallet";
 
+    private Button btnChoose;
+
+    private final int PICK_IMAGE_REQUEST = 71;
+
+    FirebaseStorage storage;
+    StorageReference storageReference;
+
+    private Uri filePath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+
+        //jenny
+        profileImage = (ImageView) findViewById(R.id.profile_img);
+        changeImage = (Button)findViewById(R.id.btn_change);
+
+        btnChoose = (Button) findViewById(R.id.btn_choose);
+
+
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
+
         auth = FirebaseAuth.getInstance();
         logout = (Button) findViewById(R.id.btn_logout);
         btn_dlt_act = (Button) findViewById(R.id.btn_dlt_account);
         userinfo = (TextView) findViewById(R.id.user_info);
         adduserInfo();
+        try {
+            updateImage(profileImage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         addNumUser();
+
+
+
+        changeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                uploadImage();
+            }
+        });
+
+        btnChoose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImage();
+            }
+        });
+
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,6 +175,95 @@ public class Profile extends AppCompatActivity {
                 alertDialog.show();
             }
         });
+
+
+    }
+
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    private void updateImage(final ImageView imageView) throws IOException {
+        String uid = auth.getUid();
+        Log.d(TAG, "uid is:" + uid);
+        StorageReference ref = storageReference.child("images/"+ uid + "/" + "profile");
+        final File localFile = File.createTempFile("images", "jpg");
+
+        ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                // Local temp file has been created
+                Log.d(TAG,"download successful");
+                if(localFile.exists()){
+                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    imageView.setImageBitmap(bitmap);
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+        //Log.d(TAG,"download successful" + localFile.getPath());
+
+    }
+
+    private void uploadImage() {
+
+        if(filePath != null)
+        {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+            String uid = auth.getUid();
+            StorageReference ref = storageReference.child("images/"+ uid + "/" + "profile");
+            ref.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+                            Toast.makeText(Profile.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(Profile.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                                    .getTotalByteCount());
+                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                        }
+                    });
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null )
+        {
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                profileImage.setImageBitmap(bitmap);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void addNumUser() {
@@ -128,7 +276,7 @@ public class Profile extends AppCompatActivity {
                             int count = 0;
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 count++;
-                                Log.d(TAG, "" + count);
+//                                Log.d(TAG, "" + count);
                             }
                             userinfo.append("Number of active users: " + count + "\n");
                         } else {

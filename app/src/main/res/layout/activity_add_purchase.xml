@@ -92,16 +92,14 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/delete_button"
+                android:id="@+id/cancel_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".475"
                 android:background="@color/colorAccent"
-                android:clickable="false"
                 android:padding="10dp"
-                android:text="DELETE"
-                android:textColor="@color/white"
-                android:visibility="invisible" />
+                android:text="CANCEL"
+                android:textColor="@color/white" />
 
             <View
                 android:layout_width="0dp"

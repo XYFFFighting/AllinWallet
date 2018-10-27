@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".Searching">
 
     <LinearLayout
@@ -90,21 +91,44 @@
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_search"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:background="@color/colorAccent"
-            android:padding="10dp"
-            android:text="Search"
-            android:textColor="@color/white" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/clear_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".475"
+                android:background="@color/colorAccent"
+                android:padding="10dp"
+                android:text="CLEAR"
+                android:textColor="@color/white" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="0.05" />
+
+            <Button
+                android:id="@+id/btn_search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".475"
+                android:background="@color/colorAccent"
+                android:padding="10dp"
+                android:text="Search"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rst_search"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
             android:scrollbars="vertical" />
-    </LinearLayout>
 
+    </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
