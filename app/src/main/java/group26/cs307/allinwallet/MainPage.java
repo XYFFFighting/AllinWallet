@@ -128,6 +128,10 @@ public class MainPage extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.profile_menu){
             startActivity(new Intent(MainPage.this, Profile.class));
+        } else if(item.getItemId() == R.id.search_menu){
+            startActivity(new Intent(MainPage.this, Searching.class));
+        } else if(item.getItemId() == R.id.report_menu){
+            startActivity(new Intent(MainPage.this, Report.class));
         } else {
             return super.onOptionsItemSelected(item);
         }

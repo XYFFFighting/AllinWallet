@@ -4,4 +4,12 @@
     <item android:id="@+id/profile_menu"
         android:title="@string/profile"
         app:showAsAction="never"/>
+
+    <item android:id="@+id/report_menu"
+        android:title="@string/report"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/search_menu"
+        android:title="@string/search"
+        app:showAsAction="never"/>
 </menu>
