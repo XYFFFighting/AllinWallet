@@ -3,6 +3,7 @@ package group26.cs307.allinwallet;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +33,7 @@ import android.widget.Toast;
 
 //jenny
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,6 +45,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -88,13 +91,17 @@ public class Profile extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-        Log.i("wowowowo", "wowowowowo");
 
         auth = FirebaseAuth.getInstance();
         logout = (Button) findViewById(R.id.btn_logout);
         btn_dlt_act = (Button) findViewById(R.id.btn_dlt_account);
         userinfo = (TextView) findViewById(R.id.user_info);
         adduserInfo();
+        try {
+            updateImage(profileImage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         addNumUser();
 
 
@@ -179,6 +186,31 @@ public class Profile extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
+    private void updateImage(final ImageView imageView) throws IOException {
+        String uid = auth.getUid();
+        Log.d(TAG, "uid is:" + uid);
+        StorageReference ref = storageReference.child("images/"+ uid + "/" + "profile");
+        final File localFile = File.createTempFile("images", "jpg");
+
+        ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                // Local temp file has been created
+                Log.d(TAG,"download successful");
+                if(localFile.exists()){
+                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    imageView.setImageBitmap(bitmap);
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+        //Log.d(TAG,"download successful" + localFile.getPath());
+
+    }
 
     private void uploadImage() {
 
@@ -244,7 +276,7 @@ public class Profile extends AppCompatActivity {
                             int count = 0;
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 count++;
-                                Log.d(TAG, "" + count);
+//                                Log.d(TAG, "" + count);
                             }
                             userinfo.append("Number of active users: " + count + "\n");
                         } else {

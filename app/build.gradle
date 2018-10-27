@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "group26.cs307.allinwallet"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
         multiDexEnabled = true
@@ -20,7 +20,7 @@ android {
 }
 
 dependencies {
-
+    implementation 'com.firebaseui:firebase-ui-storage:4.1.0'
     implementation "com.google.firebase:firebase-auth:16.0.5"
     implementation 'com.android.support:multidex:1.0.3'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
