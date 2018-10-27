@@ -13,8 +13,10 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 //jenny
@@ -57,7 +59,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -65,7 +70,7 @@ public class Profile extends AppCompatActivity {
     private ImageView profileImage;
     private Button changeImage;
     private FirebaseAuth auth;
-    private Button logout, btn_dlt_act, incomeBotton;
+    private Button logout, btn_dlt_act, budgetBotton;
     //private Button refreshbutton;
     private TextView userinfo;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -80,6 +85,10 @@ public class Profile extends AppCompatActivity {
 
     private Uri filePath;
 
+    public static List<String> incomeTime = new ArrayList<>(Arrays.asList("Weekly",
+            "Monthly", "Yearly"));
+    private List<String> incomeTimeSet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,18 +98,13 @@ public class Profile extends AppCompatActivity {
         //jenny
         profileImage = (ImageView) findViewById(R.id.profile_img);
         changeImage = (Button)findViewById(R.id.btn_change);
-        incomeBotton = (Button)findViewById(R.id.btn_income);
+        budgetBotton = (Button)findViewById(R.id.budgetButton);
         btnChoose = (Button) findViewById(R.id.btn_choose);
 
-        //refreshbutton = (Button) findViewById(R.id.btn_refresh);
-
-
-//        refreshbutton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                getImage();
-//            }
-//        });
+        incomeTimeSet = new ArrayList<>();
+        incomeTimeSet.addAll(incomeTime);
+        final ArrayAdapter spinnerAA = new ArrayAdapter(Profile.this,
+                android.R.layout.simple_spinner_dropdown_item, incomeTimeSet);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -190,16 +194,24 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-        incomeBotton.setOnClickListener(new View.OnClickListener() {
+        budgetBotton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
                 builder.setTitle("Enter a income");
-                final EditText input = new EditText(Profile.this);
+                View mView = getLayoutInflater().inflate(R.layout.activity_budget,null);
+                final EditText input = (EditText)mView.findViewById(R.id.budgetText);
+                Spinner spinner =(Spinner)mView.findViewById(R.id.budgetSpinner);
+
                 input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 input.setRawInputType(Configuration.KEYBOARD_12KEY);
-                builder.setView(input);
+               // builder.setView(input);
 
+                //final Spinner spinner = new Spinner(Profile.this);
+                spinner.setAdapter(spinnerAA);
+
+               // builder.setView(spinner);
+                builder.setView(mView);
                 builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String uid = auth.getUid();
@@ -323,7 +335,7 @@ public class Profile extends AppCompatActivity {
             @Override
             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                 progressDialog.dismiss();
-                Toast.makeText(Profile.this, "success ", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(Profile.this, "success ", Toast.LENGTH_SHORT).show();
                 Bitmap bitmap = BitmapFactory.decodeFile(local2.getAbsolutePath());
                 profileImage.setImageBitmap(bitmap);
             }
