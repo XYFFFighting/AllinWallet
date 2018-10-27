@@ -28,7 +28,7 @@
                 android:layout_weight=".32"
                 android:background="@color/colorAccent"
                 android:padding="10dp"
-                android:text="This Week"
+                android:text="THIS WEEK"
                 android:textColor="@color/white" />
 
             <View
@@ -43,7 +43,7 @@
                 android:layout_weight=".32"
                 android:background="@color/colorAccent"
                 android:padding="10dp"
-                android:text="This Month"
+                android:text="THIS MONTH"
                 android:textColor="@color/white" />
 
             <View
@@ -58,7 +58,7 @@
                 android:layout_weight=".32"
                 android:background="@color/colorAccent"
                 android:padding="10dp"
-                android:text="This Year"
+                android:text="THIS YEAR"
                 android:textColor="@color/white" />
 
         </LinearLayout>
@@ -71,8 +71,10 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0.75"
+                android:gravity="right"
                 android:text="Sort by"
+
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="17sp" />
 
@@ -80,8 +82,13 @@
                 android:id="@+id/category_picker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight=".25" />
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorAccent" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rst_search"

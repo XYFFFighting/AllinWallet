@@ -1,11 +1,13 @@
 package group26.cs307.allinwallet;
 
+import android.app.DatePickerDialog;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -16,14 +18,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 public class Report extends AppCompatActivity {
     private FirebaseAuth auth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "AllinWallet";
+
+    private Calendar calendar;
+    private Date startofWeek, startofMonth, startofYear;
 
     private Button week, month, annual;
     private EditText report;
@@ -106,5 +113,15 @@ public class Report extends AppCompatActivity {
     public String getYear(String ctime) {
         String[] timelist = ctime.split("\\s+");
         return timelist[5];
+    }
+
+    public void initializeDateSearch() {
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+
     }
 }
