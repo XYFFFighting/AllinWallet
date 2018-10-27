@@ -11,6 +11,7 @@ public class PurchaseItem implements Serializable {
     private double amount;
     private Date date;
     private String documentUID;
+    private String location;
 
     public PurchaseItem(String category, String title, double amount, Date date, String documentUID) {
         this.category = category;
@@ -18,6 +19,15 @@ public class PurchaseItem implements Serializable {
         this.amount = amount;
         this.date = date;
         this.documentUID = documentUID;
+    }
+
+    public PurchaseItem(String category, String title, double amount, Date date, String location,String documentUID) {
+        this.category = category;
+        this.title = title;
+        this.amount = amount;
+        this.date = date;
+        this.documentUID = documentUID;
+        this.location = location;
     }
 
     public String getCategory() {
@@ -30,6 +40,10 @@ public class PurchaseItem implements Serializable {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getLocation() {
+        return location;
     }
 
     public void setTitle(String title) {
