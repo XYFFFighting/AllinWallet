@@ -146,7 +146,7 @@ public class Searching extends AppCompatActivity {
                             Log.d(TAG, document.getId() + "-->" + document.getData());
                             purchases.add(new PurchaseItem(document.getString("category"),
                                     document.getString("name"), document.getDouble("price"),
-                                    document.getDate("date"),document.getString("location"), document.getId()));
+                                    document.getDate("date"), document.getString("location"), document.getId()));
                         }
 
                         purchaseListAdapter.notifyDataSetChanged();
