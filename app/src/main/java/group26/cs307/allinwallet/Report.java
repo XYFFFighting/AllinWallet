@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.Date;
 
 import java.util.Calendar;
@@ -23,10 +24,12 @@ public class Report extends AppCompatActivity {
     private FirebaseAuth auth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "AllinWallet";
+
     private Button week, month, annual;
     private EditText report;
     private String uid;
     private String[] Month = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +44,7 @@ public class Report extends AppCompatActivity {
         annual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    getPurchase(uid, 3);
+                getPurchase(uid, 3);
             }
         });
         month.setOnClickListener(new View.OnClickListener() {
@@ -71,14 +74,14 @@ public class Report extends AppCompatActivity {
                                 String time = document.getId();
                                 Object price = document.getData().get("price");
                                 Object name = document.getData().get("name");
-                                if(type == 3){
+                                if (type == 3) {
                                     Log.d(TAG, "year2: " + getYear(time));
-                                    if(year.equals(getYear(time))){
+                                    if (year.equals(getYear(time))) {
                                         report.append(time + " price: " + price + " name: " + name + "\n");
                                     }
                                 }
-                                if(type == 2 ){
-                                    if(month.equals(getMonth(time))){
+                                if (type == 2) {
+                                    if (month.equals(getMonth(time))) {
                                         report.append(time + " price: " + price + " name: " + name + "\n");
                                     }
                                 }
@@ -90,17 +93,17 @@ public class Report extends AppCompatActivity {
                 });
     }
 
-    public String getMonth(String ctime){
+    public String getMonth(String ctime) {
         String[] timelist = ctime.split("\\s+");
         return timelist[1];
     }
 
-    public String getDate(String ctime){
+    public String getDate(String ctime) {
         String[] timelist = ctime.split("\\s+");
         return timelist[2];
     }
 
-    public String getYear(String ctime){
+    public String getYear(String ctime) {
         String[] timelist = ctime.split("\\s+");
         return timelist[5];
     }
