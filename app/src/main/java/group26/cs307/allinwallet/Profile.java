@@ -70,7 +70,7 @@ public class Profile extends AppCompatActivity {
     private ImageView profileImage;
     private Button changeImage;
     private FirebaseAuth auth;
-    private Button logout, btn_dlt_act, budgetBotton;
+    private Button logout, btn_dlt_act, budgetBotton, incomeButton;
     //private Button refreshbutton;
     private TextView userinfo;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -99,6 +99,7 @@ public class Profile extends AppCompatActivity {
         profileImage = (ImageView) findViewById(R.id.profile_img);
         changeImage = (Button)findViewById(R.id.btn_change);
         budgetBotton = (Button)findViewById(R.id.budgetButton);
+        incomeButton = (Button)findViewById(R.id.incomeButton);
         btnChoose = (Button) findViewById(R.id.btn_choose);
 
         incomeTimeSet = new ArrayList<>();
@@ -198,7 +199,7 @@ public class Profile extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
-                builder.setTitle("Enter a income");
+                builder.setTitle("Enter your budget");
                 View mView = getLayoutInflater().inflate(R.layout.activity_budget,null);
                 final EditText input = (EditText)mView.findViewById(R.id.budgetText);
                 Spinner spinner =(Spinner)mView.findViewById(R.id.budgetSpinner);
@@ -211,6 +212,56 @@ public class Profile extends AppCompatActivity {
                 spinner.setAdapter(spinnerAA);
 
                // builder.setView(spinner);
+                builder.setView(mView);
+                builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String uid = auth.getUid();
+
+                        if (!TextUtils.isEmpty(uid)) {
+                            String budget_text = input.getText().toString();
+
+                            if (TextUtils.isEmpty(budget_text)) {
+                                Toast.makeText(getApplicationContext(), "Budget field is empty!",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                Map<String, Object> budget_info = new HashMap<>();
+                                budget_info.put("budget", Double.parseDouble(budget_text));
+                                CollectionReference users = db.collection("users");
+                                users.document(uid).update(budget_info);
+                            }
+                        }
+
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("CANCEL", new DialogInterface
+                        .OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.show();
+            }
+        });
+
+        incomeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
+                builder.setTitle("Enter your income");
+                View mView = getLayoutInflater().inflate(R.layout.activity_income,null);
+                final EditText input = (EditText)mView.findViewById(R.id.incomeText);
+
+                input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                input.setRawInputType(Configuration.KEYBOARD_12KEY);
+                // builder.setView(input);
+
+                //final Spinner spinner = new Spinner(Profile.this);
+
+
+                // builder.setView(spinner);
                 builder.setView(mView);
                 builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -244,6 +295,8 @@ public class Profile extends AppCompatActivity {
                 builder.show();
             }
         });
+
+
 
         getImage();
     }
