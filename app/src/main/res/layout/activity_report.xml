@@ -12,69 +12,66 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:gravity="top"
-        android:orientation="vertical"
-        android:padding="10dp">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <RadioGroup
+            android:id="@+id/start_date_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:minHeight="50dp"
             android:orientation="horizontal">
+            <!--android:layout_marginTop="5dp"-->
 
-            <Button
+            <RadioButton
                 android:id="@+id/btn_rpt_week"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".32"
-                android:background="@color/colorAccent"
-                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/radio_button_selector"
+                android:button="@null"
+                android:gravity="center"
                 android:text="THIS WEEK"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="0.02" />
-
-            <Button
+            <RadioButton
                 android:id="@+id/btn_rpt_month"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".32"
-                android:background="@color/colorAccent"
-                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/radio_button_selector"
+                android:button="@null"
+                android:gravity="center"
                 android:text="THIS MONTH"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="0.02" />
-
-            <Button
+            <RadioButton
                 android:id="@+id/btn_rpt_annul"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".32"
-                android:background="@color/colorAccent"
-                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/radio_button_selector"
+                android:button="@null"
+                android:gravity="center"
                 android:text="THIS YEAR"
-                android:textColor="@color/white" />
-
-        </LinearLayout>
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </RadioGroup>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.75"
+                android:layout_weight="1"
                 android:gravity="right"
                 android:text="Sort by"
-
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="17sp" />
 
@@ -82,7 +79,7 @@
                 android:id="@+id/sort_by_picker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight=".25" />
+                android:layout_weight="1" />
         </LinearLayout>
 
         <View
@@ -94,7 +91,7 @@
             android:id="@+id/report_result"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
+            android:layout_margin="10dp"
             android:scrollbars="vertical" />
 
     </LinearLayout>

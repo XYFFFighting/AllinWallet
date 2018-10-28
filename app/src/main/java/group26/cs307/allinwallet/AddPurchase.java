@@ -177,8 +177,6 @@ public class AddPurchase extends AppCompatActivity {
             }
         });
 
-
-
         if (passedPurchaseIndex != -1) {
             setTitle(R.string.title_activity_edit_purchase);
             inputName.setText(item.getTitle());

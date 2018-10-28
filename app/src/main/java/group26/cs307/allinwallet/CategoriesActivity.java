@@ -74,7 +74,7 @@ public class CategoriesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         auth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_categories);
+        //setContentView(R.layout.activity_categories);
 
         welcomeMessage = (TextView) findViewById(R.id.welcomeText);
         budgetText = (TextView) findViewById(R.id.budgetText);

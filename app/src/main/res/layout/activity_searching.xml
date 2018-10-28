@@ -12,8 +12,7 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:gravity="top"
-        android:orientation="vertical"
-        android:padding="10dp">
+        android:orientation="vertical">
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -23,7 +22,7 @@
                 android:id="@+id/item_name2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
+                android:layout_margin="5dp"
                 android:hint="Purchase title:"
                 android:inputType="textPersonName"
                 android:textColor="@color/colorPrimaryDark"
@@ -31,10 +30,10 @@
         </android.support.design.widget.TextInputLayout>
 
         <LinearLayout
-            android:id="@+id/linearLayout4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -52,10 +51,15 @@
                 android:layout_weight="1" />
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorAccent" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <android.support.design.widget.TextInputLayout
@@ -94,6 +98,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <Button
@@ -127,7 +132,7 @@
             android:id="@+id/rst_search"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
+            android:layout_margin="10dp"
             android:scrollbars="vertical" />
 
     </LinearLayout>

@@ -45,4 +45,11 @@
     <string name="title_activity_search_by_name">Search_by_name</string>
     <string name="title_activity_search_by_category">Search_by_category</string>
     <string name="title_activity_searching">Search and Filter</string>
+
+    <string-array name="sort_array">
+        <item>Date</item>
+        <item>Category</item>
+        <item>Title</item>
+        <item>Amount</item>
+    </string-array>
 </resources>
