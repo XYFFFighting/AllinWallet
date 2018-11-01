@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:hint="Purchase title:"
+                android:hint="Search by title:"
                 android:inputType="textPersonName"
                 android:textColor="@color/colorPrimaryDark"
                 android:textColorHint="@color/colorPrimaryDark" />
@@ -50,11 +50,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorAccent" />
 
         <LinearLayout
             android:layout_width="match_parent"

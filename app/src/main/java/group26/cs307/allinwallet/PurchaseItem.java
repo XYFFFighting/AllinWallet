@@ -21,7 +21,7 @@ public class PurchaseItem implements Serializable {
         this.documentUID = documentUID;
     }
 
-    public PurchaseItem(String category, String title, double amount, Date date, String location,String documentUID) {
+    public PurchaseItem(String category, String title, double amount, Date date, String location, String documentUID) {
         this.category = category;
         this.title = title;
         this.amount = amount;
@@ -55,7 +55,7 @@ public class PurchaseItem implements Serializable {
     }
 
     public String getAmountString() {
-        return Double.toString(amount);
+        return String.format(Locale.getDefault(), "%.2f", amount);
     }
 
     public void setAmount(double amount) {

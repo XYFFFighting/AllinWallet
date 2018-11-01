@@ -16,11 +16,13 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 //jenny
 import java.io.File;
+
 import android.app.Activity;
 //import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -84,9 +86,6 @@ public class Profile extends AppCompatActivity {
     StorageReference storageReference;
 
     private Uri filePath;
-
-    public static List<String> incomeTime = new ArrayList<>(Arrays.asList("Weekly",
-            "Monthly", "Yearly"));
     private List<String> incomeTimeSet;
 
     @Override
@@ -94,22 +93,15 @@ public class Profile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-
         //jenny
         profileImage = (ImageView) findViewById(R.id.profile_img);
-        changeImage = (Button)findViewById(R.id.btn_change);
-        budgetBotton = (Button)findViewById(R.id.budgetButton);
-        incomeButton = (Button)findViewById(R.id.incomeButton);
+        changeImage = (Button) findViewById(R.id.btn_change);
+        budgetBotton = (Button) findViewById(R.id.budgetButton);
+        incomeButton = (Button) findViewById(R.id.incomeButton);
         btnChoose = (Button) findViewById(R.id.btn_choose);
-
-        incomeTimeSet = new ArrayList<>();
-        incomeTimeSet.addAll(incomeTime);
-        final ArrayAdapter spinnerAA = new ArrayAdapter(Profile.this,
-                android.R.layout.simple_spinner_dropdown_item, incomeTimeSet);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-
 
         auth = FirebaseAuth.getInstance();
         logout = (Button) findViewById(R.id.btn_logout);
@@ -123,15 +115,12 @@ public class Profile extends AppCompatActivity {
         }
         addNumUser();
 
-
-
         changeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 uploadImage();
             }
         });
-
         btnChoose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,6 +150,7 @@ public class Profile extends AppCompatActivity {
                 alertDialog.show();
             }
         });
+
         btn_dlt_act.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -179,7 +169,7 @@ public class Profile extends AppCompatActivity {
                                                 if (task.isSuccessful()) {
                                                     Log.d(TAG, "user account deleted.");
                                                     startActivity(new Intent(Profile.this, LoginActivity.class));
-                                                    }
+                                                }
                                             }
                                         });
                                 deleteData(uid);
@@ -200,51 +190,48 @@ public class Profile extends AppCompatActivity {
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
                 builder.setTitle("Enter your budget");
-                View mView = getLayoutInflater().inflate(R.layout.activity_budget,null);
-                final EditText input = (EditText)mView.findViewById(R.id.budgetText);
-                final Spinner spinner =(Spinner)mView.findViewById(R.id.budgetSpinner);
+                View mView = getLayoutInflater().inflate(R.layout.activity_budget, null);
+                final EditText input = (EditText) mView.findViewById(R.id.budgetText);
+                final RadioGroup budgetTypeGroup = (RadioGroup) mView.findViewById(R.id
+                        .budget_type_group);
 
-                input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                input.setRawInputType(Configuration.KEYBOARD_12KEY);
-               // builder.setView(input);
-
-                //final Spinner spinner = new Spinner(Profile.this);
-                spinner.setAdapter(spinnerAA);
-
-               // builder.setView(spinner);
+                budgetTypeGroup.check(R.id.monthly_budget_type);
                 builder.setView(mView);
+
                 builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String uid = auth.getUid();
 
                         if (!TextUtils.isEmpty(uid)) {
                             String budget_text = input.getText().toString();
-                            String text = spinner.getSelectedItem().toString();
-
 
                             if (TextUtils.isEmpty(budget_text)) {
                                 Toast.makeText(getApplicationContext(), "Budget field is empty!",
                                         Toast.LENGTH_SHORT).show();
                             } else {
-                                if(TextUtils.equals(text,"Weekly")){
-                                    Map<String, Object> budget_info = new HashMap<>();
-                                    budget_info.put(text+"budget", Double.parseDouble(budget_text));
-                                    CollectionReference users = db.collection("users");
-                                    users.document(uid).update(budget_info);
-                                }
-                                if(TextUtils.equals(text,"Monthly")){
-                                    Map<String, Object> budget_info = new HashMap<>();
-                                    budget_info.put(text+"budget", Double.parseDouble(budget_text));
-                                    CollectionReference users = db.collection("users");
-                                    users.document(uid).update(budget_info);
-                                }
-                                if(TextUtils.equals(text,"Yearly")){
-                                    Map<String, Object> budget_info = new HashMap<>();
-                                    budget_info.put(text+"budget", Double.parseDouble(budget_text));
-                                    CollectionReference users = db.collection("users");
-                                    users.document(uid).update(budget_info);
+                                String text;
+                                switch (budgetTypeGroup.getCheckedRadioButtonId()) {
+                                    case R.id.weekly_budget_type:
+                                        text = "weekly budget";
+                                        break;
+                                    case R.id.monthly_budget_type:
+                                        text = "monthly budget";
+                                        break;
+                                    case R.id.annual_budget_type:
+                                        text = "annual budget";
+                                        break;
+                                    default:
+                                        text = "Error";
+                                        break;
                                 }
 
+                                Map<String, Object> budget_info = new HashMap<>();
+                                budget_info.put(text, Double.parseDouble(budget_text));
+                                CollectionReference users = db.collection("users");
+                                users.document(uid).update(budget_info);
+                                Toast.makeText(getApplicationContext(), "You have successfully " +
+                                                "added " + text,
+                                        Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -267,18 +254,10 @@ public class Profile extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
-                builder.setTitle("Enter your income");
-                View mView = getLayoutInflater().inflate(R.layout.activity_income,null);
-                final EditText input = (EditText)mView.findViewById(R.id.incomeText);
+                builder.setTitle("Enter your monthly income");
+                View mView = getLayoutInflater().inflate(R.layout.activity_income, null);
+                final EditText input = (EditText) mView.findViewById(R.id.incomeText);
 
-                input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                input.setRawInputType(Configuration.KEYBOARD_12KEY);
-                // builder.setView(input);
-
-                //final Spinner spinner = new Spinner(Profile.this);
-
-
-                // builder.setView(spinner);
                 builder.setView(mView);
                 builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -295,6 +274,8 @@ public class Profile extends AppCompatActivity {
                                 income_info.put("income", Double.parseDouble(income_text));
                                 CollectionReference users = db.collection("users");
                                 users.document(uid).update(income_info);
+                                Toast.makeText(getApplicationContext(), "Income added successfully",
+                                        Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -313,8 +294,6 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-
-
         getImage();
     }
 
@@ -328,15 +307,15 @@ public class Profile extends AppCompatActivity {
     private void updateImage(final ImageView imageView) throws IOException {
         String uid = auth.getUid();
         Log.d(TAG, "uid is:" + uid);
-        StorageReference ref = storageReference.child("images/"+ uid + "/" + "profile");
+        StorageReference ref = storageReference.child("images/" + uid + "/" + "profile");
         final File localFile = File.createTempFile("images", "jpg");
 
         ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                 // Local temp file has been created
-                Log.d(TAG,"download successful");
-                if(localFile.exists()){
+                Log.d(TAG, "download successful");
+                if (localFile.exists()) {
                     Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                     imageView.setImageBitmap(bitmap);
                 }
@@ -353,13 +332,12 @@ public class Profile extends AppCompatActivity {
 
     private void uploadImage() {
 
-        if(filePath != null)
-        {
+        if (filePath != null) {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
             String uid = auth.getUid();
-            StorageReference ref = storageReference.child("images/"+ uid + "/" + "profile");
+            StorageReference ref = storageReference.child("images/" + uid + "/" + "profile");
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -372,13 +350,13 @@ public class Profile extends AppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            Toast.makeText(Profile.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Profile.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
                                     .getTotalByteCount());
                             //progressDialog.setMessage("Uploaded "+(int)progress+"%");
                         }
@@ -391,7 +369,7 @@ public class Profile extends AppCompatActivity {
         progressDialog.setTitle("Getting...");
         progressDialog.show();
         String uid = auth.getUid();
-        StorageReference ref = storageReference.child("images/"+ uid + "/" + "profile");
+        StorageReference ref = storageReference.child("images/" + uid + "/" + "profile");
         File localFile = null;
 
         try {
@@ -418,7 +396,7 @@ public class Profile extends AppCompatActivity {
         }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
             @Override
             public void onProgress(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
                         .getTotalByteCount());
                 //progressDialog.setMessage("Uploaded "+(int)progress+"%");
             }
@@ -429,16 +407,13 @@ public class Profile extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null )
-        {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
             filePath = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 profileImage.setImageBitmap(bitmap);
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -464,13 +439,13 @@ public class Profile extends AppCompatActivity {
                 });
     }
 
-    public void deleteData(final String uid){
+    public void deleteData(final String uid) {
         DocumentReference dRef = db.collection("users").document(uid);
         dRef.collection("purchase").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot document:task.getResult()){
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
                         String did = document.getId();
                         db.collection("users").document(uid).collection("purchase").document(did)
                                 .delete()

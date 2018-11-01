@@ -12,9 +12,13 @@ import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -27,11 +31,14 @@ import java.util.Date;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class Report extends AppCompatActivity {
     private FirebaseAuth auth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "AllinWallet";
+
+    private TextView spendingNum, budgetText, budgetNum, remainingBudgetText, remainingBudgetNum;
 
     private Date startofWeek, startofMonth, startofYear;
 
@@ -53,6 +60,12 @@ public class Report extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         uid = auth.getUid();
 
+        spendingNum = (TextView) findViewById(R.id.spending_num);
+        budgetText = (TextView) findViewById(R.id.budget_text);
+        budgetNum = (TextView) findViewById(R.id.budget_num);
+        remainingBudgetText = (TextView) findViewById(R.id.remaining_budget_text);
+        remainingBudgetNum = (TextView) findViewById(R.id.remaining_budget_num);
+
         sortPicker = (Spinner) findViewById(R.id.sort_by_picker);
         ArrayAdapter<CharSequence> sortAA = ArrayAdapter.createFromResource(Report.this,
                 R.array.sort_array, android.R.layout.simple_spinner_item);
@@ -64,6 +77,7 @@ public class Report extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int pos, long id) {
                 sortPurchases(pos);
+                purchaseListAdapter.notifyDataSetChanged();
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
@@ -90,7 +104,7 @@ public class Report extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 dateButton = (RadioButton) group.findViewById(checkedId);
                 if (dateButton != null) {
-                    getPurchases(checkedId);
+                    updateReport(checkedId);
                 }
             }
         });
@@ -98,43 +112,94 @@ public class Report extends AppCompatActivity {
         initializeDateReport();
     }
 
-    public void getPurchases(int whichButton) {
-        Query result = db.collection("users").document(uid).collection("purchase");
+    public void updateReport(int whichButton) {
+        final DocumentReference dRef = db.collection("users").document(uid);
+        String text;
+        Query result = dRef.collection("purchase");
         final int sortMethodPos = sortPicker.getSelectedItemPosition();
 
         switch (whichButton) {
             case R.id.btn_rpt_week:
                 result = result.whereGreaterThanOrEqualTo("date", startofWeek);
+                text = "weekly";
                 break;
             case R.id.btn_rpt_month:
                 result = result.whereGreaterThanOrEqualTo("date", startofMonth);
+                text = "monthly";
                 break;
             case R.id.btn_rpt_annul:
                 result = result.whereGreaterThanOrEqualTo("date", startofYear);
+                text = "annual";
                 break;
-
             default:
+                text = "";
                 break;
         }
+
+        final String budgetType = text + " budget";
 
         result.orderBy("date", Query.Direction.DESCENDING).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         purchases.clear();
+                        double sum = 0.0, amount;
 
                         for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
                             Log.d(TAG, document.getId() + "-->" + document.getData());
+                            amount = document.getDouble("price");
+                            sum += amount;
                             purchases.add(new PurchaseItem(document.getString("category"),
-                                    document.getString("name"), document.getDouble("price"),
+                                    document.getString("name"), amount,
                                     document.getDate("date"), document.getString("location"), document.getId()));
                         }
 
+                        spendingNum.setText(String.format(Locale.getDefault(), "%.2f", sum));
+                        final double finalSum = sum;
+
+                        dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot uidDoc = task.getResult();
+                                    if (uidDoc.exists()) {
+                                        Log.d(TAG, uidDoc.getId() + "-->" + uidDoc.getData());
+
+                                        if (uidDoc.contains(budgetType)) {
+                                            double budget = uidDoc.getDouble(budgetType);
+                                            String remainingBudgetNumText;
+
+                                            if (Double.compare(finalSum, budget) < 0) {
+                                                remainingBudgetNumText = String.format(Locale
+                                                        .getDefault(), "%.2f", budget - finalSum);
+                                            } else {
+                                                remainingBudgetNumText = "0.00";
+                                            }
+
+                                            budgetText.setText("Your " + budgetType + ":");
+                                            budgetNum.setText(String.format(Locale.getDefault(), "%.2f", budget));
+                                            remainingBudgetText.setText(R.string.report_remaining_budget_found);
+                                            remainingBudgetNum.setText(remainingBudgetNumText);
+                                        } else {
+                                            budgetText.setText(R.string.report_default_budget_text);
+                                            budgetNum.setText(null);
+                                            remainingBudgetText.setText(R.string.report_default_remaining_budget_text);
+                                            remainingBudgetNum.setText(null);
+                                        }
+                                    } else {
+                                        Log.d(TAG, "No such document");
+                                    }
+                                } else {
+                                    Log.d(TAG, "get failed with ", task.getException());
+                                }
+                            }
+                        });
+
                         if (sortMethodPos >= 1 && sortMethodPos <= 3) {
                             sortPurchases(sortMethodPos);
-                        } else {
-                            purchaseListAdapter.notifyDataSetChanged();
                         }
+
+                        purchaseListAdapter.notifyDataSetChanged();
                     }
                 });
     }
@@ -180,8 +245,6 @@ public class Report extends AppCompatActivity {
             default:
                 break;
         }
-
-        purchaseListAdapter.notifyDataSetChanged();
     }
 
     public void initializeDateReport() {
