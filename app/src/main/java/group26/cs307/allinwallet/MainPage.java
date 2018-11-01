@@ -132,6 +132,8 @@ public class MainPage extends AppCompatActivity {
             startActivity(new Intent(MainPage.this, Searching.class));
         } else if(item.getItemId() == R.id.report_menu){
             startActivity(new Intent(MainPage.this, Report.class));
+        } else if(item.getItemId() == R.id.issue_menu) {
+
         } else {
             return super.onOptionsItemSelected(item);
         }

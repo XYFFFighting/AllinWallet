@@ -12,4 +12,8 @@
     <item android:id="@+id/search_menu"
         android:title="@string/search"
         app:showAsAction="never"/>
+    <item android:id="@+id/issue_menu"
+        android:title="@string/issue"
+        app:showAsAction="never"/>
+
 </menu>
