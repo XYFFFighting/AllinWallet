@@ -10,9 +10,9 @@
         android:id="@+id/btn_signup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="117dp"
         android:layout_marginEnd="91dp"
         android:layout_marginRight="91dp"
+        android:layout_marginTop="117dp"
         android:text="signup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -21,8 +21,8 @@
         android:id="@+id/btn_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
         android:layout_marginLeft="6dp"
+        android:layout_marginStart="6dp"
         android:text="Login"
         app:layout_constraintBottom_toBottomOf="@+id/btn_signup"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,8 +32,8 @@
         android:id="@+id/btn_dashboard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
         android:layout_marginLeft="6dp"
+        android:layout_marginStart="6dp"
         android:layout_marginTop="27dp"
         android:text="Main"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,10 +43,10 @@
         android:id="@+id/add_purchase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="92dp"
-
         android:layout_marginEnd="252dp"
+
         android:layout_marginRight="252dp"
+        android:layout_marginTop="92dp"
         android:text="addpurchase"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_signup" />
@@ -85,8 +85,8 @@
         android:id="@+id/btn_report"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="9dp"
         android:layout_marginLeft="9dp"
+        android:layout_marginStart="9dp"
         android:layout_marginTop="17dp"
         android:text="report"
         app:layout_constraintStart_toStartOf="parent"
@@ -105,8 +105,8 @@
         android:id="@+id/btn_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="9dp"
         android:layout_marginLeft="9dp"
+        android:layout_marginStart="9dp"
         android:layout_marginTop="23dp"
         android:text="Search"
         app:layout_constraintStart_toStartOf="parent"
@@ -122,5 +122,19 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btn_search"
         app:layout_constraintTop_toBottomOf="@+id/btn_budget" />
+
+
+    <Button
+        android:id="@+id/report_issue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Report Issue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btn_search"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/categories"
+        app:layout_constraintVertical_bias="0.887" />
 
 </android.support.constraint.ConstraintLayout>
