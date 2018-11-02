@@ -53,4 +53,5 @@
         <item>Title</item>
         <item>Amount</item>
     </string-array>
+    <string name="title_activity_issue">Issue</string>
 </resources>
