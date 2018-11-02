@@ -42,6 +42,7 @@
     <string name="title_activity_add_purchase">Add Purchase</string>
     <string name="title_activity_edit_purchase">Edit Purchase</string>
     <string name="title_activity_profile">Profile</string>
+    <string name="title_activity_report">Report</string>
     <string name="action_example">Example action</string>
     <string name="dlt_account">Delete Account</string>
     <string name="action_settings">Settings</string>
@@ -53,6 +54,7 @@
     <string name="report_default_budget_text">No budget found</string>
     <string name="report_default_remaining_budget_text">Go to the profile page and set a budget</string>
     <string name="report_remaining_budget_found">Your remaining budget:</string>
+    <string name="title_activity_issue">Issue</string>
 
     <string-array name="sort_array">
         <item>Date</item>
@@ -60,5 +62,4 @@
         <item>Title</item>
         <item>Amount</item>
     </string-array>
-    <string name="title_activity_issue">Issue</string>
 </resources>
