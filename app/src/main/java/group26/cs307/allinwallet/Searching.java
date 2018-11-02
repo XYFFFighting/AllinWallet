@@ -115,7 +115,6 @@ public class Searching extends AppCompatActivity {
     }
 
     public void searchAll(String category, String name, String startString, String endString) {
-        purchases.clear();
         String uid = auth.getUid();
         CollectionReference col_purchase = db.collection("users").document(uid).collection("purchase");
         Query result = col_purchase;
@@ -142,11 +141,13 @@ public class Searching extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        purchases.clear();
+
                         for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
                             Log.d(TAG, document.getId() + "-->" + document.getData());
                             purchases.add(new PurchaseItem(document.getString("category"),
                                     document.getString("name"), document.getDouble("price"),
-                                    document.getDate("date"),document.getString("location"), document.getId()));
+                                    document.getDate("date"), document.getString("location"), document.getId()));
                         }
 
                         purchaseListAdapter.notifyDataSetChanged();

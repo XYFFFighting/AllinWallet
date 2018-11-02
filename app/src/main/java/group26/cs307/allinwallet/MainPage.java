@@ -126,11 +126,11 @@ public class MainPage extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.profile_menu){
+        if (item.getItemId() == R.id.profile_menu) {
             startActivity(new Intent(MainPage.this, Profile.class));
-        } else if(item.getItemId() == R.id.search_menu){
+        } else if (item.getItemId() == R.id.search_menu) {
             startActivity(new Intent(MainPage.this, Searching.class));
-        } else if(item.getItemId() == R.id.report_menu){
+        } else if (item.getItemId() == R.id.report_menu) {
             startActivity(new Intent(MainPage.this, Report.class));
         } else {
             return super.onOptionsItemSelected(item);
@@ -167,7 +167,8 @@ public class MainPage extends AppCompatActivity {
                     }
 
                     purchaseListAdapter.notifyDataSetChanged();
-                    budgetText.append(Double.toString(sum));
+                    budgetText.append(String.format(Locale.getDefault(),
+                            "%.2f", sum));
 
                     dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -177,8 +178,16 @@ public class MainPage extends AppCompatActivity {
                                 if (document.exists()) {
                                     Log.d(TAG, document.getId() + "-->" + document.getData());
 
-                                    if (document.contains("budget")) {
-                                        budgetText.append(" / " + document.getDouble("budget"));
+                                    if (document.contains("monthly budget")) {
+                                        budgetText.append(String.format(Locale.getDefault(),
+                                                " / %.2f", document.getDouble("monthly budget")));
+                                    }
+
+                                    if (document.contains("income")) {
+                                        String income = String.format(Locale.getDefault(),
+                                                "\nYour monthly income: %.2f",
+                                                document.getDouble("income"));
+                                        budgetText.append(income);
                                     }
                                 } else {
                                     Log.d(TAG, "No such document");

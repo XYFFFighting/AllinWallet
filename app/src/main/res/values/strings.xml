@@ -46,4 +46,16 @@
     <string name="title_activity_search_by_name">Search_by_name</string>
     <string name="title_activity_search_by_category">Search_by_category</string>
     <string name="title_activity_searching">Search and Filter</string>
+    <string name="report_default_spending_text">Your current spending:</string>
+    <string name="report_default_spending_num">0.0</string>
+    <string name="report_default_budget_text">No budget found</string>
+    <string name="report_default_remaining_budget_text">Go to the profile page and set a budget</string>
+    <string name="report_remaining_budget_found">Your remaining budget:</string>
+
+    <string-array name="sort_array">
+        <item>Date</item>
+        <item>Category</item>
+        <item>Title</item>
+        <item>Amount</item>
+    </string-array>
 </resources>

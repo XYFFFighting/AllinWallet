@@ -12,17 +12,13 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:gravity="top"
-        android:orientation="vertical"
-        android:padding="10dp">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorAccent" />
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -48,7 +44,7 @@
                 android:id="@+id/item_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_margin="5dp"
                 android:focusable="false"
                 android:hint="Purchase date:"
                 android:longClickable="false"
@@ -64,7 +60,7 @@
                 android:id="@+id/item_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_margin="5dp"
                 android:hint="Purchase title:"
                 android:inputType="textPersonName"
                 android:textColor="@color/colorPrimaryDark"
@@ -79,7 +75,7 @@
                 android:id="@+id/item_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_margin="5dp"
                 android:hint="Purchase amount:"
                 android:inputType="numberDecimal"
                 android:textColor="@color/colorPrimaryDark"
@@ -93,8 +89,8 @@
             <TextView
                 android:id="@+id/txt_location"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginBottom="10dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:text="Location"
                 android:textColor="@color/colorPrimaryDark"
                 android:textColorHint="@color/colorPrimaryDark" />
@@ -103,6 +99,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <Button
@@ -136,6 +133,7 @@
             android:id="@+id/btn_get_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:background="@color/colorAccent"
             android:text="get location"
             android:textColor="@color/white" />
