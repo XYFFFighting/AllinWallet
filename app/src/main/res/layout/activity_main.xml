@@ -4,25 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    tools:layout_editor_absoluteY="25dp">
 
     <Button
         android:id="@+id/btn_signup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="91dp"
-        android:layout_marginRight="91dp"
-        android:layout_marginTop="117dp"
+        android:layout_marginBottom="24dp"
         android:text="signup"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/btn_reset"
+        app:layout_constraintStart_toStartOf="@+id/btn_reset" />
 
     <Button
         android:id="@+id/btn_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="6dp"
         android:layout_marginStart="6dp"
+        android:layout_marginLeft="6dp"
         android:text="Login"
         app:layout_constraintBottom_toBottomOf="@+id/btn_signup"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,8 +31,8 @@
         android:id="@+id/btn_dashboard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="6dp"
         android:layout_marginStart="6dp"
+        android:layout_marginLeft="6dp"
         android:layout_marginTop="27dp"
         android:text="Main"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,13 +42,13 @@
         android:id="@+id/add_purchase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="252dp"
 
-        android:layout_marginRight="252dp"
-        android:layout_marginTop="92dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginTop="17dp"
         android:text="addpurchase"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_signup" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_dashboard" />
 
     <EditText
         android:id="@+id/auth_text"
@@ -67,10 +66,12 @@
         android:id="@+id/btn_reset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="189dp"
+        android:layout_marginEnd="34dp"
+        android:layout_marginRight="34dp"
         android:text="@string/btn_reset_password"
-        app:layout_constraintStart_toStartOf="@+id/btn_signup"
-        app:layout_constraintTop_toBottomOf="@+id/btn_signup" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btn_profile"
@@ -85,8 +86,8 @@
         android:id="@+id/btn_report"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="9dp"
         android:layout_marginStart="9dp"
+        android:layout_marginLeft="9dp"
         android:layout_marginTop="17dp"
         android:text="report"
         app:layout_constraintStart_toStartOf="parent"
@@ -96,17 +97,19 @@
         android:id="@+id/btn_budget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="22dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginBottom="16dp"
         android:text="Budget"
-        app:layout_constraintStart_toStartOf="@+id/btn_profile"
-        app:layout_constraintTop_toBottomOf="@+id/btn_profile" />
+        app:layout_constraintBottom_toTopOf="@+id/categories"
+        app:layout_constraintEnd_toEndOf="@+id/categories" />
 
     <Button
         android:id="@+id/btn_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="9dp"
         android:layout_marginStart="9dp"
+        android:layout_marginLeft="9dp"
         android:layout_marginTop="23dp"
         android:text="Search"
         app:layout_constraintStart_toStartOf="parent"
@@ -116,25 +119,21 @@
         android:id="@+id/categories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="19dp"
         android:text="Categories"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btn_search"
-        app:layout_constraintTop_toBottomOf="@+id/btn_budget" />
+        app:layout_constraintBottom_toTopOf="@+id/report_issue"
+        app:layout_constraintStart_toStartOf="@+id/report_issue" />
 
 
     <Button
         android:id="@+id/report_issue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="73dp"
+        android:layout_marginRight="73dp"
+        android:layout_marginBottom="59dp"
         android:text="Report Issue"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btn_search"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/categories"
-        app:layout_constraintVertical_bias="0.887" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

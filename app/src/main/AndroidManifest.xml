@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="group26.cs307.allinwallet">
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-
-
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -59,8 +57,11 @@
             android:label="@string/title_activity_search_by_category" />
         <activity
             android:name=".Searching"
-            android:label="@string/title_activity_searching"></activity>
-        <activity android:name=".UploadActivity"></activity>
+            android:label="@string/title_activity_searching" />
+        <activity android:name=".UploadActivity" />
+        <activity
+            android:name=".Issue"
+            android:label="@string/title_activity_issue"></activity>
     </application>
 
 </manifest>
