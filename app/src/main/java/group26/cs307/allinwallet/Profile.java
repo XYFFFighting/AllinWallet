@@ -350,7 +350,7 @@ public class Profile extends AppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            Toast.makeText(Profile.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Profile.this, "Upload Failed Please try again" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -391,7 +391,7 @@ public class Profile extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 progressDialog.dismiss();
-                Toast.makeText(Profile.this, "Failed ", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(Profile.this, "Get Image Failed please check your network", Toast.LENGTH_SHORT).show();
             }
         }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
             @Override
