@@ -19,7 +19,12 @@ android {
     }
 }
 
+repositories{
+    maven { url 'https://jitpack.io' }
+}
+
 dependencies {
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
     implementation 'com.firebaseui:firebase-ui-storage:4.1.0'
     implementation "com.google.firebase:firebase-auth:16.0.5"
     implementation 'com.android.support:multidex:1.0.3'

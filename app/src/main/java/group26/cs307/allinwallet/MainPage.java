@@ -38,6 +38,7 @@ import java.util.Locale;
 public class MainPage extends AppCompatActivity {
     private FloatingActionButton purchaseButton;
     private TextView welcomeMessage, budgetText;
+    private Date startofMonth;
     private RecyclerView purchaseList;
     private RecyclerView.Adapter purchaseListAdapter;
     private RecyclerView.LayoutManager purchaseListLayoutManager;
@@ -126,12 +127,14 @@ public class MainPage extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.profile_menu){
+        if (item.getItemId() == R.id.profile_menu) {
             startActivity(new Intent(MainPage.this, Profile.class));
-        } else if(item.getItemId() == R.id.search_menu){
+        } else if (item.getItemId() == R.id.search_menu) {
             startActivity(new Intent(MainPage.this, Searching.class));
-        } else if(item.getItemId() == R.id.report_menu){
+        } else if (item.getItemId() == R.id.report_menu) {
             startActivity(new Intent(MainPage.this, Report.class));
+        } else if (item.getItemId() == R.id.issue_menu) {
+            startActivity(new Intent(MainPage.this, Issue.class));
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -139,16 +142,24 @@ public class MainPage extends AppCompatActivity {
     }
 
     public void setDate() {
-        Date today = Calendar.getInstance().getTime();//getting date
+        Calendar calendar = Calendar.getInstance();
         SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d yyyy", Locale.getDefault());
-        String date = formatter.format(today);
+        String date = formatter.format(calendar.getTime());
         welcomeMessage.append(date);
+
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        startofMonth = calendar.getTime();
     }
 
     public void updateMainPage(String uid) {
         final DocumentReference dRef = db.collection("users").document(uid);
 
-        dRef.collection("purchase").orderBy("date", Query.Direction.DESCENDING)
+        dRef.collection("purchase").whereGreaterThanOrEqualTo("date", startofMonth)
+                .orderBy("date", Query.Direction.DESCENDING)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -167,7 +178,8 @@ public class MainPage extends AppCompatActivity {
                     }
 
                     purchaseListAdapter.notifyDataSetChanged();
-                    budgetText.append(Double.toString(sum));
+                    budgetText.append(String.format(Locale.getDefault(),
+                            "%.2f", sum));
 
                     dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -177,8 +189,16 @@ public class MainPage extends AppCompatActivity {
                                 if (document.exists()) {
                                     Log.d(TAG, document.getId() + "-->" + document.getData());
 
-                                    if (document.contains("budget")) {
-                                        budgetText.append(" / " + document.getDouble("budget"));
+                                    if (document.contains("monthly budget")) {
+                                        budgetText.append(String.format(Locale.getDefault(),
+                                                " / %.2f", document.getDouble("monthly budget")));
+                                    }
+
+                                    if (document.contains("income")) {
+                                        String income = String.format(Locale.getDefault(),
+                                                "\nYour monthly income: %.2f",
+                                                document.getDouble("income"));
+                                        budgetText.append(income);
                                     }
                                 } else {
                                     Log.d(TAG, "No such document");

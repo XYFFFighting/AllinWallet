@@ -62,6 +62,7 @@ public class AddPurchase extends AppCompatActivity {
             "Clothes", "Housing", "Personal", "General", "Transport", "Fun"));
     private List<String> categories;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         auth = FirebaseAuth.getInstance();
@@ -175,8 +176,6 @@ public class AddPurchase extends AppCompatActivity {
                 }
             }
         });
-
-
 
         if (passedPurchaseIndex != -1) {
             setTitle(R.string.title_activity_edit_purchase);
