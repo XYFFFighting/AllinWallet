@@ -162,13 +162,13 @@ public class Profile extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                 final String uid = user.getUid();
+                                deleteData(uid);
                                 user.delete()
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
                                                     Log.d(TAG, "user account deleted.");
-                                                    deleteData(uid);
                                                     startActivity(new Intent(Profile.this, LoginActivity.class));
                                                 } else {
                                                     Log.d(TAG, "delete failed");

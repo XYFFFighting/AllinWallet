@@ -4,16 +4,22 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +39,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,7 +52,10 @@ import java.util.Locale;
 import java.util.Map;
 
 public class AddPurchase extends AppCompatActivity {
-    private Button save, cancel, getlocation;
+    String mCurrentPhotoPath;
+    private Button save, cancel, getlocation, btn_take_picture;
+    private ImageView img_reci;
+    private Bitmap recip;
     private Spinner categoryPicker;
     private EditText inputName, inputPrice, inputDate;
     private TextView txt_location;
@@ -61,7 +72,8 @@ public class AddPurchase extends AppCompatActivity {
     public static List<String> defaultCategories = new ArrayList<>(Arrays.asList("Grocery",
             "Clothes", "Housing", "Personal", "General", "Transport", "Fun"));
     private List<String> categories;
-
+    private Intent takePictureIntent;
+    static final int REQUEST_TAKE_PHOTO = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,11 +89,13 @@ public class AddPurchase extends AppCompatActivity {
         save = (Button) findViewById(R.id.save_button);
         cancel = (Button) findViewById(R.id.cancel_button);
         getlocation = (Button) findViewById(R.id.btn_get_location);
+        btn_take_picture = (Button) findViewById(R.id.btn_take_pic);
         categoryPicker = (Spinner) findViewById(R.id.category_picker);
         inputName = (EditText) findViewById(R.id.item_name);
         inputPrice = (EditText) findViewById(R.id.item_price);
         inputDate = (EditText) findViewById(R.id.item_date);
         txt_location = (TextView) findViewById(R.id.txt_location);
+        img_reci = (ImageView) findViewById(R.id.img_reci);
         categories = new ArrayList<>();
         categories.addAll(defaultCategories);
         // TO-DO: get categories from firebase
@@ -90,6 +104,14 @@ public class AddPurchase extends AppCompatActivity {
         categoryPicker.setAdapter(spinnerAA);
         formatter = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
         calendar = Calendar.getInstance();
+
+        btn_take_picture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                takePictureIntent = TakePictureIntent();
+                handleSmallCameraPhoto(takePictureIntent);
+            }
+        });
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -272,6 +294,63 @@ public class AddPurchase extends AppCompatActivity {
             e.printStackTrace();
         }
         return cityName;
+    }
+
+    private Intent TakePictureIntent(){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "group26.cs307.allinwallet",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
+
+        return takePictureIntent;
+
+    }
+
+
+    private void handleSmallCameraPhoto(Intent intent) {
+        Bundle extras = intent.getExtras();
+        recip = (Bitmap) extras.get("data");
+        img_reci.setImageBitmap(recip);
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        Log.d(TAG, mCurrentPhotoPath);
+        return image;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "add picture resume");
+        if(takePictureIntent!= null)
+            handleSmallCameraPhoto(takePictureIntent);
     }
 }
 
