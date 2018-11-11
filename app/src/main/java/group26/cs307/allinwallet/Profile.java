@@ -72,7 +72,7 @@ public class Profile extends AppCompatActivity {
     private ImageView profileImage;
     private Button changeImage;
     private FirebaseAuth auth;
-    private Button logout, btn_dlt_act, budgetBotton, incomeButton;
+    private Button logout, btn_dlt_act, budgetBotton, incomeButton, currencyButton;
     //private Button refreshbutton;
     private TextView userinfo;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -99,6 +99,7 @@ public class Profile extends AppCompatActivity {
         budgetBotton = (Button) findViewById(R.id.budgetButton);
         incomeButton = (Button) findViewById(R.id.incomeButton);
         btnChoose = (Button) findViewById(R.id.btn_choose);
+        currencyButton = (Button) findViewById(R.id.currency);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -295,8 +296,72 @@ public class Profile extends AppCompatActivity {
                 builder.show();
             }
         });
-
         getImage();
+
+
+        currencyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
+                builder.setTitle("Choose your currency");
+                View mView = getLayoutInflater().inflate(R.layout.activity_currency, null);
+                //       final EditText input = (EditText) mView.findViewById(R.id.budgetText);
+                final RadioGroup budgetTypeGroup = (RadioGroup) mView.findViewById(R.id
+                        .currency_type_group);
+
+                budgetTypeGroup.check(R.id.USD_type);
+                builder.setView(mView);
+
+                builder.setPositiveButton("SET", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String uid = auth.getUid();
+
+                        if (!TextUtils.isEmpty(uid)) {
+
+                            String text;
+                            switch (budgetTypeGroup.getCheckedRadioButtonId()) {
+                                case R.id.USD_type:
+                                    text = "$";
+                                    break;
+                                case R.id.EUR_type:
+                                    text = "€";
+                                    break;
+                                case R.id.CNY_type:
+                                    text = "¥";
+                                    break;
+                                default:
+                                    text = "Error";
+                                    break;
+
+
+//                                Map<String, Object> budget_info = new HashMap<>();
+//                                budget_info.put(text, Double.parseDouble(budget_text));
+//                                CollectionReference users = db.collection("users");
+//                                users.document(uid).update(budget_info);
+//                                Toast.makeText(getApplicationContext(), "You have successfully " +
+//                                                "added " + text,
+//                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton("CANCEL", new DialogInterface
+                        .OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.show();
+            }
+        });
+
+
+
+
     }
 
     private void chooseImage() {

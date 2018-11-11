@@ -91,7 +91,16 @@
             android:text="Income"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
-
+        <Button
+            android:id="@+id/currency"
+            style="?android:textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@color/colorAccent"
+            android:text="change the currency"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
         <Button
             android:id="@+id/btn_logout"
             style="?android:textAppearanceSmall"
