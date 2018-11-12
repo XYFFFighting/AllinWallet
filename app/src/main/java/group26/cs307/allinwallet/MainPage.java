@@ -38,6 +38,7 @@ import java.util.Locale;
 public class MainPage extends AppCompatActivity {
     private FloatingActionButton purchaseButton;
     private TextView welcomeMessage, budgetText;
+    private Date startofMonth;
     private RecyclerView purchaseList;
     private RecyclerView.Adapter purchaseListAdapter;
     private RecyclerView.LayoutManager purchaseListLayoutManager;
@@ -132,6 +133,8 @@ public class MainPage extends AppCompatActivity {
             startActivity(new Intent(MainPage.this, Searching.class));
         } else if (item.getItemId() == R.id.report_menu) {
             startActivity(new Intent(MainPage.this, Report.class));
+        } else if (item.getItemId() == R.id.issue_menu) {
+            startActivity(new Intent(MainPage.this, Issue.class));
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -139,16 +142,24 @@ public class MainPage extends AppCompatActivity {
     }
 
     public void setDate() {
-        Date today = Calendar.getInstance().getTime();//getting date
+        Calendar calendar = Calendar.getInstance();
         SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d yyyy", Locale.getDefault());
-        String date = formatter.format(today);
+        String date = formatter.format(calendar.getTime());
         welcomeMessage.append(date);
+
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        startofMonth = calendar.getTime();
     }
 
     public void updateMainPage(String uid) {
         final DocumentReference dRef = db.collection("users").document(uid);
 
-        dRef.collection("purchase").orderBy("date", Query.Direction.DESCENDING)
+        dRef.collection("purchase").whereGreaterThanOrEqualTo("date", startofMonth)
+                .orderBy("date", Query.Direction.DESCENDING)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {

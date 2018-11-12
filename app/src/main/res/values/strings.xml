@@ -14,6 +14,7 @@
     <string name="title_activity_login">AllinWallet - Sign in</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
+    <string name="summary">graph summary</string>
     <string name="hint_name">Fullname</string>
     <string name="btn_login">LOGIN</string>
     <string name="btn_link_to_register">Not a member? Get registered in Firebase now!</string>
@@ -27,6 +28,7 @@
     <string name="btn_back"><![CDATA[<< Back]]></string>
     <string name="hint_new_email">New Email</string>
     <string name="btn_change">Change</string>
+    <string name="issue">find bug?</string>
     <string name="profile">Profile</string>
     <string name="report">Report</string>
     <string name="search">Search</string>
@@ -40,6 +42,7 @@
     <string name="title_activity_add_purchase">Add Purchase</string>
     <string name="title_activity_edit_purchase">Edit Purchase</string>
     <string name="title_activity_profile">Profile</string>
+    <string name="title_activity_report">Report</string>
     <string name="action_example">Example action</string>
     <string name="dlt_account">Delete Account</string>
     <string name="action_settings">Settings</string>
@@ -51,14 +54,7 @@
     <string name="report_default_budget_text">No budget found</string>
     <string name="report_default_remaining_budget_text">Go to the profile page and set a budget</string>
     <string name="report_remaining_budget_found">Your remaining budget:</string>
-    <string name="grocery_text">Groceries Total Amount</string>
-    <string name="clothes_text">Clothes Total Amount</string>
-    <string name="housing_text">Housing Total Amount</string>
-    <string name="personal_text">Personal Total Amount</string>
-    <string name="general_text">General Total Amount</string>
-    <string name="transport_text">Transport Total Amount</string>
-    <string name="fun_text">Fun Total Amount</string>
-
+    <string name="title_activity_issue">Issue</string>
 
     <string-array name="sort_array">
         <item>Date</item>
