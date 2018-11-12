@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText emaill, pw;
     TextView tips;
 
-    //5 TIPS FOR NOW
+    //15 TIPS FOR NOW
 
     List<String> tipList = new ArrayList<>();
 
@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
     String tip14 = "TIP:\n Consider purchasing electronics on Black Friday for many great deals.";
     String tip15 = "TIP:\n You can usually find free PDFs of textbooks on the Internet.";
 
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
