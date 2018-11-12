@@ -100,7 +100,6 @@ public class Profile extends AppCompatActivity {
         budgetBotton = (Button) findViewById(R.id.budgetButton);
         incomeButton = (Button) findViewById(R.id.incomeButton);
         btnChoose = (Button) findViewById(R.id.btn_choose);
-        changeImage = (Button) findViewById(R.id.btn_change_theme);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
