@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -50,7 +49,7 @@ public class MainPage extends AppCompatActivity {
     private FirebaseAuth auth;
     private RadioGroup currencyGroup;
     private int CurrencyselectedRadioButtonID;
-    private String currencySign;
+    public static String currencySign;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +69,31 @@ public class MainPage extends AppCompatActivity {
             }
         });
 
+
+        String uid = auth.getUid();
+        final DocumentReference dRef = db.collection("users").document(uid);
+        dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, document.getId() + "-->" + document.getData());
+
+
+                        if (document.contains("Currency")){
+                            currencySign = document.getString("Currency");
+                        }
+
+
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
         purchaseList = (RecyclerView) findViewById(R.id.purchase_list);
         purchaseList.setHasFixedSize(true);
         purchaseListLayoutManager = new LinearLayoutManager(MainPage.this);
@@ -177,7 +201,7 @@ public class MainPage extends AppCompatActivity {
 
     public void updateMainPage(String uid) {
         final DocumentReference dRef = db.collection("users").document(uid);
-        currencySign = "$";
+        currencySign = "";
         dRef.collection("purchase").whereGreaterThanOrEqualTo("date", startofMonth)
                 .orderBy("date", Query.Direction.DESCENDING)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -200,7 +224,7 @@ public class MainPage extends AppCompatActivity {
 
                     purchaseListAdapter.notifyDataSetChanged();
                     budgetText.append(String.format(Locale.getDefault(),
-                            "%.2f%s", sum, currencySign));
+                            "%.2f", sum));
                     // 29 $
 
                     dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -215,6 +239,9 @@ public class MainPage extends AppCompatActivity {
                                         budgetText.append(String.format(Locale.getDefault(),
                                                 " / %.2f", document.getDouble("monthly budget")));
                                         //300 $
+                                    }
+                                    if (document.contains("Currency")){
+                                        currencySign = document.getString("Currency");
                                     }
 
                                     if (document.contains("income")) {
