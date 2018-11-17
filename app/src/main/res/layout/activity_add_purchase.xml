@@ -138,5 +138,20 @@
             android:text="get location"
             android:textColor="@color/white" />
 
+        <Button
+            android:id="@+id/btn_take_pic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="take picture"
+            android:background="@color/colorAccent"
+            android:padding="10dp"
+            android:textColor="@color/white"/>
+
+        <ImageView
+            android:id="@+id/img_reci"
+            android:layout_width="match_parent"
+            android:layout_height="190dp"
+            app:srcCompat="@drawable/common_google_signin_btn_icon_light_normal_background" />
+
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

@@ -72,7 +72,8 @@ public class Profile extends AppCompatActivity {
     private ImageView profileImage;
     private Button changeImage;
     private FirebaseAuth auth;
-    private Button logout, btn_dlt_act, budgetBotton, incomeButton, currencyButton;
+    private Button logout, btn_dlt_act, budgetBotton, incomeButton;
+    private Button changeTheme;
     //private Button refreshbutton;
     private TextView userinfo;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -99,7 +100,6 @@ public class Profile extends AppCompatActivity {
         budgetBotton = (Button) findViewById(R.id.budgetButton);
         incomeButton = (Button) findViewById(R.id.incomeButton);
         btnChoose = (Button) findViewById(R.id.btn_choose);
-        currencyButton = (Button) findViewById(R.id.currency);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -363,6 +363,7 @@ public class Profile extends AppCompatActivity {
 
 
 
+        getImage();
     }
 
     private void chooseImage() {
