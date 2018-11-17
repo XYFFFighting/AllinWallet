@@ -333,15 +333,16 @@ public class Profile extends AppCompatActivity {
                                     text = "Error";
                                     break;
 
-
-//                                Map<String, Object> budget_info = new HashMap<>();
-//                                budget_info.put(text, Double.parseDouble(budget_text));
-//                                CollectionReference users = db.collection("users");
-//                                users.document(uid).update(budget_info);
-//                                Toast.makeText(getApplicationContext(), "You have successfully " +
-//                                                "added " + text,
-//                                        Toast.LENGTH_SHORT).show();
                             }
+                                Map<String, Object> budget_info = new HashMap<>();
+                                budget_info.put("Currency", text);
+                                Object temp = text;
+                                CollectionReference users = db.collection("users");
+                                users.document(uid).update(budget_info);
+                                Toast.makeText(getApplicationContext(), "You have successfully " +
+                                                "added " + text,
+                                        Toast.LENGTH_SHORT).show();
+
                         }
 
 

@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,13 +48,16 @@ public class MainPage extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "AllinWallet";
     private FirebaseAuth auth;
+    private RadioGroup currencyGroup;
+    private int CurrencyselectedRadioButtonID;
+    private String currencySign;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         auth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
-
+        currencyGroup = findViewById(R.id.currency_type_group);
         welcomeMessage = (TextView) findViewById(R.id.welcomeText);
         budgetText = (TextView) findViewById(R.id.budgetText);
         setDate();
@@ -79,6 +84,8 @@ public class MainPage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
 
         purchaseList.setAdapter(purchaseListAdapter);
 
@@ -117,6 +124,16 @@ public class MainPage extends AppCompatActivity {
 
         ItemTouchHelper purchaseItemTouchHelper = new ItemTouchHelper(purchaseItemCallback);
         purchaseItemTouchHelper.attachToRecyclerView(purchaseList);
+
+//        CurrencyselectedRadioButtonID = currencyGroup.getCheckedRadioButtonId();
+//        if (CurrencyselectedRadioButtonID != -1) {
+////
+////            RadioButton selectedRadioButton = (RadioButton) findViewById(CurrencyselectedRadioButtonID);
+////            currencySign = selectedRadioButton.getText().toString();
+////        }
+////        else{
+////            currencySign = "";
+////        }
     }
 
     @Override
@@ -155,9 +172,12 @@ public class MainPage extends AppCompatActivity {
         startofMonth = calendar.getTime();
     }
 
+
+
+
     public void updateMainPage(String uid) {
         final DocumentReference dRef = db.collection("users").document(uid);
-
+        currencySign = "$";
         dRef.collection("purchase").whereGreaterThanOrEqualTo("date", startofMonth)
                 .orderBy("date", Query.Direction.DESCENDING)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -167,19 +187,21 @@ public class MainPage extends AppCompatActivity {
                     purchases.clear();
                     budgetText.setText("Current spending: ");
                     double sum = 0.0, amount;
-
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, document.getId() + "-->" + document.getData());
                         amount = document.getDouble("price");
+
                         sum += amount;
                         purchases.add(new PurchaseItem(document.getString("category"),
                                 document.getString("name"), amount,
                                 document.getDate("date"), document.getString("location"), document.getId()));
                     }
 
+
                     purchaseListAdapter.notifyDataSetChanged();
                     budgetText.append(String.format(Locale.getDefault(),
-                            "%.2f", sum));
+                            "%.2f%s", sum, currencySign));
+                    // 29 $
 
                     dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -192,6 +214,7 @@ public class MainPage extends AppCompatActivity {
                                     if (document.contains("monthly budget")) {
                                         budgetText.append(String.format(Locale.getDefault(),
                                                 " / %.2f", document.getDouble("monthly budget")));
+                                        //300 $
                                     }
 
                                     if (document.contains("income")) {
