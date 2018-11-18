@@ -57,6 +57,9 @@
             android:name=".Search_by_category"
             android:label="@string/title_activity_search_by_category" />
         <activity
+            android:name=".ShareActivity"
+            android:label="ShareActivity" />
+        <activity
             android:name=".Searching"
             android:label="@string/title_activity_searching" />
         <activity android:name=".UploadActivity" />
