@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,13 +47,16 @@ public class MainPage extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "AllinWallet";
     private FirebaseAuth auth;
+    private RadioGroup currencyGroup;
+    private int CurrencyselectedRadioButtonID;
+    public static String currencySign;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         auth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
-
+        currencyGroup = findViewById(R.id.currency_type_group);
         welcomeMessage = (TextView) findViewById(R.id.welcomeText);
         budgetText = (TextView) findViewById(R.id.budgetText);
         setDate();
@@ -65,6 +69,31 @@ public class MainPage extends AppCompatActivity {
             }
         });
 
+
+        String uid = auth.getUid();
+        final DocumentReference dRef = db.collection("users").document(uid);
+        dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, document.getId() + "-->" + document.getData());
+
+
+                        if (document.contains("Currency")){
+                            currencySign = document.getString("Currency");
+                        }
+
+
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
         purchaseList = (RecyclerView) findViewById(R.id.purchase_list);
         purchaseList.setHasFixedSize(true);
         purchaseListLayoutManager = new LinearLayoutManager(MainPage.this);
@@ -79,6 +108,8 @@ public class MainPage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
 
         purchaseList.setAdapter(purchaseListAdapter);
 
@@ -117,6 +148,16 @@ public class MainPage extends AppCompatActivity {
 
         ItemTouchHelper purchaseItemTouchHelper = new ItemTouchHelper(purchaseItemCallback);
         purchaseItemTouchHelper.attachToRecyclerView(purchaseList);
+
+//        CurrencyselectedRadioButtonID = currencyGroup.getCheckedRadioButtonId();
+//        if (CurrencyselectedRadioButtonID != -1) {
+////
+////            RadioButton selectedRadioButton = (RadioButton) findViewById(CurrencyselectedRadioButtonID);
+////            currencySign = selectedRadioButton.getText().toString();
+////        }
+////        else{
+////            currencySign = "";
+////        }
     }
 
     @Override
@@ -155,9 +196,12 @@ public class MainPage extends AppCompatActivity {
         startofMonth = calendar.getTime();
     }
 
+
+
+
     public void updateMainPage(String uid) {
         final DocumentReference dRef = db.collection("users").document(uid);
-
+        currencySign = "";
         dRef.collection("purchase").whereGreaterThanOrEqualTo("date", startofMonth)
                 .orderBy("date", Query.Direction.DESCENDING)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -167,19 +211,21 @@ public class MainPage extends AppCompatActivity {
                     purchases.clear();
                     budgetText.setText("Current spending: ");
                     double sum = 0.0, amount;
-
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, document.getId() + "-->" + document.getData());
                         amount = document.getDouble("price");
+
                         sum += amount;
                         purchases.add(new PurchaseItem(document.getString("category"),
                                 document.getString("name"), amount,
                                 document.getDate("date"), document.getString("location"), document.getId()));
                     }
 
+
                     purchaseListAdapter.notifyDataSetChanged();
                     budgetText.append(String.format(Locale.getDefault(),
                             "%.2f", sum));
+                    // 29 $
 
                     dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -192,6 +238,10 @@ public class MainPage extends AppCompatActivity {
                                     if (document.contains("monthly budget")) {
                                         budgetText.append(String.format(Locale.getDefault(),
                                                 " / %.2f", document.getDouble("monthly budget")));
+                                        //300 $
+                                    }
+                                    if (document.contains("Currency")){
+                                        currencySign = document.getString("Currency");
                                     }
 
                                     if (document.contains("income")) {

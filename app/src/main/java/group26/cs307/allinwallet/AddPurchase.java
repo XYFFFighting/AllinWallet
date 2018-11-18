@@ -108,7 +108,7 @@ public class AddPurchase extends AppCompatActivity {
         btn_take_picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TakePictureIntent();
+                takePictureIntent = TakePictureIntent();
                 handleSmallCameraPhoto(takePictureIntent);
             }
         });
@@ -296,8 +296,8 @@ public class AddPurchase extends AppCompatActivity {
         return cityName;
     }
 
-    private void TakePictureIntent(){
-        takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    private Intent TakePictureIntent(){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
@@ -317,6 +317,7 @@ public class AddPurchase extends AppCompatActivity {
             }
         }
 
+        return takePictureIntent;
 
     }
 

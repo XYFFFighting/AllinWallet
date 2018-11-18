@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText emaill, pw;
     TextView tips;
 
-    //15 TIPS FOR NOW
+    //5 TIPS FOR NOW
 
     List<String> tipList = new ArrayList<>();
 
@@ -52,17 +52,6 @@ public class LoginActivity extends AppCompatActivity {
     String tip3 = "TIP:\n Try cooking more at home than eating out, as it is usually more expensive.";
     String tip4 = "TIP:\n You can download music for free on numerous mp3 websites instead of purchasing via iTunes.";
     String tip5 = "TIP:\n Stream TV shows and movies for free using putlocker.com.";
-    String tip6 = "TIP:\n Use your .edu email for Amazon Prime for better deals and savings.";
-    String tip7 = "TIP:\n Use your .edu email for Amazon Prime for free one-day shipping.";
-    String tip8 = "TIP:\n Always turn off the lights when not needed, your electric bill will thank you.";
-    String tip9 = "TIP:\n Try to fix things yourself instead of paying for maintenance.";
-    String tip10 = "TIP:\n Always stick with water: the healthiest and cheapest drink choice.";
-    String tip11 = "TIP:\n Buy used products rather than new if you can.";
-    String tip12 = "TIP:\n Use your student ID at the movie theater for cheaper tickets.";
-    String tip13 = "TIP:\n Take advantage of public transportation.";
-    String tip14 = "TIP:\n Consider purchasing electronics on Black Friday for many great deals.";
-    String tip15 = "TIP:\n You can usually find free PDFs of textbooks on the Internet.";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,16 +63,6 @@ public class LoginActivity extends AppCompatActivity {
         tipList.add(tip3);
         tipList.add(tip4);
         tipList.add(tip5);
-        tipList.add(tip6);
-        tipList.add(tip7);
-        tipList.add(tip8);
-        tipList.add(tip9);
-        tipList.add(tip10);
-        tipList.add(tip11);
-        tipList.add(tip12);
-        tipList.add(tip13);
-        tipList.add(tip14);
-        tipList.add(tip15);
 
         super.onCreate(savedInstanceState);
 
