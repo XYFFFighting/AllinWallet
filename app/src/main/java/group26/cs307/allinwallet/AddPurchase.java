@@ -250,7 +250,13 @@ public class AddPurchase extends AppCompatActivity {
                 .collection("purchase").document(time).set(purchaselist);
         Log.d(TAG, uid + " send purchase data");
 
-        //update picture
+        uploadrecipe(time);
+
+    }
+
+    public void uploadrecipe(String time){
+        //upload picture
+        String uid = auth.getUid();
         StorageReference ref = storageReference.child("images/" + uid + "/" + "purchase" + "/" + time + "/" + "recipe");
         img_reci.setDrawingCacheEnabled(true);
         img_reci.buildDrawingCache();
@@ -270,7 +276,6 @@ public class AddPurchase extends AppCompatActivity {
 
             }
         });
-
     }
 
     public void updatePurchase(String name, double price, String category, Date date, String location, String
@@ -286,6 +291,7 @@ public class AddPurchase extends AppCompatActivity {
 
         db.collection("users").document(uid)
                 .collection("purchase").document(documentUID).update(purchaselist);
+        uploadrecipe(documentUID);
         Log.d(TAG, uid + " update purchase data");
     }
 
@@ -337,6 +343,7 @@ public class AddPurchase extends AppCompatActivity {
     private void updateReci(String time){
         String uid = auth.getUid();
         StorageReference ref = storageReference.child("images/" + uid + "/" + "purchase" + "/" + time + "/" + "recipe");
+        Log.d(TAG, "update recipe: " + "images/" + uid + "/" + "purchase" + "/" + time + "/" + "recipe");
         File localFile = null;
 
         try {
