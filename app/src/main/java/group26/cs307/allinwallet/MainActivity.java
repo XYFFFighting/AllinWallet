@@ -1,6 +1,5 @@
 package group26.cs307.allinwallet;
 
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -9,17 +8,13 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.Menu;
 import android.widget.Button;
 import android.widget.EditText;
-import android.text.InputType;
-import android.content.res.Configuration;
 import android.widget.Toast;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -36,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "AllinWallet";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAnalytics mFirebaseAnalytics;
-    private Button signup, login, main, addpurchase, reset, profile, report, budget, search, categories, reportIssue;
+    private Button signup, login, main, addpurchase, reset, profile, report, budget, search, categories, reportIssue, graphVisual;
     private EditText authtext;
     private FirebaseAuth auth;
 
@@ -59,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         authtext = (EditText) findViewById(R.id.auth_text);
         budget = (Button) findViewById(R.id.btn_budget);
         reportIssue = (Button) findViewById(R.id.report_issue);
+        graphVisual = (Button) findViewById(R.id.graph_visual_btn);
 
 
         if (auth.getCurrentUser() == null) {
@@ -73,6 +69,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
 
+            }
+        });
+
+        graphVisual.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                startActivity(new Intent(MainActivity.this, GraphVisual.class));
             }
         });
         signup.setOnClickListener(new View.OnClickListener() {
@@ -137,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, Report.class));
             }
         });
+
 
 
 

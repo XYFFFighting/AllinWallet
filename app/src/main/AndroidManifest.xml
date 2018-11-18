@@ -60,6 +60,8 @@
             android:name=".Searching"
             android:label="@string/title_activity_searching" />
         <activity android:name=".UploadActivity" />
+        <activity android:name=".GraphVisual"
+            android:label="GraphVisual"/>
         <activity
             android:name=".Issue"
             android:label="@string/title_activity_issue"></activity>
