@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "AllinWallet";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAnalytics mFirebaseAnalytics;
-    private Button signup, login, main, addpurchase, reset, profile, report, budget, search, categories, reportIssue, graphVisual;
+    private Button signup, login, main, addpurchase, reset, profile, report, budget, search, categories, reportIssue, graphVisual, shareActivity;
     private EditText authtext;
     private FirebaseAuth auth;
 
@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         budget = (Button) findViewById(R.id.btn_budget);
         reportIssue = (Button) findViewById(R.id.report_issue);
         graphVisual = (Button) findViewById(R.id.graph_visual_btn);
+        shareActivity = (Button) findViewById(R.id.share);
 
 
         if (auth.getCurrentUser() == null) {
@@ -133,6 +134,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, Profile.class));
+            }
+        });
+
+        shareActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, ShareActivity.class));
             }
         });
 
