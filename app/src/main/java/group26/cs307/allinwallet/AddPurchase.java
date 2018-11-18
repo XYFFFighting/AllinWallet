@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -33,12 +35,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -68,6 +78,8 @@ public class AddPurchase extends AppCompatActivity {
     private Calendar calendar;
     private SimpleDateFormat formatter;
     private int passedPurchaseIndex;
+    FirebaseStorage storage;
+    StorageReference storageReference;
     private PurchaseItem item;
     public static List<String> defaultCategories = new ArrayList<>(Arrays.asList("Grocery",
             "Clothes", "Housing", "Personal", "General", "Transport", "Fun"));
@@ -104,12 +116,15 @@ public class AddPurchase extends AppCompatActivity {
         categoryPicker.setAdapter(spinnerAA);
         formatter = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
         calendar = Calendar.getInstance();
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
 
         btn_take_picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                takePictureIntent = TakePictureIntent();
-                handleSmallCameraPhoto(takePictureIntent);
+//                takePictureIntent = TakePictureIntent();
+//                handleSmallCameraPhoto(takePictureIntent);
+                dispatchTakePictureIntent();
             }
         });
 
@@ -205,6 +220,7 @@ public class AddPurchase extends AppCompatActivity {
             inputPrice.setText(item.getAmountString());
             inputDate.setText(item.getDateString());
             calendar.setTime(item.getDate());
+            updateReci(item.getDocumentUID());
             if(!item.getLocation().equals("")){
                 txt_location.setText(item.getLocation());
             } else {
@@ -233,6 +249,28 @@ public class AddPurchase extends AppCompatActivity {
         db.collection("users").document(uid)
                 .collection("purchase").document(time).set(purchaselist);
         Log.d(TAG, uid + " send purchase data");
+
+        //update picture
+        StorageReference ref = storageReference.child("images/" + uid + "/" + "purchase" + "/" + time + "/" + "recipe");
+        img_reci.setDrawingCacheEnabled(true);
+        img_reci.buildDrawingCache();
+        Bitmap bitmap = ((BitmapDrawable) img_reci.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+        UploadTask uploadTask = ref.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Log.d(TAG, "upload recipe failed");
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+            }
+        });
+
     }
 
     public void updatePurchase(String name, double price, String category, Date date, String location, String
@@ -296,62 +334,139 @@ public class AddPurchase extends AppCompatActivity {
         return cityName;
     }
 
-    private Intent TakePictureIntent(){
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "group26.cs307.allinwallet",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
+    private void updateReci(String time){
+        String uid = auth.getUid();
+        StorageReference ref = storageReference.child("images/" + uid + "/" + "purchase" + "/" + time + "/" + "recipe");
+        File localFile = null;
+
+        try {
+            localFile = File.createTempFile("images", "jpg");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        return takePictureIntent;
+        final File local2 = localFile;
+        ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                Bitmap bitmap = BitmapFactory.decodeFile(local2.getAbsolutePath());
+                img_reci.setImageBitmap(bitmap);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
+                        .getTotalByteCount());
+                //progressDialog.setMessage("Uploaded "+(int)progress+"%");
+            }
+        });
 
     }
 
 
-    private void handleSmallCameraPhoto(Intent intent) {
-        Bundle extras = intent.getExtras();
-        recip = (Bitmap) extras.get("data");
-        img_reci.setImageBitmap(recip);
-    }
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
-        Log.d(TAG, mCurrentPhotoPath);
-        return image;
-    }
+//    private Intent TakePictureIntent(){
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        // Ensure that there's a camera activity to handle the intent
+//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//            // Create the File where the photo should go
+//            File photoFile = null;
+//            try {
+//                photoFile = createImageFile();
+//            } catch (IOException ex) {
+//                // Error occurred while creating the File
+//            }
+//            // Continue only if the File was successfully created
+//            if (photoFile != null) {
+//                Uri photoURI = FileProvider.getUriForFile(this,
+//                        "group26.cs307.allinwallet",
+//                        photoFile);
+//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+//                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+//            }
+//        }
+//
+//        return takePictureIntent;
+//
+//    }
+//
+//
+//    private void handleSmallCameraPhoto(Intent intent) {
+//        Bundle extras = intent.getExtras();
+//        recip = (Bitmap) extras.get("data");
+//        img_reci.setImageBitmap(recip);
+//    }
+//
+//    private File createImageFile() throws IOException {
+//        // Create an image file name
+//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//        String imageFileName = "JPEG_" + timeStamp + "_";
+//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        File image = File.createTempFile(
+//                imageFileName,  /* prefix */
+//                ".jpg",         /* suffix */
+//                storageDir      /* directory */
+//        );
+//
+//        // Save a file: path for use with ACTION_VIEW intents
+//        mCurrentPhotoPath = image.getAbsolutePath();
+//        Log.d(TAG, mCurrentPhotoPath);
+//        return image;
+//    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "add picture resume");
-        if(takePictureIntent!= null)
-            handleSmallCameraPhoto(takePictureIntent);
+//        Log.d(TAG, "add picture resume");
+//        if(takePictureIntent!= null)
+//            handleSmallCameraPhoto(takePictureIntent);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE  && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            img_reci.setImageBitmap(imageBitmap);
+        }
+    }
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+//        private Intent TakePictureIntent(){
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        // Ensure that there's a camera activity to handle the intent
+//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//            // Create the File where the photo should go
+//            File photoFile = null;
+//            try {
+//                photoFile = createImageFile();
+//            } catch (IOException ex) {
+//                // Error occurred while creating the File
+//                Log.d(TAG, "failed to create image file");
+//            }
+//            // Continue only if the File was successfully created
+//            if (photoFile != null) {
+//                Uri photoURI = FileProvider.getUriForFile(this,
+//                        "group26.cs307.allinwallet",
+//                        photoFile);
+//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+//                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+//            }
+//        }
+//
+//        return takePictureIntent;
+//
+//    }
 }
 
 
