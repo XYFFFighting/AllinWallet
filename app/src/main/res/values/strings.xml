@@ -61,6 +61,7 @@
     <string name="add_purchase_menu_add_receipt">Add Receipt</string>
     <string name="add_purchase_menu_update_receipt">Update Receipt</string>
     <string name="add_purchase_menu_remove_receipt">Remove Receipt</string>
+    <string name="add_purchase_recurring_check_box">Recurring Expense</string>
 
     <string-array name="sort_array">
         <item>Date</item>

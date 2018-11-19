@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -62,8 +63,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class AddPurchase extends AppCompatActivity {
+public class AddPurchase extends AppCompatActivity implements View.OnClickListener {
     private Button save, cancel;
+    private CheckBox isRecurringExpense;
     private ImageView img_reci;
     private Spinner categoryPicker;
     private EditText inputName, inputPrice, inputDate;
@@ -95,6 +97,7 @@ public class AddPurchase extends AppCompatActivity {
         }
 
         locationString = "No Location";
+        isRecurringExpense = (CheckBox) findViewById(R.id.recurring_check_box);
         save = (Button) findViewById(R.id.save_button);
         cancel = (Button) findViewById(R.id.cancel_button);
         inputName = (EditText) findViewById(R.id.item_name);
@@ -112,46 +115,9 @@ public class AddPurchase extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String name = inputName.getText().toString();
-                String price = inputPrice.getText().toString();
-                String category = categoryPicker.getSelectedItem().toString();
-                String location = locationString;
-                Date date = calendar.getTime();
-
-                if (TextUtils.isEmpty(name)) {
-                    inputName.setError("Title cannot be empty");
-                    return;
-                }
-                if (TextUtils.isEmpty(price)) {
-                    inputPrice.setError("Amount cannot be empty");
-                    return;
-                }
-
-                Log.d(TAG, "Item Title: " + name);
-                Log.d(TAG, "Item Amount: " + price);
-                Log.d(TAG, "Item Category: " + category);
-                Log.d(TAG, "Item Date: " + date);
-                Log.d(TAG, "location: " + locationString);
-
-                if (passedPurchaseIndex == -1) {
-                    addPurchase(name, Double.parseDouble(price), category, date, location);
-                } else {
-                    updatePurchase(name, Double.parseDouble(price), category, date, location, item.getDocumentUID());
-                }
-
-                onBackPressed();
-            }
-        });
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+        save.setOnClickListener(this);
+        cancel.setOnClickListener(this);
+        inputDate.setOnClickListener(this);
 
         dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -166,18 +132,6 @@ public class AddPurchase extends AppCompatActivity {
             }
         };
 
-        inputDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-                new DatePickerDialog(AddPurchase.this,
-                        dateSetListener, year, month, day).show();
-            }
-        });
-
         if (passedPurchaseIndex != -1) {
             setTitle(R.string.title_activity_edit_purchase);
             inputName.setText(item.getTitle());
@@ -186,6 +140,7 @@ public class AddPurchase extends AppCompatActivity {
             calendar.setTime(item.getDate());
             updateReci(item.getDocumentUID());
             categoryPicker.setSelection(categories.indexOf(item.getCategory()));
+            isRecurringExpense.setVisibility(View.GONE);
         } else {
             inputDate.setText(formatter.format(calendar.getTime()));
         }
@@ -403,6 +358,55 @@ public class AddPurchase extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(menuItem);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.save_button:
+                String name = inputName.getText().toString();
+                String price = inputPrice.getText().toString();
+                String category = categoryPicker.getSelectedItem().toString();
+                String location = locationString;
+                Date date = calendar.getTime();
+
+                if (TextUtils.isEmpty(name)) {
+                    inputName.setError("Title cannot be empty");
+                    return;
+                }
+                if (TextUtils.isEmpty(price)) {
+                    inputPrice.setError("Amount cannot be empty");
+                    return;
+                }
+
+                Log.d(TAG, "Item Title: " + name);
+                Log.d(TAG, "Item Amount: " + price);
+                Log.d(TAG, "Item Category: " + category);
+                Log.d(TAG, "Item Date: " + date);
+                Log.d(TAG, "location: " + locationString);
+
+                if (passedPurchaseIndex == -1) {
+                    addPurchase(name, Double.parseDouble(price), category, date, location);
+                } else {
+                    updatePurchase(name, Double.parseDouble(price), category, date, location, item.getDocumentUID());
+                }
+
+                onBackPressed();
+                break;
+            case R.id.cancel_button:
+                onBackPressed();
+                break;
+            case R.id.item_date:
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                new DatePickerDialog(AddPurchase.this,
+                        dateSetListener, year, month, day).show();
+                break;
+            default:
+                break;
         }
     }
 }
