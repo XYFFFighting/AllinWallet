@@ -15,16 +15,7 @@
 
     <item
         android:id="@+id/menu_add_receipt"
+        android:icon="@drawable/ic_add_receipt"
         android:title="@string/add_purchase_menu_add_receipt"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/menu_update_receipt"
-        android:title="@string/add_purchase_menu_update_receipt"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/menu_remove_receipt"
-        android:title="@string/add_purchase_menu_remove_receipt"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 </menu>

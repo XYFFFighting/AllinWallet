@@ -49,8 +49,6 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.w3c.dom.Text;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -65,16 +63,13 @@ import java.util.Locale;
 import java.util.Map;
 
 public class AddPurchase extends AppCompatActivity {
-    String mCurrentPhotoPath;
-    private Button save, cancel, getlocation, btn_take_picture;
+    private Button save, cancel;
     private ImageView img_reci;
-    private Bitmap recip;
     private Spinner categoryPicker;
     private EditText inputName, inputPrice, inputDate;
-    private TextView txt_location;
+    private String locationString;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth auth;
-    private FirebaseAnalytics mFirebaseAnalytics;
     private static final String TAG = "AllinWallet";
 
     private DatePickerDialog.OnDateSetListener dateSetListener;
@@ -84,11 +79,9 @@ public class AddPurchase extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageReference;
     private PurchaseItem item;
-    public static List<String> defaultCategories = new ArrayList<>(Arrays.asList("Grocery",
+    private static List<String> defaultCategories = new ArrayList<>(Arrays.asList("Grocery",
             "Clothes", "Housing", "Personal", "General", "Transport", "Fun"));
-    private List<String> categories;
-    private Intent takePictureIntent;
-    static final int REQUEST_TAKE_PHOTO = 1;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,35 +94,24 @@ public class AddPurchase extends AppCompatActivity {
             item = MainPage.purchases.get(passedPurchaseIndex);
         }
 
+        locationString = "No Location";
         save = (Button) findViewById(R.id.save_button);
         cancel = (Button) findViewById(R.id.cancel_button);
-        getlocation = (Button) findViewById(R.id.btn_get_location);
-        btn_take_picture = (Button) findViewById(R.id.btn_take_pic);
-        categoryPicker = (Spinner) findViewById(R.id.category_picker);
         inputName = (EditText) findViewById(R.id.item_name);
         inputPrice = (EditText) findViewById(R.id.item_price);
         inputDate = (EditText) findViewById(R.id.item_date);
-        txt_location = (TextView) findViewById(R.id.txt_location);
         img_reci = (ImageView) findViewById(R.id.img_reci);
-        categories = new ArrayList<>();
-        categories.addAll(defaultCategories);
-        // TO-DO: get categories from firebase
-        ArrayAdapter spinnerAA = new ArrayAdapter(AddPurchase.this,
-                android.R.layout.simple_spinner_dropdown_item, categories);
-        categoryPicker.setAdapter(spinnerAA);
+
+        categoryPicker = (Spinner) findViewById(R.id.category_picker);
+        ArrayAdapter<CharSequence> categoryAA = ArrayAdapter.createFromResource(AddPurchase.this,
+                R.array.category_array, android.R.layout.simple_spinner_item);
+        categoryAA.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categoryPicker.setAdapter(categoryAA);
+
         formatter = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
         calendar = Calendar.getInstance();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-
-        btn_take_picture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                takePictureIntent = TakePictureIntent();
-//                handleSmallCameraPhoto(takePictureIntent);
-                dispatchTakePictureIntent();
-            }
-        });
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,10 +119,7 @@ public class AddPurchase extends AppCompatActivity {
                 String name = inputName.getText().toString();
                 String price = inputPrice.getText().toString();
                 String category = categoryPicker.getSelectedItem().toString();
-                String location = txt_location.getText().toString();
-                if (location.equals("Location")) {
-                    location = "";
-                }
+                String location = locationString;
                 Date date = calendar.getTime();
 
                 if (TextUtils.isEmpty(name)) {
@@ -151,17 +130,19 @@ public class AddPurchase extends AppCompatActivity {
                     inputPrice.setError("Amount cannot be empty");
                     return;
                 }
+
                 Log.d(TAG, "Item Title: " + name);
                 Log.d(TAG, "Item Amount: " + price);
                 Log.d(TAG, "Item Category: " + category);
                 Log.d(TAG, "Item Date: " + date);
-                Log.d(TAG, "location: " + location);
+                Log.d(TAG, "location: " + locationString);
 
                 if (passedPurchaseIndex == -1) {
                     addPurchase(name, Double.parseDouble(price), category, date, location);
                 } else {
                     updatePurchase(name, Double.parseDouble(price), category, date, location, item.getDocumentUID());
                 }
+
                 onBackPressed();
             }
         });
@@ -198,25 +179,6 @@ public class AddPurchase extends AppCompatActivity {
             }
         });
 
-        getlocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1000);
-                } else {
-                    LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                    try {
-                        String city = getCityName(location.getLatitude(), location.getLongitude());
-                        txt_location.setText(city);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(AddPurchase.this, "Not found", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-
         if (passedPurchaseIndex != -1) {
             setTitle(R.string.title_activity_edit_purchase);
             inputName.setText(item.getTitle());
@@ -224,13 +186,7 @@ public class AddPurchase extends AppCompatActivity {
             inputDate.setText(item.getDateString());
             calendar.setTime(item.getDate());
             updateReci(item.getDocumentUID());
-            if (!item.getLocation().equals("")) {
-                txt_location.setText(item.getLocation());
-            } else {
-                txt_location.setText("");
-            }
-            categoryPicker.setSelection(categories.indexOf(item.getCategory()));
-            getlocation.setVisibility(View.INVISIBLE);
+            categoryPicker.setSelection(defaultCategories.indexOf(item.getCategory()));
         } else {
             inputDate.setText(formatter.format(calendar.getTime()));
         }
@@ -253,8 +209,9 @@ public class AddPurchase extends AppCompatActivity {
                 .collection("purchase").document(time).set(purchaselist);
         Log.d(TAG, uid + " send purchase data");
 
-        uploadrecipe(time);
-
+        if (img_reci.getDrawable() != null) {
+            uploadrecipe(time);
+        }
     }
 
     public void uploadrecipe(String time) {
@@ -294,13 +251,15 @@ public class AddPurchase extends AppCompatActivity {
 
         db.collection("users").document(uid)
                 .collection("purchase").document(documentUID).update(purchaselist);
-        uploadrecipe(documentUID);
         Log.d(TAG, uid + " update purchase data");
+
+        if (img_reci.getDrawable() != null) {
+            uploadrecipe(documentUID);
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
         switch (requestCode) {
             case 1000: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -308,7 +267,9 @@ public class AddPurchase extends AppCompatActivity {
                     @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                     try {
                         String city = getCityName(location.getLatitude(), location.getLongitude());
-                        txt_location.setText(city);
+                        Toast.makeText(AddPurchase.this, "Located: " + city, Toast.LENGTH_SHORT)
+                                .show();
+                        locationString = city;
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(AddPurchase.this, "Not found", Toast.LENGTH_SHORT).show();
@@ -376,64 +337,6 @@ public class AddPurchase extends AppCompatActivity {
 
     }
 
-
-//    private Intent TakePictureIntent(){
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        // Ensure that there's a camera activity to handle the intent
-//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//            // Create the File where the photo should go
-//            File photoFile = null;
-//            try {
-//                photoFile = createImageFile();
-//            } catch (IOException ex) {
-//                // Error occurred while creating the File
-//            }
-//            // Continue only if the File was successfully created
-//            if (photoFile != null) {
-//                Uri photoURI = FileProvider.getUriForFile(this,
-//                        "group26.cs307.allinwallet",
-//                        photoFile);
-//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-//                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-//            }
-//        }
-//
-//        return takePictureIntent;
-//
-//    }
-//
-//
-//    private void handleSmallCameraPhoto(Intent intent) {
-//        Bundle extras = intent.getExtras();
-//        recip = (Bitmap) extras.get("data");
-//        img_reci.setImageBitmap(recip);
-//    }
-//
-//    private File createImageFile() throws IOException {
-//        // Create an image file name
-//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//        String imageFileName = "JPEG_" + timeStamp + "_";
-//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//        File image = File.createTempFile(
-//                imageFileName,  /* prefix */
-//                ".jpg",         /* suffix */
-//                storageDir      /* directory */
-//        );
-//
-//        // Save a file: path for use with ACTION_VIEW intents
-//        mCurrentPhotoPath = image.getAbsolutePath();
-//        Log.d(TAG, mCurrentPhotoPath);
-//        return image;
-//    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        Log.d(TAG, "add picture resume");
-//        if(takePictureIntent!= null)
-//            handleSmallCameraPhoto(takePictureIntent);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
@@ -443,8 +346,6 @@ public class AddPurchase extends AppCompatActivity {
         }
     }
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -452,54 +353,57 @@ public class AddPurchase extends AppCompatActivity {
         }
     }
 
-//        private Intent TakePictureIntent(){
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        // Ensure that there's a camera activity to handle the intent
-//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//            // Create the File where the photo should go
-//            File photoFile = null;
-//            try {
-//                photoFile = createImageFile();
-//            } catch (IOException ex) {
-//                // Error occurred while creating the File
-//                Log.d(TAG, "failed to create image file");
-//            }
-//            // Continue only if the File was successfully created
-//            if (photoFile != null) {
-//                Uri photoURI = FileProvider.getUriForFile(this,
-//                        "group26.cs307.allinwallet",
-//                        photoFile);
-//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-//                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//            }
-//        }
-//
-//        return takePictureIntent;
-//
-//    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.add_purchase_menu, menu);
+
+        if (passedPurchaseIndex == -1) {
+            MenuItem check = menu.findItem(R.id.action_check_location);
+            check.setVisible(false);
+        } else {
+            MenuItem get = menu.findItem(R.id.action_get_location);
+            get.setVisible(false);
+        }
+
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
             case R.id.action_get_location:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1000);
+                } else {
+                    LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    try {
+                        String city = getCityName(location.getLatitude(), location.getLongitude());
+                        Toast.makeText(AddPurchase.this, "Located: " + city, Toast.LENGTH_SHORT)
+                                .show();
+                        locationString = city;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(AddPurchase.this, "Not found", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
                 return true;
             case R.id.action_check_location:
+                if (TextUtils.equals(item.getLocation(), "No Location")) {
+                    Toast.makeText(AddPurchase.this, "No Location Found", Toast.LENGTH_SHORT)
+                            .show();
+                } else {
+                    Toast.makeText(AddPurchase.this, "Place of Purchase: " + item.getLocation(), Toast.LENGTH_SHORT)
+                            .show();
+                }
+
                 return true;
             case R.id.menu_add_receipt:
+                dispatchTakePictureIntent();
                 return true;
-            case R.id.menu_update_receipt:
-                return true;
-            case R.id.menu_remove_receipt:
-                return true;
-
             default:
-                return super.onOptionsItemSelected(item);
+                return super.onOptionsItemSelected(menuItem);
         }
     }
 }

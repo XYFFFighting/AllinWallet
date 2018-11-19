@@ -61,10 +61,21 @@
     <string name="add_purchase_menu_add_receipt">Add Receipt</string>
     <string name="add_purchase_menu_update_receipt">Update Receipt</string>
     <string name="add_purchase_menu_remove_receipt">Remove Receipt</string>
+
     <string-array name="sort_array">
         <item>Date</item>
         <item>Category</item>
         <item>Title</item>
         <item>Amount</item>
+    </string-array>
+
+    <string-array name="category_array">
+        <item>Grocery</item>
+        <item>Clothes</item>
+        <item>Housing</item>
+        <item>Personal</item>
+        <item>General</item>
+        <item>Transport</item>
+        <item>Fun</item>
     </string-array>
 </resources>
