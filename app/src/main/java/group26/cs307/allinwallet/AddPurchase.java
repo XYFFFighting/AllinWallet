@@ -355,30 +355,6 @@ public class AddPurchase extends AppCompatActivity {
             handleSmallCameraPhoto(takePictureIntent);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.add_purchase_menu, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_get_location:
-                return true;
-            case R.id.action_check_location:
-                return true;
-            case R.id.menu_add_receipt:
-                return true;
-            case R.id.menu_update_receipt:
-                return true;
-            case R.id.menu_remove_receipt:
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-}
 
 
