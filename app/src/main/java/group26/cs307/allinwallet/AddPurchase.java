@@ -23,6 +23,8 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -120,7 +122,7 @@ public class AddPurchase extends AppCompatActivity {
                 String price = inputPrice.getText().toString();
                 String category = categoryPicker.getSelectedItem().toString();
                 String location = txt_location.getText().toString();
-                if(location.equals("Location")){
+                if (location.equals("Location")) {
                     location = "";
                 }
                 Date date = calendar.getTime();
@@ -184,7 +186,7 @@ public class AddPurchase extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, 1000);
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1000);
                 } else {
                     LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                     Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -205,7 +207,7 @@ public class AddPurchase extends AppCompatActivity {
             inputPrice.setText(item.getAmountString());
             inputDate.setText(item.getDateString());
             calendar.setTime(item.getDate());
-            if(!item.getLocation().equals("")){
+            if (!item.getLocation().equals("")) {
                 txt_location.setText(item.getLocation());
             } else {
                 txt_location.setText("");
@@ -255,8 +257,8 @@ public class AddPurchase extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         switch (requestCode) {
-            case 1000:{
-                if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            case 1000: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                     @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                     try {
@@ -283,7 +285,7 @@ public class AddPurchase extends AppCompatActivity {
         try {
             addresses = geocoder.getFromLocation(latitude, lontitude, 10);
             if (addresses.size() > 0) {
-                for(Address address : addresses) {
+                for (Address address : addresses) {
                     if (address.getLocality() != null && address.getLocality().length() > 0) {
                         cityName = address.getLocality();
                         break;
@@ -296,7 +298,7 @@ public class AddPurchase extends AppCompatActivity {
         return cityName;
     }
 
-    private Intent TakePictureIntent(){
+    private Intent TakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -349,8 +351,33 @@ public class AddPurchase extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "add picture resume");
-        if(takePictureIntent!= null)
+        if (takePictureIntent != null)
             handleSmallCameraPhoto(takePictureIntent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.add_purchase_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_get_location:
+                return true;
+            case R.id.action_check_location:
+                return true;
+            case R.id.menu_add_receipt:
+                return true;
+            case R.id.menu_update_receipt:
+                return true;
+            case R.id.menu_remove_receipt:
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
 
