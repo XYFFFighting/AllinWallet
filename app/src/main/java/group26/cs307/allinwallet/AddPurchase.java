@@ -26,6 +26,8 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -475,4 +477,29 @@ public class AddPurchase extends AppCompatActivity {
 //        return takePictureIntent;
 //
 //    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.add_purchase_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_get_location:
+                return true;
+            case R.id.action_check_location:
+                return true;
+            case R.id.menu_add_receipt:
+                return true;
+            case R.id.menu_update_receipt:
+                return true;
+            case R.id.menu_remove_receipt:
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }
