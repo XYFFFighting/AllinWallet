@@ -79,7 +79,7 @@ public class AddPurchase extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageReference;
     private PurchaseItem item;
-    private static List<String> defaultCategories = new ArrayList<>(Arrays.asList("Grocery",
+    private static List<String> categories = new ArrayList<>(Arrays.asList("Grocery",
             "Clothes", "Housing", "Personal", "General", "Transport", "Fun"));
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -103,9 +103,8 @@ public class AddPurchase extends AppCompatActivity {
         img_reci = (ImageView) findViewById(R.id.img_reci);
 
         categoryPicker = (Spinner) findViewById(R.id.category_picker);
-        ArrayAdapter<CharSequence> categoryAA = ArrayAdapter.createFromResource(AddPurchase.this,
-                R.array.category_array, android.R.layout.simple_spinner_item);
-        categoryAA.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter categoryAA = new ArrayAdapter(AddPurchase.this,
+                android.R.layout.simple_spinner_dropdown_item, categories);
         categoryPicker.setAdapter(categoryAA);
 
         formatter = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
@@ -186,7 +185,7 @@ public class AddPurchase extends AppCompatActivity {
             inputDate.setText(item.getDateString());
             calendar.setTime(item.getDate());
             updateReci(item.getDocumentUID());
-            categoryPicker.setSelection(defaultCategories.indexOf(item.getCategory()));
+            categoryPicker.setSelection(categories.indexOf(item.getCategory()));
         } else {
             inputDate.setText(formatter.format(calendar.getTime()));
         }
