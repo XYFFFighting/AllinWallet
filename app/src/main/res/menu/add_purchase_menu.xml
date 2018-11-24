@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_get_location"
+        android:icon="@drawable/ic_get_location"
+        android:title="@string/add_purchase_menu_get_location"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_check_location"
+        android:icon="@drawable/ic_check_location"
+        android:title="@string/add_purchase_menu_check_location"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_add_receipt"
+        android:icon="@drawable/ic_add_receipt"
+        android:title="@string/add_purchase_menu_add_receipt"
+        app:showAsAction="ifRoom" />
+</menu>
