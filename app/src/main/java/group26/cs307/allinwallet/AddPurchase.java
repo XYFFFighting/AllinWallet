@@ -31,7 +31,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -65,14 +64,13 @@ import java.util.Map;
 
 public class AddPurchase extends AppCompatActivity implements View.OnClickListener {
     private Button save, cancel;
-    private CheckBox isRecurringExpense;
     private ImageView img_reci;
     private Spinner categoryPicker;
     private EditText inputName, inputPrice, inputDate;
     private String locationString;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth auth;
-    private static final String TAG = "AllinWallet";
+    private static final String TAG = "Add Purchase";
 
     private DatePickerDialog.OnDateSetListener dateSetListener;
     private Calendar calendar;
@@ -97,7 +95,6 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
         }
 
         locationString = "No Location";
-        isRecurringExpense = (CheckBox) findViewById(R.id.recurring_check_box);
         save = (Button) findViewById(R.id.save_button);
         cancel = (Button) findViewById(R.id.cancel_button);
         inputName = (EditText) findViewById(R.id.item_name);
@@ -140,7 +137,6 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
             calendar.setTime(item.getDate());
             updateReci(item.getDocumentUID());
             categoryPicker.setSelection(categories.indexOf(item.getCategory()));
-            isRecurringExpense.setVisibility(View.GONE);
         } else {
             inputDate.setText(formatter.format(calendar.getTime()));
         }

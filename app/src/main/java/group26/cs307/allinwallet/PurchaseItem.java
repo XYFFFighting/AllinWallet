@@ -55,7 +55,7 @@ public class PurchaseItem implements Serializable {
     }
 
     public String getAmountString() {
-        return String.format(Locale.getDefault(), "%.2f", amount);
+        return String.format(Locale.getDefault(), "%s%.2f", MainPage.currencySign, amount);
     }
 
     public void setAmount(double amount) {

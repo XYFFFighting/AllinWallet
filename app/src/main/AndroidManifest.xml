@@ -36,7 +36,6 @@
         <activity
             android:name=".MainPage"
             android:label="@string/title_activity_main_page" />
-
         <activity android:name=".ReportIssueActivity" />
         <activity
             android:name=".CategoriesActivity"
@@ -51,6 +50,9 @@
             android:name=".Profile"
             android:label="@string/title_activity_profile"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".RecurringExpense"
+            android:label="@string/recurring_expense" />
         <activity
             android:name=".Report"
             android:label="@string/title_activity_report" />
@@ -72,7 +74,7 @@
             android:label="GraphVisual" />
         <activity
             android:name=".Issue"
-            android:label="@string/title_activity_issue"></activity>
+            android:label="@string/title_activity_issue" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -81,7 +83,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 
