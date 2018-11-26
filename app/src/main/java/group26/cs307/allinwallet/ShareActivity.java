@@ -15,12 +15,15 @@ public class ShareActivity extends AppCompatActivity{
         setContentView(R.layout.activity_share);
         //sendFeedback = (Button) findViewById(R.id.feedBackbtn);
 
-        String message = "Information I wish to share.";
+        //Will use this template across other activities to share certain content
+        //Look into other ways to share things
+
+        String message = "The content I wish to share.";
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("text/plain");
         share.putExtra(Intent.EXTRA_TEXT, message);
 
-        startActivity(Intent.createChooser(share, "How do you want to share this?"));
+        startActivity(Intent.createChooser(share, "How would you like to share this?"));
     }
 
 
