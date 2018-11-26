@@ -36,7 +36,6 @@ import java.util.Locale;
 
 public class Searching extends AppCompatActivity {
     private Spinner categoryPicker;
-    private List<String> categories;
     private EditText inputName, inputStart, inputEnd;
     private Button clear, btn_search;
     private RecyclerView purchaseList;
@@ -46,8 +45,6 @@ public class Searching extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "AllinWallet";
     private FirebaseAuth auth;
-    public static List<String> defaultCategories = new ArrayList<>(Arrays.asList("Any", "Grocery",
-            "Clothes", "House", "Personal", "General", "Transport", "Fun"));
 
     private DatePickerDialog.OnDateSetListener startDateSetListener, endDateSetListener;
     private Calendar startCalendar, endCalendar;
@@ -61,7 +58,6 @@ public class Searching extends AppCompatActivity {
 
         clear = (Button) findViewById(R.id.clear_button);
         btn_search = (Button) findViewById(R.id.btn_search);
-        categoryPicker = (Spinner) findViewById(R.id.category_picker);
         inputName = (EditText) findViewById(R.id.item_name2);
         inputStart = (EditText) findViewById(R.id.start_date);
         inputEnd = (EditText) findViewById(R.id.end_date);
@@ -82,11 +78,11 @@ public class Searching extends AppCompatActivity {
 
         initializeDateSearch();
 
-        categories = new ArrayList<>();
-        categories.addAll(defaultCategories);
-        ArrayAdapter spinnerAA = new ArrayAdapter(Searching.this,
-                android.R.layout.simple_spinner_dropdown_item, categories);
-        categoryPicker.setAdapter(spinnerAA);
+        categoryPicker = (Spinner) findViewById(R.id.category_picker);
+        ArrayAdapter<CharSequence> categoryAA = ArrayAdapter.createFromResource(Searching.this,
+                R.array.category_array, android.R.layout.simple_spinner_item);
+        categoryAA.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categoryPicker.setAdapter(categoryAA);
 
         clear.setOnClickListener(new View.OnClickListener() {
             @Override

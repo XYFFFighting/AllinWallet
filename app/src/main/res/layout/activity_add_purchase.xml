@@ -36,21 +36,38 @@
                 android:layout_weight="1" />
         </LinearLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/item_date"
-                android:layout_width="match_parent"
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:focusable="false"
-                android:hint="Purchase date:"
-                android:longClickable="false"
-                android:textColor="@color/colorPrimaryDark"
-                android:textColorHint="@color/colorPrimaryDark" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/item_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:focusable="false"
+                    android:hint="Purchase date:"
+                    android:longClickable="false"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textColorHint="@color/colorPrimaryDark" />
+            </android.support.design.widget.TextInputLayout>
+
+            <CheckBox
+                android:id="@+id/recurring_check_box"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layoutDirection="rtl"
+                android:text="@string/add_purchase_recurring_check_box"
+                android:textSize="19sp" />
+        </LinearLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -78,20 +95,6 @@
                 android:layout_margin="5dp"
                 android:hint="Purchase amount:"
                 android:inputType="numberDecimal"
-                android:textColor="@color/colorPrimaryDark"
-                android:textColorHint="@color/colorPrimaryDark" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/txt_location"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="Location"
                 android:textColor="@color/colorPrimaryDark"
                 android:textColorHint="@color/colorPrimaryDark" />
         </android.support.design.widget.TextInputLayout>
@@ -129,29 +132,12 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_get_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@color/colorAccent"
-            android:text="get location"
-            android:textColor="@color/white" />
-
-        <Button
-            android:id="@+id/btn_take_pic"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="take picture"
-            android:background="@color/colorAccent"
-            android:padding="10dp"
-            android:textColor="@color/white"/>
-
         <ImageView
             android:id="@+id/img_reci"
             android:layout_width="match_parent"
-            android:layout_height="190dp"
-            app:srcCompat="@drawable/common_google_signin_btn_icon_light_normal_background" />
+            android:layout_height="match_parent" />
+        <!--app:srcCompat="@drawable/common_google_signin_btn_icon_light_normal_background
+        "-->
 
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
