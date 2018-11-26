@@ -41,7 +41,6 @@
             android:id="@+id/iv_personal_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:src="@drawable/logo" />
 
 
@@ -58,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:background="@color/colorAccent"
-            android:text="choose your avatar"
+            android:text="@string/avatar_choose"
             android:textColor="@android:color/white" />
 
         <Button
@@ -67,7 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:background="@color/colorAccent"
-            android:text="change your avatar"
+            android:text="@string/avatar_change"
             android:textColor="@android:color/white" />
 
         <Button
@@ -77,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:background="@color/colorAccent"
-            android:text="Budget"
+            android:text="@string/budget"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
 
@@ -88,7 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:background="@color/colorAccent"
-            android:text="Income"
+            android:text="@string/income"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
         <Button
@@ -98,7 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:background="@color/colorAccent"
-            android:text="change the currency"
+            android:text="@string/currency_change"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
         <Button

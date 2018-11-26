@@ -103,7 +103,7 @@
                 android:background="@drawable/radio_button_selector"
                 android:button="@null"
                 android:gravity="center"
-                android:text="THIS WEEK"
+                android:text="@string/this_week"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
@@ -115,7 +115,7 @@
                 android:background="@drawable/radio_button_selector"
                 android:button="@null"
                 android:gravity="center"
-                android:text="THIS MONTH"
+                android:text="@string/this_month"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
@@ -127,7 +127,7 @@
                 android:background="@drawable/radio_button_selector"
                 android:button="@null"
                 android:gravity="center"
-                android:text="THIS YEAR"
+                android:text="@string/this_year"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
         </RadioGroup>
@@ -144,7 +144,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
                 android:gravity="right"
-                android:text="Sort by"
+                android:text="@string/sort_by"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="17sp" />
 

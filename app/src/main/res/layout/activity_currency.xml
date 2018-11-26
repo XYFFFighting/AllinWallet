@@ -16,21 +16,21 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="€" />
+            android:text="@string/europe_sign" />
 
         <RadioButton
             android:id="@+id/USD_type"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="$" />
+            android:text="@string/dollar_sign" />
 
         <RadioButton
             android:id="@+id/CNY_type"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="¥" />
+            android:text="@string/yuan_sign" />
     </RadioGroup>
 
     <!--<EditText-->

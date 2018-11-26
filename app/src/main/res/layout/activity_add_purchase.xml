@@ -25,7 +25,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Choose a category:"
+                android:text="@string/choose_category"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="17sp" />
 
@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:focusable="false"
-                    android:hint="Purchase date:"
+                    android:hint="@string/purchase_date"
                     android:longClickable="false"
                     android:textColor="@color/colorPrimaryDark"
                     android:textColorHint="@color/colorPrimaryDark" />
@@ -78,7 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:hint="Purchase title:"
+                android:hint="@string/purchase_title"
                 android:inputType="textPersonName"
                 android:textColor="@color/colorPrimaryDark"
                 android:textColorHint="@color/colorPrimaryDark" />
@@ -93,7 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:hint="Purchase amount:"
+                android:hint="@string/purchase_amount"
                 android:inputType="numberDecimal"
                 android:textColor="@color/colorPrimaryDark"
                 android:textColorHint="@color/colorPrimaryDark" />
@@ -112,7 +112,7 @@
                 android:layout_weight=".475"
                 android:background="@color/colorAccent"
                 android:padding="10dp"
-                android:text="CANCEL"
+                android:text="@string/cancel"
                 android:textColor="@color/white" />
 
             <View
@@ -127,7 +127,7 @@
                 android:layout_weight=".475"
                 android:background="@color/colorAccent"
                 android:padding="10dp"
-                android:text="SAVE"
+                android:text="@string/save"
                 android:textColor="@color/white" />
 
         </LinearLayout>

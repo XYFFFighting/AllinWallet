@@ -6,7 +6,7 @@
 
 
     <Button
-        android:text="Upload"
+        android:text="@string/upload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -21,7 +21,7 @@
         android:layout_centerHorizontal="true">
 
         <Button
-            android:text="Back"
+            android:text="@string/back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="13dp"
@@ -30,7 +30,7 @@
             />
 
         <Button
-            android:text="Next"
+            android:text="@string/next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="13dp"
@@ -55,7 +55,7 @@
         android:layout_height="50dp"
         android:layout_below="@+id/uploadImage"
         android:id="@+id/imageName"
-        android:hint="Enter image name"/>
+        android:hint="@string/enter_image_name"/>
 
 
 </RelativeLayout>

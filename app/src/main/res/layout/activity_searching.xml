@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:hint="Search by title:"
+                android:hint="@string/search_by_title"
                 android:inputType="textPersonName"
                 android:textColor="@color/colorPrimaryDark"
                 android:textColorHint="@color/colorPrimaryDark" />
@@ -40,7 +40,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Filter by category:"
+                android:text="@string/filter_by_category"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="17sp" />
 
@@ -67,7 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:focusable="false"
-                    android:hint="Start date:"
+                    android:hint="@string/start_date"
                     android:longClickable="false"
                     android:textColor="@color/colorPrimaryDark"
                     android:textColorHint="@color/colorPrimaryDark" />
@@ -83,7 +83,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:focusable="false"
-                    android:hint="End date:"
+                    android:hint="@string/end_date"
                     android:longClickable="false"
                     android:textColor="@color/colorPrimaryDark"
                     android:textColorHint="@color/colorPrimaryDark" />
@@ -103,7 +103,7 @@
                 android:layout_weight=".475"
                 android:background="@color/colorAccent"
                 android:padding="10dp"
-                android:text="CLEAR"
+                android:text="@string/clear"
                 android:textColor="@color/white" />
 
             <View
@@ -118,7 +118,7 @@
                 android:layout_weight=".475"
                 android:background="@color/colorAccent"
                 android:padding="10dp"
-                android:text="Search"
+                android:text="@string/search"
                 android:textColor="@color/white" />
 
         </LinearLayout>
