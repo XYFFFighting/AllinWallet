@@ -34,7 +34,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@+id/spending_num"
                     android:text="@string/report_default_spending_text"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/black"
                     android:textSize="18sp" />
 
                 <TextView
@@ -54,7 +54,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@+id/budget_num"
                     android:text="@string/report_default_budget_text"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/black"
                     android:textSize="18sp" />
 
                 <TextView
@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/spending_num"
                     android:layout_alignParentRight="true"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/black"
                     android:textSize="18sp" />
 
                 <TextView
@@ -74,7 +74,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@+id/remaining_budget_num"
                     android:text="@string/report_default_remaining_budget_text"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/black"
                     android:textSize="18sp" />
 
                 <TextView
@@ -145,7 +145,7 @@
                 android:layout_weight="0.6"
                 android:gravity="right"
                 android:text="@string/sort_by"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/black"
                 android:textSize="17sp" />
 
             <Spinner

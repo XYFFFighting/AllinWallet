@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/choose_category"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/black"
                 android:textSize="17sp" />
 
             <Spinner
@@ -54,8 +54,8 @@
                     android:focusable="false"
                     android:hint="@string/purchase_date"
                     android:longClickable="false"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textColorHint="@color/colorPrimaryDark" />
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black" />
             </android.support.design.widget.TextInputLayout>
 
             <CheckBox
@@ -80,8 +80,8 @@
                 android:layout_margin="5dp"
                 android:hint="@string/purchase_title"
                 android:inputType="textPersonName"
-                android:textColor="@color/colorPrimaryDark"
-                android:textColorHint="@color/colorPrimaryDark" />
+                android:textColor="@color/black"
+                android:textColorHint="@color/black" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -95,8 +95,8 @@
                 android:layout_margin="5dp"
                 android:hint="@string/purchase_amount"
                 android:inputType="numberDecimal"
-                android:textColor="@color/colorPrimaryDark"
-                android:textColorHint="@color/colorPrimaryDark" />
+                android:textColor="@color/black"
+                android:textColorHint="@color/black" />
         </android.support.design.widget.TextInputLayout>
 
         <LinearLayout

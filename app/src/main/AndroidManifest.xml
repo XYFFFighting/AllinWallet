@@ -8,7 +8,10 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.STORAGE" />
-    <uses-feature android:name="android.hardware.camera" android:required="true"/>
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -46,7 +49,8 @@
             android:label="@string/title_activity_add_purchase" />
         <activity
             android:name=".Profile"
-            android:label="@string/title_activity_profile" />
+            android:label="@string/title_activity_profile"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Report"
             android:label="@string/title_activity_report" />
@@ -63,8 +67,9 @@
             android:name=".Searching"
             android:label="@string/title_activity_searching" />
         <activity android:name=".UploadActivity" />
-        <activity android:name=".GraphVisual"
-            android:label="GraphVisual"/>
+        <activity
+            android:name=".GraphVisual"
+            android:label="GraphVisual" />
         <activity
             android:name=".Issue"
             android:label="@string/title_activity_issue"></activity>

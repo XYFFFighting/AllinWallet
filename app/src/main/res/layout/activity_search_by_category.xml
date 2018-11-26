@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_weight=".5"
             android:text="@string/category_choose"
-            android:textColor="@color/colorPrimaryDark" />
+            android:textColor="@color/black" />
 
         <Spinner
             android:id="@+id/category_picker"

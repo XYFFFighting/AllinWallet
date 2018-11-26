@@ -25,8 +25,8 @@
                 android:layout_margin="5dp"
                 android:hint="@string/search_by_title"
                 android:inputType="textPersonName"
-                android:textColor="@color/colorPrimaryDark"
-                android:textColorHint="@color/colorPrimaryDark" />
+                android:textColor="@color/black"
+                android:textColorHint="@color/black" />
         </android.support.design.widget.TextInputLayout>
 
         <LinearLayout
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/filter_by_category"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/black"
                 android:textSize="17sp" />
 
             <Spinner
@@ -69,8 +69,8 @@
                     android:focusable="false"
                     android:hint="@string/start_date"
                     android:longClickable="false"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textColorHint="@color/colorPrimaryDark" />
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -85,8 +85,8 @@
                     android:focusable="false"
                     android:hint="@string/end_date"
                     android:longClickable="false"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textColorHint="@color/colorPrimaryDark" />
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
