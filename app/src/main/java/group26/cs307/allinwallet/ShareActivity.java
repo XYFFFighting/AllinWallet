@@ -16,7 +16,7 @@ public class ShareActivity extends AppCompatActivity{
         //sendFeedback = (Button) findViewById(R.id.feedBackbtn);
 
         //Will use this template across other activities to share certain content
-        //Look into other ways to share things
+        //Look into other ways/methods to share things
 
         String message = "The content I wish to share.";
         Intent share = new Intent(Intent.ACTION_SEND);
