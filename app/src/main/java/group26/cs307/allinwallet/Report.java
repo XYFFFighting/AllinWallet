@@ -25,6 +25,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -173,56 +174,62 @@ public class Report extends AppCompatActivity {
                 final double firstSum = sum;
 
                 dRef.collection("recurring expense")
-                        .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        double tempSum = firstSum, tempAmount;
-                        Calendar calendar, lowerBound;
-                        Calendar upperBound = Calendar.getInstance();
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        double tempSum = firstSum;
 
-                        switch (whichButton) {
-                            case R.id.btn_rpt_week:
-                                calendar = (Calendar) startOfMonth.clone();
-                                lowerBound = (Calendar) startOfWeek.clone();
-                                break;
-                            case R.id.btn_rpt_annul:
-                                calendar = (Calendar) startOfYear.clone();
-                                lowerBound = (Calendar) startOfYear.clone();
-                                break;
-                            default:
-                                calendar = (Calendar) startOfMonth.clone();
-                                lowerBound = (Calendar) startOfMonth.clone();
-                                break;
-                        }
+                        if (task.isSuccessful()) {
+                            double tempAmount;
+                            Calendar calendar, lowerBound;
+                            Calendar upperBound = Calendar.getInstance();
 
-                        int originalMonth = calendar.get(Calendar.MONTH);
-
-                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                            if (document.getDate("date").after(lowerBound.getTime())) {
-                                lowerBound.setTime(document.getDate("date"));
-                                lowerBound.set(Calendar.HOUR_OF_DAY, 0);
-                                lowerBound.set(Calendar.MINUTE, 0);
-                                lowerBound.set(Calendar.SECOND, 0);
-                                lowerBound.set(Calendar.MILLISECOND, 0);
+                            switch (whichButton) {
+                                case R.id.btn_rpt_week:
+                                    calendar = (Calendar) startOfMonth.clone();
+                                    lowerBound = (Calendar) startOfWeek.clone();
+                                    break;
+                                case R.id.btn_rpt_annul:
+                                    calendar = (Calendar) startOfYear.clone();
+                                    lowerBound = (Calendar) startOfYear.clone();
+                                    break;
+                                default:
+                                    calendar = (Calendar) startOfMonth.clone();
+                                    lowerBound = (Calendar) startOfMonth.clone();
+                                    break;
                             }
 
-                            calendar.set(Calendar.MONTH, originalMonth);
-                            calendar.set(Calendar.DAY_OF_MONTH,
-                                    document.getLong("recurring").intValue());
+                            int originalMonth = calendar.get(Calendar.MONTH);
 
-                            while (calendar.before(upperBound)) {
-                                if (calendar.compareTo(lowerBound) >= 0) {
-                                    tempAmount = document.getDouble("price");
-                                    tempSum += tempAmount;
-
-                                    purchases.add(new PurchaseItem(document.getString("category"),
-                                            document.getString("name"), tempAmount,
-                                            calendar.getTime(),
-                                            document.getString("location"), document.getId()));
+                            for (DocumentSnapshot document : task.getResult()) {
+                                if (document.getDate("date").after(lowerBound.getTime())) {
+                                    lowerBound.setTime(document.getDate("date"));
+                                    lowerBound.set(Calendar.HOUR_OF_DAY, 0);
+                                    lowerBound.set(Calendar.MINUTE, 0);
+                                    lowerBound.set(Calendar.SECOND, 0);
+                                    lowerBound.set(Calendar.MILLISECOND, 0);
                                 }
 
-                                calendar.add(Calendar.MONTH, 1);
+                                calendar.set(Calendar.MONTH, originalMonth);
+                                calendar.set(Calendar.DAY_OF_MONTH,
+                                        document.getLong("recurring").intValue());
+
+                                while (calendar.before(upperBound)) {
+                                    if (calendar.compareTo(lowerBound) >= 0) {
+                                        tempAmount = document.getDouble("price");
+                                        tempSum += tempAmount;
+
+                                        purchases.add(new PurchaseItem(document.getString("category"),
+                                                document.getString("name"), tempAmount,
+                                                calendar.getTime(),
+                                                document.getString("location"), document.getId()));
+                                    }
+
+                                    calendar.add(Calendar.MONTH, 1);
+                                }
                             }
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
                         }
 
                         spendingNum.setText(String.format(Locale.getDefault(), "%.2f", tempSum));
