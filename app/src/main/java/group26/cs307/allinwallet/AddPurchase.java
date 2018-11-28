@@ -99,7 +99,6 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
             item = MainPage.purchases.get(passedPurchaseIndex);
         }
 
-        locationString = "No Location";
         save = (Button) findViewById(R.id.save_button);
         cancel = (Button) findViewById(R.id.cancel_button);
         inputName = (EditText) findViewById(R.id.item_name);
@@ -140,10 +139,12 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
             inputPrice.setText(item.getAmountString());
             inputDate.setText(item.getDateString());
             calendar.setTime(item.getDate());
+            locationString = item.getLocation();
             updateReci(item.getDocumentUID());
             categoryPicker.setSelection(categories.indexOf(item.getCategory()));
         } else {
             inputDate.setText(formatter.format(calendar.getTime()));
+            locationString = "No Location";
         }
     }
 
@@ -225,7 +226,7 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
+                Log.d(TAG, "upload recipe succeeded");
             }
         });
     }
@@ -319,15 +320,7 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
             @Override
             public void onFailure(@NonNull Exception e) {
             }
-        }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
-                        .getTotalByteCount());
-                //progressDialog.setMessage("Uploaded "+(int)progress+"%");
-            }
         });
-
     }
 
     @Override
@@ -387,7 +380,7 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
                     Toast.makeText(AddPurchase.this, "No Location Found", Toast.LENGTH_SHORT)
                             .show();
                 } else {
-                    Toast.makeText(AddPurchase.this, "Place of Purchase: " + item.getLocation(), Toast.LENGTH_SHORT)
+                    Toast.makeText(AddPurchase.this, "Place of Purchase: " + locationString, Toast.LENGTH_SHORT)
                             .show();
                 }
 
@@ -423,7 +416,7 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
                 Log.d(TAG, "Item Amount: " + price);
                 Log.d(TAG, "Item Category: " + category);
                 Log.d(TAG, "Item Date: " + date);
-                Log.d(TAG, "location: " + locationString);
+                Log.d(TAG, "Item Location: " + locationString);
 
                 if (passedPurchaseIndex == -1) {
                     addPurchase(name, Double.parseDouble(price), category, date, location);
