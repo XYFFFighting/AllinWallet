@@ -1,7 +1,6 @@
 
 package group26.cs307.allinwallet;
 
-import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,8 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,13 +22,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -40,16 +37,13 @@ import java.util.Locale;
 import java.util.Map;
 
 public class RecurringExpense extends AppCompatActivity implements View.OnClickListener {
-    private Button save, clear;
+    private Button addButton, clearButton;
     private Spinner categoryPicker;
-    private EditText inputName, inputPrice, inputDate;
+    private EditText inputName, inputPrice, inputDay;
+    private int recurringDay;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth auth;
     private static final String TAG = "Recurring Expense";
-
-    private DatePickerDialog.OnDateSetListener dateSetListener;
-    private Calendar calendar;
-    private SimpleDateFormat formatter;
 
     private RecyclerView recurringList;
     private RecyclerView.Adapter recurringListAdapter;
@@ -65,37 +59,21 @@ public class RecurringExpense extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recurring_expense);
 
-        save = (Button) findViewById(R.id.save_button);
-        clear = (Button) findViewById(R.id.clear_button);
+        addButton = (Button) findViewById(R.id.add_button);
+        clearButton = (Button) findViewById(R.id.clear_button);
         inputName = (EditText) findViewById(R.id.item_name);
         inputPrice = (EditText) findViewById(R.id.item_price);
-        inputDate = (EditText) findViewById(R.id.item_date);
+        inputDay = (EditText) findViewById(R.id.item_day);
+        recurringDay = -1;
 
         categoryPicker = (Spinner) findViewById(R.id.category_picker);
         ArrayAdapter categoryAA = new ArrayAdapter(RecurringExpense.this,
                 android.R.layout.simple_spinner_dropdown_item, categories);
         categoryPicker.setAdapter(categoryAA);
 
-        formatter = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
-        calendar = Calendar.getInstance();
-        inputDate.setText(formatter.format(calendar.getTime()));
-
-        save.setOnClickListener(this);
-        clear.setOnClickListener(this);
-        inputDate.setOnClickListener(this);
-
-        dateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, day);
-
-                String date = formatter.format(calendar.getTime());
-                inputDate.setText(date);
-                Log.d(TAG, "onDateSet: mm/dd/yyy:" + date);
-            }
-        };
+        addButton.setOnClickListener(this);
+        clearButton.setOnClickListener(this);
+        inputDay.setOnClickListener(this);
 
         recurringList = (RecyclerView) findViewById(R.id.report_result);
         recurringList.setHasFixedSize(true);
@@ -142,9 +120,10 @@ public class RecurringExpense extends AppCompatActivity implements View.OnClickL
                     recurringExpenses.clear();
 
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        recurringExpenses.add(new PurchaseItem(document.getString("category"),
+                        recurringExpenses.add(new RecurringExpenseItem(document.getString("category"),
                                 document.getString("name"), document.getDouble("price"),
-                                document.getDate("date"), document.getId()));
+                                document.getDate("date"), document.getLong("recurring").intValue(),
+                                document.getId()));
                     }
 
                     recurringListAdapter.notifyDataSetChanged();
@@ -157,10 +136,10 @@ public class RecurringExpense extends AppCompatActivity implements View.OnClickL
 
     public void addRecurringExpense(String name, double price, String category, Date date) {
         String UID = auth.getUid();
-        String dUID = Calendar.getInstance().getTime().toString();
+        String dUID = date.toString();
         int position = recurringExpenses.size();
-        recurringExpenses.add(new PurchaseItem(category,
-                name, price, date, UID));
+        recurringExpenses.add(new RecurringExpenseItem(category,
+                name, price, date, recurringDay, dUID));
         recurringListAdapter.notifyItemInserted(position);
 
         Map<String, Object> newRecurringExpense = new HashMap<>();
@@ -168,6 +147,7 @@ public class RecurringExpense extends AppCompatActivity implements View.OnClickL
         newRecurringExpense.put("price", price);
         newRecurringExpense.put("category", category);
         newRecurringExpense.put("date", date);
+        newRecurringExpense.put("recurring", recurringDay);
 
         db.collection("users").document(UID)
                 .collection("recurring expense").document(dUID).set(newRecurringExpense);
@@ -198,11 +178,16 @@ public class RecurringExpense extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.save_button: {
+            case R.id.add_button: {
                 String name = inputName.getText().toString();
                 String price = inputPrice.getText().toString();
                 String category = categoryPicker.getSelectedItem().toString();
-                Date date = calendar.getTime();
+                Date date = Calendar.getInstance().getTime();
+
+                if (recurringDay == -1) {
+                    inputDay.setError("Recurring day cannot be empty");
+                    return;
+                }
 
                 if (TextUtils.isEmpty(name)) {
                     inputName.setError("Title cannot be empty");
@@ -218,19 +203,38 @@ public class RecurringExpense extends AppCompatActivity implements View.OnClickL
             }
             break;
             case R.id.clear_button: {
-                inputDate.setText(null);
+                inputName.setText(null);
                 inputPrice.setText(null);
-                inputDate.setText(null);
+                inputDay.setText(null);
+                recurringDay = -1;
                 categoryPicker.setSelection(0);
             }
             break;
-            case R.id.item_date: {
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
+            case R.id.item_day: {
+                AlertDialog.Builder builder = new AlertDialog.Builder(RecurringExpense.this);
+                builder.setTitle("Choose a recurring day");
+                View mView = getLayoutInflater().inflate(R.layout.recurring_expense_number_picker, null);
+                final NumberPicker dayPicker = (NumberPicker) mView.findViewById(R.id.day_picker);
+                dayPicker.setMinValue(1);
+                dayPicker.setMaxValue(28);
+                builder.setView(mView);
 
-                new DatePickerDialog(RecurringExpense.this,
-                        dateSetListener, year, month, day).show();
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        recurringDay = dayPicker.getValue();
+                        inputDay.setText(RecurringExpenseItem.toRecurringDayString(recurringDay));
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("CANCEL", new DialogInterface
+                        .OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.show();
             }
             break;
             default:

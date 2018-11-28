@@ -60,7 +60,7 @@
     <string name="add_purchase_menu_check_location">Check Location</string>
     <string name="add_purchase_menu_add_receipt">Add Receipt</string>
     <string name="recurring_expense">Recurring Expense</string>
-    <string name="recurring_expense_date">Monthly date:</string>
+    <string name="recurring_expense_day">Recurring day:</string>
     <string name="recurring_expense_title">Expense title:</string>
     <string name="recurring_expense_amount">Expense amount:</string>
     <string name="choose_category">Choose a category:</string>
@@ -69,6 +69,7 @@
     <string name="purchase_amount">Purchase amount:</string>
     <string name="cancel">CANCEL</string>
     <string name="save">SAVE</string>
+    <string name="add">ADD</string>
     <string name="weekly">Weekly</string>
     <string name="monthly">Monthly</string>
     <string name="annual">Annual</string>

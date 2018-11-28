@@ -41,12 +41,12 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/item_date"
+                android:id="@+id/item_day"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:focusable="false"
-                android:hint="@string/recurring_expense_date"
+                android:hint="@string/recurring_expense_day"
                 android:longClickable="false"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black" />
@@ -104,13 +104,13 @@
                 android:layout_weight="0.05" />
 
             <Button
-                android:id="@+id/save_button"
+                android:id="@+id/add_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".475"
                 android:background="@color/colorAccent"
                 android:padding="10dp"
-                android:text="@string/save"
+                android:text="@string/add"
                 android:textColor="@color/white" />
 
         </LinearLayout>

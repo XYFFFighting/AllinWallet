@@ -6,12 +6,12 @@ import java.util.Date;
 import java.util.Locale;
 
 public class PurchaseItem implements Serializable {
-    private String category;
-    private String title;
-    private double amount;
-    private Date date;
-    private String documentUID;
-    private String location;
+    protected String category;
+    protected String title;
+    protected double amount;
+    protected Date date;
+    protected String documentUID;
+    protected String location;
 
     public PurchaseItem(String category, String title, double amount, Date date, String documentUID) {
         this.category = category;
@@ -84,16 +84,5 @@ public class PurchaseItem implements Serializable {
 
     public void setDocumentUID(String documentUID) {
         this.documentUID = documentUID;
-    }
-
-    @Override
-    public String toString() {
-        return "PurchaseItem{" +
-                "category='" + category + '\'' +
-                ", title='" + title + '\'' +
-                ", amount=" + amount +
-                ", date='" + date + '\'' +
-                ", documentUID='" + documentUID + '\'' +
-                '}';
     }
 }
