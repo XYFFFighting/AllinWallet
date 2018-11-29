@@ -124,15 +124,13 @@ public class Report extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.summary_menu) {
             startActivity(new Intent(Report.this, CategoriesActivity.class));
-        } else
+        } else if (item.getItemId() == R.id.share_menu) {
+            String message = "The content I wish to share.";
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setType("text/plain");
+            share.putExtra(Intent.EXTRA_TEXT, message);
 
-            if (item.getItemId() == R.id.share_menu) {
-                String message = "The content I wish to share.";
-                Intent share = new Intent(Intent.ACTION_SEND);
-                share.setType("text/plain");
-                share.putExtra(Intent.EXTRA_TEXT, message);
-
-                startActivity(Intent.createChooser(share, "How would you like to share this?"));
+            startActivity(Intent.createChooser(share, "How would you like to share this?"));
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -241,7 +239,8 @@ public class Report extends AppCompatActivity {
                             Log.d(TAG, "get failed with ", task.getException());
                         }
 
-                        spendingNum.setText(String.format(Locale.getDefault(), "%.2f", tempSum));
+                        spendingNum.setText(String.format(Locale.getDefault(), "%s%.2f",
+                                MainPage.currencySign, tempSum));
                         final double finalSum = tempSum;
 
                         dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -257,14 +256,18 @@ public class Report extends AppCompatActivity {
                                             String remainingBudgetNumText;
 
                                             if (Double.compare(finalSum, budget) < 0) {
-                                                remainingBudgetNumText = String.format(Locale
-                                                        .getDefault(), "%.2f", budget - finalSum);
+                                                remainingBudgetNumText = String.format(Locale.getDefault(),
+                                                        "%s%.2f", MainPage.currencySign,
+                                                        budget - finalSum);
                                             } else {
-                                                remainingBudgetNumText = "0.00";
+                                                remainingBudgetNumText = String.format(Locale.getDefault(),
+                                                        "%s0.00", MainPage.currencySign);
                                             }
 
-                                            budgetText.setText("Your " + budgetType + ":");
-                                            budgetNum.setText(String.format(Locale.getDefault(), "%.2f", budget));
+                                            budgetText.setText(String.format(Locale.getDefault(),
+                                                    "Your %s:", budgetType));
+                                            budgetNum.setText(String.format(Locale.getDefault(),
+                                                    "%s%.2f", MainPage.currencySign, budget));
                                             remainingBudgetText.setText(R.string.report_remaining_budget_found);
                                             remainingBudgetNum.setText(remainingBudgetNumText);
                                         } else {

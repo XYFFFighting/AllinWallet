@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,33 +31,33 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class MainPage extends AppCompatActivity {
     private FloatingActionButton purchaseButton;
-    private TextView welcomeMessage, budgetText;
-    private Date startofMonth;
-    private RecyclerView purchaseList;
-    private RecyclerView.Adapter purchaseListAdapter;
-    private RecyclerView.LayoutManager purchaseListLayoutManager;
-    public static List<PurchaseItem> purchases;
+    private TextView dateText, spendingNum, incomeNum;
+    private Calendar startOfMonth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private static final String TAG = "AllinWallet";
+    private static final String TAG = "MainPage";
     private FirebaseAuth auth;
-    private RadioGroup currencyGroup;
-    private int CurrencyselectedRadioButtonID;
     public static String currencySign = "$";
+
+    private RecyclerView purchaseList;
+    private RecyclerView.LayoutManager purchaseListLayoutManager;
+    public static RecyclerView.Adapter purchaseListAdapter;
+    public static List<PurchaseItem> purchases;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        auth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
-        currencyGroup = findViewById(R.id.currency_type_group);
-        welcomeMessage = (TextView) findViewById(R.id.welcomeText);
-        budgetText = (TextView) findViewById(R.id.budgetText);
+        auth = FirebaseAuth.getInstance();
+
+        dateText = (TextView) findViewById(R.id.date_text);
+        spendingNum = (TextView) findViewById(R.id.spending_num);
+        incomeNum = (TextView) findViewById(R.id.income_num);
+        setCurrencySign();
         setDate();
 
         purchaseButton = (FloatingActionButton) findViewById(R.id.fab);
@@ -69,31 +68,6 @@ public class MainPage extends AppCompatActivity {
             }
         });
 
-
-        String uid = auth.getUid();
-        final DocumentReference dRef = db.collection("users").document(uid);
-        dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, document.getId() + "-->" + document.getData());
-
-
-                        if (document.contains("Currency")) {
-                            currencySign = document.getString("Currency");
-                        }
-
-
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
         purchaseList = (RecyclerView) findViewById(R.id.purchase_list);
         purchaseList.setHasFixedSize(true);
         purchaseListLayoutManager = new LinearLayoutManager(MainPage.this);
@@ -108,7 +82,6 @@ public class MainPage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
 
         purchaseList.setAdapter(purchaseListAdapter);
 
@@ -147,16 +120,7 @@ public class MainPage extends AppCompatActivity {
 
         ItemTouchHelper purchaseItemTouchHelper = new ItemTouchHelper(purchaseItemCallback);
         purchaseItemTouchHelper.attachToRecyclerView(purchaseList);
-
-//        CurrencyselectedRadioButtonID = currencyGroup.getCheckedRadioButtonId();
-//        if (CurrencyselectedRadioButtonID != -1) {
-////
-////            RadioButton selectedRadioButton = (RadioButton) findViewById(CurrencyselectedRadioButtonID);
-////            currencySign = selectedRadioButton.getText().toString();
-////        }
-////        else{
-////            currencySign = "";
-////        }
+        initializeMainPage();
     }
 
     @Override
@@ -189,31 +153,52 @@ public class MainPage extends AppCompatActivity {
     }
 
     public void setDate() {
-        Calendar calendar = Calendar.getInstance();
+        startOfMonth = Calendar.getInstance();
         SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d yyyy", Locale.getDefault());
-        String date = formatter.format(calendar.getTime());
-        welcomeMessage.append(date);
+        dateText.append(formatter.format(startOfMonth.getTime()));
 
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        startofMonth = calendar.getTime();
+        startOfMonth.set(Calendar.DAY_OF_MONTH, 1);
+        startOfMonth.set(Calendar.HOUR_OF_DAY, 0);
+        startOfMonth.set(Calendar.MINUTE, 0);
+        startOfMonth.set(Calendar.SECOND, 0);
+        startOfMonth.set(Calendar.MILLISECOND, 0);
     }
 
-    public void updateMainPage(String uid) {
+    public void setCurrencySign() {
+        String uid = auth.getUid();
+
+        db.collection("users").document(uid)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        if (document.contains("Currency")) {
+                            currencySign = document.getString("Currency");
+                        }
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+    public void initializeMainPage() {
+        final String uid = auth.getUid();
         final DocumentReference dRef = db.collection("users").document(uid);
 
-        dRef.collection("purchase").whereGreaterThanOrEqualTo("date", startofMonth)
-                .orderBy("date", Query.Direction.DESCENDING)
+        dRef.collection("purchase").whereGreaterThanOrEqualTo("date", startOfMonth.getTime())
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     purchases.clear();
-                    budgetText.setText("Current spending: ");
                     double sum = 0.0, amount;
+                    
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, document.getId() + "-->" + document.getData());
                         amount = document.getDouble("price");
@@ -249,7 +234,7 @@ public class MainPage extends AppCompatActivity {
 
                                     if (document.contains("income")) {
                                         String income = String.format(Locale.getDefault(),
-                                                "\nYour monthly income: %.2f",
+                                                "\nMonthly income: %.2f",
                                                 document.getDouble("income"));
                                         budgetText.append(income);
                                     }
@@ -293,8 +278,8 @@ public class MainPage extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        String uid = auth.getUid();
-        updateMainPage(uid);
+        //String uid = auth.getUid();
+        //updateMainPage(uid);
     }
 
     @Override

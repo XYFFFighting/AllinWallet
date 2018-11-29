@@ -352,10 +352,10 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
 
                                 Map<String, Object> budget_info = new HashMap<>();
                                 budget_info.put(text, Double.parseDouble(budget_text));
-                                CollectionReference users = db.collection("users");
-                                users.document(uid).update(budget_info);
-                                Toast.makeText(getApplicationContext(), "You have successfully " +
-                                                "added " + text,
+
+                                db.collection("users").document(uid).update(budget_info);
+                                Toast.makeText(getApplicationContext(),
+                                        "You have successfully added " + text,
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -394,9 +394,9 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                             } else {
                                 Map<String, Object> income_info = new HashMap<>();
                                 income_info.put("income", Double.parseDouble(income_text));
-                                CollectionReference users = db.collection("users");
-                                users.document(uid).update(income_info);
-                                Toast.makeText(getApplicationContext(), "Income added successfully",
+
+                                db.collection("users").document(uid).update(income_info);
+                                Toast.makeText(getApplicationContext(), "Income updated successfully",
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -417,7 +417,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
             break;
             case R.id.currency: {
                 AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
-                builder.setTitle("Choose your currency");
+                builder.setTitle("Set a currency symbol");
                 View mView = getLayoutInflater().inflate(R.layout.activity_currency, null);
                 final RadioGroup budgetTypeGroup = (RadioGroup) mView.findViewById(R.id
                         .currency_type_group);
@@ -430,8 +430,8 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                         String uid = auth.getUid();
 
                         if (!TextUtils.isEmpty(uid)) {
-
                             String text;
+
                             switch (budgetTypeGroup.getCheckedRadioButtonId()) {
                                 case R.id.USD_type:
                                     text = "$";
@@ -447,13 +447,13 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                                     break;
 
                             }
+
                             Map<String, Object> budget_info = new HashMap<>();
                             budget_info.put("Currency", text);
-                            Object temp = text;
-                            CollectionReference users = db.collection("users");
-                            users.document(uid).update(budget_info);
-                            Toast.makeText(getApplicationContext(), "You have successfully " +
-                                            "added " + text,
+
+                            db.collection("users").document(uid).update(budget_info);
+                            Toast.makeText(getApplicationContext(),
+                                    "You have successfully updated your currency symbol",
                                     Toast.LENGTH_SHORT).show();
                         }
 
