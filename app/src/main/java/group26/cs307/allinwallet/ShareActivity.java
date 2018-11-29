@@ -15,15 +15,17 @@ public class ShareActivity extends AppCompatActivity{
         setContentView(R.layout.activity_share);
         //sendFeedback = (Button) findViewById(R.id.feedBackbtn);
 
-        //Will use this template across other activities to share certain content
-        //Look into other ways/methods to share things
-
-        String message = "The content I wish to share.";
-        Intent share = new Intent(Intent.ACTION_SEND);
-        share.setType("text/plain");
-        share.putExtra(Intent.EXTRA_TEXT, message);
-
-        startActivity(Intent.createChooser(share, "How would you like to share this?"));
+        try {
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("text/plain");
+            i.putExtra(Intent.EXTRA_SUBJECT, "Our application name");
+            String sAux = "\nLet us recommend you this application\n\n";
+            sAux = sAux + "https://github.com/raynaran/AllinWallet \n\n";
+            i.putExtra(Intent.EXTRA_TEXT, sAux);
+            startActivity(Intent.createChooser(i, "Choose one"));
+        } catch(Exception e) {
+            //e.toString();
+        }
     }
 
 

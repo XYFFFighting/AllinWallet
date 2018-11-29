@@ -125,6 +125,15 @@ public class Report extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.summary_menu) {
             startActivity(new Intent(Report.this, CategoriesActivity.class));
+        } else
+
+            if (item.getItemId() == R.id.share_menu) {
+                String message = "The content I wish to share.";
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.setType("text/plain");
+                share.putExtra(Intent.EXTRA_TEXT, message);
+
+                startActivity(Intent.createChooser(share, "How would you like to share this?"));
         } else {
             return super.onOptionsItemSelected(item);
         }
