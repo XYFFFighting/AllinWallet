@@ -20,11 +20,9 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-//jenny
 import java.io.File;
 
 import android.app.Activity;
-//import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -38,8 +36,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-//jenny
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -68,92 +64,222 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class Profile extends AppCompatActivity {
+public class Profile extends AppCompatActivity implements View.OnClickListener {
     private ImageView profileImage;
-    private Button changeImage;
     private FirebaseAuth auth;
-    private Button logout, btn_dlt_act, budgetBotton, incomeButton, currencyButton;
-    //private Button refreshbutton;
+    private Button logout, btn_dlt_act, budgetBotton,
+            incomeButton, currencyButton, btnChoose;
     private TextView userinfo;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "AllinWallet";
-
-    private Button btnChoose;
-
     private final int PICK_IMAGE_REQUEST = 71;
-
     FirebaseStorage storage;
     StorageReference storageReference;
-
     private Uri filePath;
-    private List<String> incomeTimeSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        //jenny
+        auth = FirebaseAuth.getInstance();
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
         profileImage = (ImageView) findViewById(R.id.profile_img);
-        changeImage = (Button) findViewById(R.id.btn_change);
         budgetBotton = (Button) findViewById(R.id.budgetButton);
         incomeButton = (Button) findViewById(R.id.incomeButton);
         btnChoose = (Button) findViewById(R.id.btn_choose);
         currencyButton = (Button) findViewById(R.id.currency);
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
-
-        auth = FirebaseAuth.getInstance();
         logout = (Button) findViewById(R.id.btn_logout);
         btn_dlt_act = (Button) findViewById(R.id.btn_dlt_account);
         userinfo = (TextView) findViewById(R.id.user_info);
+
         adduserInfo();
+        getImage();
+
+        btnChoose.setOnClickListener(this);
+        logout.setOnClickListener(this);
+        btn_dlt_act.setOnClickListener(this);
+        budgetBotton.setOnClickListener(this);
+        incomeButton.setOnClickListener(this);
+        currencyButton.setOnClickListener(this);
+    }
+
+    private void uploadImage() {
+        if (filePath != null) {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+            String uid = auth.getUid();
+            StorageReference ref = storageReference.child("images/" + uid + "/" + "profile");
+            ref.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+                            Toast.makeText(Profile.this, "Avatar Uploaded", Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(Profile.this, "Upload Failed Please try again" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+
+    private void getImage() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Getting...");
+        progressDialog.show();
+        String uid = auth.getUid();
+        StorageReference ref = storageReference.child("images/" + uid + "/" + "profile");
+        File localFile = null;
+
         try {
-            updateImage(profileImage);
+            localFile = File.createTempFile("images", "jpg");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        addNumUser();
 
-        changeImage.setOnClickListener(new View.OnClickListener() {
+        final File local2 = localFile;
+        ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
             @Override
-            public void onClick(View view) {
-                uploadImage();
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                progressDialog.dismiss();
+                Bitmap bitmap = BitmapFactory.decodeFile(local2.getAbsolutePath());
+                profileImage.setImageBitmap(bitmap);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressDialog.dismiss();
             }
         });
-        btnChoose.setOnClickListener(new View.OnClickListener() {
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                profileImage.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            uploadImage();
+        }
+    }
+
+    public void deleteData(final String uid) {
+        DocumentReference dRef = db.collection("users").document(uid);
+        dRef.collection("purchase").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onClick(View v) {
-                chooseImage();
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        String did = document.getId();
+                        db.collection("users").document(uid).collection("purchase").document(did)
+                                .delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "document delete successful");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(TAG, "document delete unsuccessful");
+                                    }
+                                });
+                    }
+                }
             }
         });
 
-        logout.setOnClickListener(new View.OnClickListener() {
+        db.collection("users").document(uid)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "document delete successful");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "document delete unsuccessful");
+                    }
+                });
+    }
+
+    public void adduserInfo() {
+        String uid = auth.getUid();
+        final CollectionReference cRef = db.collection("users");
+
+        cRef.document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onClick(View view) {
-                AlertDialog alertDialog = new AlertDialog.Builder(Profile.this).create();
-                alertDialog.setTitle("Log Out");
-                alertDialog.setMessage("Are you sure to log out?");
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    if (documentSnapshot.exists()) {
+                        String str = "Email: " + documentSnapshot.getString("email") + "\n";
+                        userinfo.setText(str);
+
+                        cRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    int count = task.getResult().size();
+                                    userinfo.append("Number of Users: " + count);
+                                } else {
+                                    Log.d(TAG, "Error getting number of user", task.getException());
+                                }
+                            }
+                        });
+                    } else {
+                        Log.d(TAG, "no such document");
+                    }
+                } else {
+                    Log.d(TAG, "error in add userInfo");
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_logout: {
+                AlertDialog alertDialogLogout = new AlertDialog.Builder(Profile.this).create();
+                alertDialogLogout.setTitle("Log Out");
+                alertDialogLogout.setMessage("Are you sure to log out?");
+                alertDialogLogout.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 auth.signOut();
                                 startActivity(new Intent(Profile.this, LoginActivity.class));
                             }
                         });
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Cancel",
+                alertDialogLogout.setButton(AlertDialog.BUTTON_POSITIVE, "Cancel",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }
                         });
-                alertDialog.show();
+                alertDialogLogout.show();
             }
-        });
-
-        btn_dlt_act.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            break;
+            case R.id.btn_dlt_account: {
                 AlertDialog alertDialog = new AlertDialog.Builder(Profile.this).create();
                 alertDialog.setTitle("Delete Account");
                 alertDialog.setMessage("Are you sure to delete your account?");
@@ -185,11 +311,8 @@ public class Profile extends AppCompatActivity {
                         });
                 alertDialog.show();
             }
-        });
-
-        budgetBotton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            break;
+            case R.id.budgetButton: {
                 AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
                 builder.setTitle("Enter your budget");
                 View mView = getLayoutInflater().inflate(R.layout.activity_budget, null);
@@ -250,11 +373,8 @@ public class Profile extends AppCompatActivity {
 
                 builder.show();
             }
-        });
-
-        incomeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            break;
+            case R.id.incomeButton: {
                 AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
                 builder.setTitle("Enter your monthly income");
                 View mView = getLayoutInflater().inflate(R.layout.activity_income, null);
@@ -294,17 +414,11 @@ public class Profile extends AppCompatActivity {
 
                 builder.show();
             }
-        });
-        getImage();
-
-
-        currencyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            break;
+            case R.id.currency: {
                 AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
                 builder.setTitle("Choose your currency");
                 View mView = getLayoutInflater().inflate(R.layout.activity_currency, null);
-                //       final EditText input = (EditText) mView.findViewById(R.id.budgetText);
                 final RadioGroup budgetTypeGroup = (RadioGroup) mView.findViewById(R.id
                         .currency_type_group);
 
@@ -333,17 +447,15 @@ public class Profile extends AppCompatActivity {
                                     break;
 
                             }
-                                Map<String, Object> budget_info = new HashMap<>();
-                                budget_info.put("Currency", text);
-                                Object temp = text;
-                                CollectionReference users = db.collection("users");
-                                users.document(uid).update(budget_info);
-                                Toast.makeText(getApplicationContext(), "You have successfully " +
-                                                "added " + text,
-                                        Toast.LENGTH_SHORT).show();
-
+                            Map<String, Object> budget_info = new HashMap<>();
+                            budget_info.put("Currency", text);
+                            Object temp = text;
+                            CollectionReference users = db.collection("users");
+                            users.document(uid).update(budget_info);
+                            Toast.makeText(getApplicationContext(), "You have successfully " +
+                                            "added " + text,
+                                    Toast.LENGTH_SHORT).show();
                         }
-
 
                         dialog.dismiss();
                     }
@@ -357,220 +469,16 @@ public class Profile extends AppCompatActivity {
 
                 builder.show();
             }
-        });
-
-
-
-
-        getImage();
-    }
-
-    private void chooseImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-    }
-
-    private void updateImage(final ImageView imageView) throws IOException {
-        String uid = auth.getUid();
-        Log.d(TAG, "uid is:" + uid);
-        StorageReference ref = storageReference.child("images/" + uid + "/" + "profile");
-        final File localFile = File.createTempFile("images", "jpg");
-
-        ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                // Local temp file has been created
-                Log.d(TAG, "download successful");
-                if (localFile.exists()) {
-                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                    imageView.setImageBitmap(bitmap);
-                }
+            break;
+            case R.id.btn_choose: {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-            }
-        });
-        //Log.d(TAG,"download successful" + localFile.getPath());
-
-    }
-
-    private void uploadImage() {
-
-        if (filePath != null) {
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
-            String uid = auth.getUid();
-            StorageReference ref = storageReference.child("images/" + uid + "/" + "profile");
-            ref.putFile(filePath)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.dismiss();
-                            Toast.makeText(Profile.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
-                            Toast.makeText(Profile.this, "Upload Failed Please try again" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
-                                    .getTotalByteCount());
-                            //progressDialog.setMessage("Uploaded "+(int)progress+"%");
-                        }
-                    });
+            break;
+            default:
+                break;
         }
     }
-
-    private void getImage() {
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Getting...");
-        progressDialog.show();
-        String uid = auth.getUid();
-        StorageReference ref = storageReference.child("images/" + uid + "/" + "profile");
-        File localFile = null;
-
-        try {
-            localFile = File.createTempFile("images", "jpg");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        final File local2 = localFile;
-        ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                progressDialog.dismiss();
-                //Toast.makeText(Profile.this, "success ", Toast.LENGTH_SHORT).show();
-                Bitmap bitmap = BitmapFactory.decodeFile(local2.getAbsolutePath());
-                profileImage.setImageBitmap(bitmap);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                progressDialog.dismiss();
-                //Toast.makeText(Profile.this, "Get Image Failed please check your network", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
-                        .getTotalByteCount());
-                //progressDialog.setMessage("Uploaded "+(int)progress+"%");
-            }
-        });
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null) {
-            filePath = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                profileImage.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void addNumUser() {
-        db.collection("users")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            int count = 0;
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                count++;
-//                                Log.d(TAG, "" + count);
-                            }
-                            userinfo.append("Number of active users: " + count + "\n");
-                        } else {
-                            Log.d(TAG, "Error getting number of user", task.getException());
-                        }
-                    }
-                });
-    }
-
-    public void deleteData(final String uid) {
-        DocumentReference dRef = db.collection("users").document(uid);
-        dRef.collection("purchase").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        String did = document.getId();
-                        db.collection("users").document(uid).collection("purchase").document(did)
-                                .delete()
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d(TAG, "document delete successful");
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.d(TAG, "document delete unsuccessful");
-                                    }
-                                });
-                    }
-                }
-            }
-        });
-
-        db.collection("users").document(uid)
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "document delete successful");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "document delete unsuccessful");
-                    }
-                });
-    }
-
-    public void adduserInfo() {
-        String uid = auth.getUid();
-        DocumentReference document = db.collection("users").document(uid);
-        document.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot documentSnapshot = task.getResult();
-                    if (documentSnapshot.exists()) {
-                        Map<String, Object> data = documentSnapshot.getData();
-                        userinfo.append("Email:" + data.get("email") + "\n");
-//                        Log.d(TAG, "email: " + data.get("email"));
-                    } else {
-                        Log.d(TAG, "no such document");
-                    }
-                } else {
-                    Log.d(TAG, "error in add userInfo");
-                }
-            }
-        });
-
-    }
-
 }

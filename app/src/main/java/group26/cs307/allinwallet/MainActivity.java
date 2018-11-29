@@ -3,6 +3,7 @@ package group26.cs307.allinwallet;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -11,6 +12,8 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -39,11 +42,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         // Obtain the FirebaseAnalytics instance.
         auth = FirebaseAuth.getInstance();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         signup = (Button) findViewById(R.id.btn_signup);
-        search= (Button) findViewById(R.id.btn_search);
+        search = (Button) findViewById(R.id.btn_search);
         profile = (Button) findViewById(R.id.btn_profile);
         login = (Button) findViewById(R.id.btn_login);
         main = (Button) findViewById(R.id.btn_dashboard);
@@ -150,8 +154,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, Report.class));
             }
         });
-
-
 
 
         budget.setOnClickListener(new View.OnClickListener() {

@@ -49,7 +49,7 @@ public class MainPage extends AppCompatActivity {
     private FirebaseAuth auth;
     private RadioGroup currencyGroup;
     private int CurrencyselectedRadioButtonID;
-    public static String currencySign;
+    public static String currencySign = "$";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +81,7 @@ public class MainPage extends AppCompatActivity {
                         Log.d(TAG, document.getId() + "-->" + document.getData());
 
 
-                        if (document.contains("Currency")){
+                        if (document.contains("Currency")) {
                             currencySign = document.getString("Currency");
                         }
 
@@ -108,7 +108,6 @@ public class MainPage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
 
 
         purchaseList.setAdapter(purchaseListAdapter);
@@ -168,18 +167,25 @@ public class MainPage extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.profile_menu) {
-            startActivity(new Intent(MainPage.this, Profile.class));
-        } else if (item.getItemId() == R.id.search_menu) {
-            startActivity(new Intent(MainPage.this, Searching.class));
-        } else if (item.getItemId() == R.id.report_menu) {
-            startActivity(new Intent(MainPage.this, Report.class));
-        } else if (item.getItemId() == R.id.issue_menu) {
-            startActivity(new Intent(MainPage.this, Issue.class));
-        } else {
-            return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.issue_menu:
+                startActivity(new Intent(MainPage.this, Issue.class));
+                return true;
+            case R.id.profile_menu:
+                startActivity(new Intent(MainPage.this, Profile.class));
+                return true;
+            case R.id.recurring_menu:
+                startActivity(new Intent(MainPage.this, RecurringExpense.class));
+                return true;
+            case R.id.report_menu:
+                startActivity(new Intent(MainPage.this, Report.class));
+                return true;
+            case R.id.search_menu:
+                startActivity(new Intent(MainPage.this, Searching.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return true;
     }
 
     public void setDate() {
@@ -196,12 +202,9 @@ public class MainPage extends AppCompatActivity {
         startofMonth = calendar.getTime();
     }
 
-
-
-
     public void updateMainPage(String uid) {
         final DocumentReference dRef = db.collection("users").document(uid);
-        currencySign = "";
+
         dRef.collection("purchase").whereGreaterThanOrEqualTo("date", startofMonth)
                 .orderBy("date", Query.Direction.DESCENDING)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -240,7 +243,7 @@ public class MainPage extends AppCompatActivity {
                                                 " / %.2f", document.getDouble("monthly budget")));
                                         //300 $
                                     }
-                                    if (document.contains("Currency")){
+                                    if (document.contains("Currency")) {
                                         currencySign = document.getString("Currency");
                                     }
 

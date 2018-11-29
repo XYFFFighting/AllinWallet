@@ -33,7 +33,7 @@ public class PurchaseAdapter extends RecyclerView.Adapter<PurchaseAdapter.Purcha
     public void onBindViewHolder(@NonNull PurchaseViewHolder holder, int position) {
         holder.getCategoryTextView().setText(purchaseItemList.get(position).getCategory());
         holder.getTitleTextView().setText(purchaseItemList.get(position).getTitle());
-        holder.getAmountTextView().setText(purchaseItemList.get(position).getAmountString()+MainPage.currencySign);
+        holder.getAmountTextView().setText(purchaseItemList.get(position).getExtendedAmountString());
         holder.getDateTextView().setText(purchaseItemList.get(position).getExtendedDateString());
     }
 

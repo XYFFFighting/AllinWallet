@@ -34,7 +34,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@+id/spending_num"
                     android:text="@string/report_default_spending_text"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/black"
                     android:textSize="18sp" />
 
                 <TextView
@@ -54,7 +54,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@+id/budget_num"
                     android:text="@string/report_default_budget_text"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/black"
                     android:textSize="18sp" />
 
                 <TextView
@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/spending_num"
                     android:layout_alignParentRight="true"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/black"
                     android:textSize="18sp" />
 
                 <TextView
@@ -74,7 +74,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@+id/remaining_budget_num"
                     android:text="@string/report_default_remaining_budget_text"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/black"
                     android:textSize="18sp" />
 
                 <TextView
@@ -103,7 +103,7 @@
                 android:background="@drawable/radio_button_selector"
                 android:button="@null"
                 android:gravity="center"
-                android:text="THIS WEEK"
+                android:text="@string/this_week"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
@@ -115,7 +115,7 @@
                 android:background="@drawable/radio_button_selector"
                 android:button="@null"
                 android:gravity="center"
-                android:text="THIS MONTH"
+                android:text="@string/this_month"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
@@ -127,7 +127,7 @@
                 android:background="@drawable/radio_button_selector"
                 android:button="@null"
                 android:gravity="center"
-                android:text="THIS YEAR"
+                android:text="@string/this_year"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
         </RadioGroup>
@@ -144,8 +144,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
                 android:gravity="right"
-                android:text="Sort by"
-                android:textColor="@color/colorPrimaryDark"
+                android:text="@string/sort_by"
+                android:textColor="@color/black"
                 android:textSize="17sp" />
 
             <Spinner

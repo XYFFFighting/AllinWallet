@@ -17,11 +17,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Vector;
 
 
 public class GraphVisual extends AppCompatActivity {
@@ -31,8 +33,8 @@ public class GraphVisual extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     ArrayList<String> theDates = new ArrayList<>();;
     Random random;
-    String[] monthss = new String[] {"Jan", "Feb", "Mar", "April", "May", "Jun","July","Aug","Sep","Oct","Nov","Dec"};
-
+    Vector<String> strV = new Vector<String>();
+    Vector<Integer> intV = new Vector<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         auth = FirebaseAuth.getInstance();
@@ -54,71 +56,90 @@ public class GraphVisual extends AppCompatActivity {
 
 
         String uid = auth.getUid();
+
         final DocumentReference dRef = db.collection("users").document(uid);
-        dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
+        dRef.collection("summary").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, document.getId() + "-->" + document.getData());
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+
+                        strV.add(document.getId());
+                        double sum = document.getDouble("amount");
+                        intV.add((int)sum);
 
 
-                        if (document.contains("monthly budget")){
-
-                        }
 
 
-                    } else {
-                        Log.d(TAG, "No such document");
                     }
+                    ArrayList<BarEntry> barEntries = new ArrayList<>();
+                    for(int i = 0; i < intV.size();i++){
+                        barEntries.add(new BarEntry(i+1,intV.get(i)));
+
+                    }
+                    int size = strV.size();
+
+                    String[] temp = new String[size+1];
+                    temp[0] = "past";
+                    for(int i = 1; i < temp.length; i++){
+                        temp[i] = strV.get(i-1);
+                    }
+
+
+                    Log.d(TAG, "monthsize:"+temp.length);
+
+//                    barEntries.add(new BarEntry(1,40f));
+//                    barEntries.add(new BarEntry(2,44f));
+//                    barEntries.add(new BarEntry(3,30f));
+//                    barEntries.add(new BarEntry(4,36f));
+//                    ArrayList<BarEntry> barEntries1 = new ArrayList<>();
+//                    barEntries1.add(new BarEntry(1,44f));
+//                    barEntries1.add(new BarEntry(2,54f));
+//                    barEntries1.add(new BarEntry(3,60f));
+//                    barEntries1.add(new BarEntry(4,31f));
+
+
+
+                    BarDataSet barDataSet = new BarDataSet(barEntries, "Monthly consumption");
+                    barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+//                    BarDataSet barDataSet1 = new BarDataSet(barEntries1, "Date Set2");
+//                    barDataSet1.setColors(ColorTemplate.COLORFUL_COLORS);
+
+
+
+
+                    BarData data = new BarData(barDataSet);
+
+//                    float groupSpace = 0.1f;
+//                    float barSpace = 0.02f;
+                    float barWidth = 0.8f;
+
+                    barChart.setData(data);
+                    data.setBarWidth(barWidth);
+
+//                    barChart.groupBars(1,groupSpace,barSpace);
+
+
+                    String[] months = new String[] {"Jan22", "Feb", "Mar", "April"};
+
+
+                    XAxis xAxis = barChart.getXAxis();
+                    xAxis.setValueFormatter(new MyXAxisValueFormatter(temp));
+                    xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
+                    xAxis.setGranularity(1);
+                    xAxis.setCenterAxisLabels(false);
+                    xAxis.setAxisMinimum(1);
+
                 } else {
-                    Log.d(TAG, "get failed with ", task.getException());
+                    Log.e(TAG, "Error getting documents: ", task.getException());
                 }
             }
         });
 
 
-        ArrayList<BarEntry> barEntries = new ArrayList<>();
-        barEntries.add(new BarEntry(1,40f));
-        barEntries.add(new BarEntry(2,44f));
-        barEntries.add(new BarEntry(3,30f));
-        barEntries.add(new BarEntry(4,36f));
-        ArrayList<BarEntry> barEntries1 = new ArrayList<>();
-        barEntries1.add(new BarEntry(1,44f));
-        barEntries1.add(new BarEntry(2,54f));
-        barEntries1.add(new BarEntry(3,60f));
-        barEntries1.add(new BarEntry(4,31f));
 
-
-
-        BarDataSet barDataSet = new BarDataSet(barEntries, "Date Set1");
-        barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-        BarDataSet barDataSet1 = new BarDataSet(barEntries1, "Date Set2");
-        barDataSet1.setColors(ColorTemplate.COLORFUL_COLORS);
-
-
-
-
-        BarData data = new BarData(barDataSet,barDataSet1);
-
-        float groupSpace = 0.1f;
-        float barSpace = 0.02f;
-        float barWidth = 0.43f;
-
-        barChart.setData(data);
-        data.setBarWidth(barWidth);
-
-        barChart.groupBars(1,groupSpace,barSpace);
-
-
-        String[] months = new String[] {"Jan", "Feb", "Mar", "April", "May", "Jun"};
-        XAxis xAxis = barChart.getXAxis();
-        xAxis.setValueFormatter(new MyXAxisValueFormatter(months));
-        xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
-        xAxis.setGranularity(1);
-        xAxis.setCenterAxisLabels(true);
-        xAxis.setAxisMinimum(1);
     }
     public class MyXAxisValueFormatter implements IAxisValueFormatter{
         private String[] mValues;

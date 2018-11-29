@@ -31,7 +31,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -39,11 +38,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -65,14 +69,13 @@ import java.util.Map;
 
 public class AddPurchase extends AppCompatActivity implements View.OnClickListener {
     private Button save, cancel;
-    private CheckBox isRecurringExpense;
     private ImageView img_reci;
     private Spinner categoryPicker;
     private EditText inputName, inputPrice, inputDate;
     private String locationString;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth auth;
-    private static final String TAG = "AllinWallet";
+    private static final String TAG = "Add Purchase";
 
     private DatePickerDialog.OnDateSetListener dateSetListener;
     private Calendar calendar;
@@ -96,8 +99,6 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
             item = MainPage.purchases.get(passedPurchaseIndex);
         }
 
-        locationString = "No Location";
-        isRecurringExpense = (CheckBox) findViewById(R.id.recurring_check_box);
         save = (Button) findViewById(R.id.save_button);
         cancel = (Button) findViewById(R.id.cancel_button);
         inputName = (EditText) findViewById(R.id.item_name);
@@ -138,11 +139,12 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
             inputPrice.setText(item.getAmountString());
             inputDate.setText(item.getDateString());
             calendar.setTime(item.getDate());
+            locationString = item.getLocation();
             updateReci(item.getDocumentUID());
             categoryPicker.setSelection(categories.indexOf(item.getCategory()));
-            isRecurringExpense.setVisibility(View.GONE);
         } else {
             inputDate.setText(formatter.format(calendar.getTime()));
+            locationString = "No Location";
         }
     }
 
@@ -158,6 +160,7 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
         purchaselist.put("category", category);
         purchaselist.put("date", date);
         purchaselist.put("location", location);
+        addsummary(price);
 
         db.collection("users").document(uid)
                 .collection("purchase").document(time).set(purchaselist);
@@ -166,6 +169,42 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
         if (img_reci.getDrawable() != null) {
             uploadrecipe(time);
         }
+    }
+
+    private void addsummary(final double price) {
+        final String uid = auth.getUid();
+        String month = inputDate.getText().toString();
+        final String result = month.substring(month.lastIndexOf('/')+ 1, month.length()) + '-' + month.substring(0,month.indexOf('/'));
+        Log.d(TAG, "summary date: " + result);
+        DocumentReference dRef = db.collection("users").document(uid);
+        dRef.collection("summary").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    boolean find = false;
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (document.getId().equals(result)) {
+                            //update sum
+                            find = true;
+                            double sum = document.getDouble("amount");
+                            sum += price;
+                            Map<String, Object> amount = new HashMap<>();
+                            amount.put("amount", sum);
+                            db.collection("users").document(uid).collection("summary").document(document.getId()).update(amount);
+                            break;
+                        }
+                    }
+                    if(!find) {
+                        Map<String, Object> amount = new HashMap<>();
+                        amount.put("amount", price);
+                        db.collection("users").document(uid).collection("summary").document(result).set(amount);
+
+                    }
+                } else {
+                    Log.e(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
     }
 
     public void uploadrecipe(String time) {
@@ -187,7 +226,7 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
+                Log.d(TAG, "upload recipe succeeded");
             }
         });
     }
@@ -206,6 +245,7 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
         db.collection("users").document(uid)
                 .collection("purchase").document(documentUID).update(purchaselist);
         Log.d(TAG, uid + " update purchase data");
+        //addsummary(price);
 
         if (img_reci.getDrawable() != null) {
             uploadrecipe(documentUID);
@@ -280,15 +320,7 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
             @Override
             public void onFailure(@NonNull Exception e) {
             }
-        }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
-                        .getTotalByteCount());
-                //progressDialog.setMessage("Uploaded "+(int)progress+"%");
-            }
         });
-
     }
 
     @Override
@@ -348,7 +380,7 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
                     Toast.makeText(AddPurchase.this, "No Location Found", Toast.LENGTH_SHORT)
                             .show();
                 } else {
-                    Toast.makeText(AddPurchase.this, "Place of Purchase: " + item.getLocation(), Toast.LENGTH_SHORT)
+                    Toast.makeText(AddPurchase.this, "Place of Purchase: " + locationString, Toast.LENGTH_SHORT)
                             .show();
                 }
 
@@ -384,7 +416,7 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
                 Log.d(TAG, "Item Amount: " + price);
                 Log.d(TAG, "Item Category: " + category);
                 Log.d(TAG, "Item Date: " + date);
-                Log.d(TAG, "location: " + locationString);
+                Log.d(TAG, "Item Location: " + locationString);
 
                 if (passedPurchaseIndex == -1) {
                     addPurchase(name, Double.parseDouble(price), category, date, location);

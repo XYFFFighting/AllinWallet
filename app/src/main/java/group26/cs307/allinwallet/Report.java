@@ -25,6 +25,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -38,23 +39,21 @@ import java.util.Locale;
 
 public class Report extends AppCompatActivity {
     private FirebaseAuth auth;
+    private String uid;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private static final String TAG = "AllinWallet";
+    private static final String TAG = "Report";
 
     private TextView spendingNum, budgetText, budgetNum, remainingBudgetText, remainingBudgetNum;
-
-    private Date startofWeek, startofMonth, startofYear;
-
     private Spinner sortPicker;
     private RadioGroup startDateGroup;
     private RadioButton dateButton;
-
-    private String uid;
 
     private RecyclerView purchaseList;
     private RecyclerView.Adapter purchaseListAdapter;
     private RecyclerView.LayoutManager purchaseListLayoutManager;
     public static List<PurchaseItem> purchases;
+
+    private Calendar startOfWeek, startOfMonth, startOfYear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +139,7 @@ public class Report extends AppCompatActivity {
         return true;
     }
 
-    public void updateReport(int whichButton) {
+    public void updateReport(final int whichButton) {
         final DocumentReference dRef = db.collection("users").document(uid);
         String text;
         Query result = dRef.collection("purchase");
@@ -148,15 +147,15 @@ public class Report extends AppCompatActivity {
 
         switch (whichButton) {
             case R.id.btn_rpt_week:
-                result = result.whereGreaterThanOrEqualTo("date", startofWeek);
+                result = result.whereGreaterThanOrEqualTo("date", startOfWeek.getTime());
                 text = "weekly";
                 break;
             case R.id.btn_rpt_month:
-                result = result.whereGreaterThanOrEqualTo("date", startofMonth);
+                result = result.whereGreaterThanOrEqualTo("date", startOfMonth.getTime());
                 text = "monthly";
                 break;
             case R.id.btn_rpt_annul:
-                result = result.whereGreaterThanOrEqualTo("date", startofYear);
+                result = result.whereGreaterThanOrEqualTo("date", startOfYear.getTime());
                 text = "annual";
                 break;
             default:
@@ -166,24 +165,84 @@ public class Report extends AppCompatActivity {
 
         final String budgetType = text + " budget";
 
-        result.orderBy("date", Query.Direction.DESCENDING).get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        purchases.clear();
-                        double sum = 0.0, amount;
+        result.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                purchases.clear();
+                double sum = 0.0, amount;
 
-                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                            Log.d(TAG, document.getId() + "-->" + document.getData());
-                            amount = document.getDouble("price");
-                            sum += amount;
-                            purchases.add(new PurchaseItem(document.getString("category"),
-                                    document.getString("name"), amount,
-                                    document.getDate("date"), document.getString("location"), document.getId()));
+                for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                    Log.d(TAG, document.getId() + "-->" + document.getData());
+                    amount = document.getDouble("price");
+                    sum += amount;
+                    purchases.add(new PurchaseItem(document.getString("category"),
+                            document.getString("name"), amount,
+                            document.getDate("date"), document.getString("location"), document.getId()));
+                }
+
+                final double firstSum = sum;
+
+                dRef.collection("recurring expense")
+                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        double tempSum = firstSum;
+
+                        if (task.isSuccessful()) {
+                            double tempAmount;
+                            Calendar calendar, lowerBound;
+                            Calendar upperBound = Calendar.getInstance();
+
+                            switch (whichButton) {
+                                case R.id.btn_rpt_week:
+                                    calendar = (Calendar) startOfMonth.clone();
+                                    lowerBound = (Calendar) startOfWeek.clone();
+                                    break;
+                                case R.id.btn_rpt_annul:
+                                    calendar = (Calendar) startOfYear.clone();
+                                    lowerBound = (Calendar) startOfYear.clone();
+                                    break;
+                                default:
+                                    calendar = (Calendar) startOfMonth.clone();
+                                    lowerBound = (Calendar) startOfMonth.clone();
+                                    break;
+                            }
+
+                            int originalMonth = calendar.get(Calendar.MONTH);
+
+                            for (DocumentSnapshot document : task.getResult()) {
+                                if (document.getDate("date").after(lowerBound.getTime())) {
+                                    lowerBound.setTime(document.getDate("date"));
+                                    lowerBound.set(Calendar.HOUR_OF_DAY, 0);
+                                    lowerBound.set(Calendar.MINUTE, 0);
+                                    lowerBound.set(Calendar.SECOND, 0);
+                                    lowerBound.set(Calendar.MILLISECOND, 0);
+                                }
+
+                                calendar.set(Calendar.MONTH, originalMonth);
+                                calendar.set(Calendar.DAY_OF_MONTH,
+                                        document.getLong("recurring").intValue());
+
+                                while (calendar.before(upperBound)) {
+                                    if (calendar.compareTo(lowerBound) >= 0) {
+                                        tempAmount = document.getDouble("price");
+                                        tempSum += tempAmount;
+
+                                        purchases.add(new PurchaseItem(document.getString("category"),
+                                                document.getString("name"), tempAmount,
+                                                calendar.getTime(),
+                                                document.getString("location"), document.getId()));
+                                    }
+
+                                    calendar.add(Calendar.MONTH, 1);
+                                }
+                            }
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
                         }
 
-                        spendingNum.setText(String.format(Locale.getDefault(), "%.2f", sum));
-                        final double finalSum = sum;
+                        spendingNum.setText(String.format(Locale.getDefault(), "%.2f", tempSum));
+                        final double finalSum = tempSum;
 
                         dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
@@ -223,13 +282,12 @@ public class Report extends AppCompatActivity {
                             }
                         });
 
-                        if (sortMethodPos >= 1 && sortMethodPos <= 3) {
-                            sortPurchases(sortMethodPos);
-                        }
-
+                        sortPurchases(sortMethodPos);
                         purchaseListAdapter.notifyDataSetChanged();
                     }
                 });
+            }
+        });
     }
 
     public void sortPurchases(int sortMethodPos) {
@@ -276,20 +334,18 @@ public class Report extends AppCompatActivity {
     }
 
     public void initializeDateReport() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
+        startOfWeek = Calendar.getInstance();
+        startOfWeek.set(Calendar.HOUR_OF_DAY, 0);
+        startOfWeek.set(Calendar.MINUTE, 0);
+        startOfWeek.set(Calendar.SECOND, 0);
+        startOfWeek.set(Calendar.MILLISECOND, 0);
 
-        Calendar temp = (Calendar) calendar.clone();
-        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-        startofWeek = calendar.getTime();
+        startOfMonth = (Calendar) startOfWeek.clone();
+        startOfWeek.set(Calendar.DAY_OF_WEEK, startOfWeek.getFirstDayOfWeek());
 
-        temp.set(Calendar.DAY_OF_MONTH, 1);
-        startofMonth = temp.getTime();
+        startOfMonth.set(Calendar.DAY_OF_MONTH, 1);
 
-        temp.set(Calendar.MONTH, 1);
-        startofYear = temp.getTime();
+        startOfYear = (Calendar) startOfMonth.clone();
+        startOfYear.set(Calendar.MONTH, Calendar.JANUARY);
     }
 }
