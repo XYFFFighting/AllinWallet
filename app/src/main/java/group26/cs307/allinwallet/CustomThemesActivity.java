@@ -7,21 +7,28 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class CustomThemesActivity extends AppCompatActivity {
-    private Button sendFeedback;
+    //private Button sendFeedback;
+    View view;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cus_themes);
-        //sendFeedback = (Button) findViewById(R.id.feedBackbtn);
-
-
-        /*sendFeedback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"Feedback submitted", Toast.LENGTH_LONG).show();
-                //setContentView(R.layout.activity_main);
-            }
-        });*/
+        view =this.getWindow().getDecorView();
+        final GlobalClass gv = (GlobalClass) getApplicationContext();
+        final boolean isDark  = gv.getThemeSelection();
+        if (isDark) {
+            view.setBackgroundResource(R.color.cardview_dark_background);
+        }
+        //view = this.findViewById(R.id.report_issue);
+       // view = findViewById(R.id.mainView);
+        //view.setBackgroundResource(R.color.cardview_dark_background);
     }
 
+    public void goDark(View v) {
+        view.setBackgroundResource(R.color.cardview_dark_background);
+        final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
+        globalVariable.setThemeSelection(true);
+
+
+    }
 }

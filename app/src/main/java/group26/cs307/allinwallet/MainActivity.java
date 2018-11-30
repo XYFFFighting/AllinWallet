@@ -30,6 +30,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "AllinWallet";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -38,10 +39,20 @@ public class MainActivity extends AppCompatActivity {
     private EditText authtext;
     private FirebaseAuth auth;
 
+    //public boolean themeColor = true;
+
+
+    View view;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final GlobalClass globalvariable = (GlobalClass) getApplicationContext();
+        final boolean isDark = globalvariable.getThemeSelection();
+        if (isDark) {
+            view = this.getWindow().getDecorView();
+            view.setBackgroundResource(R.color.cardview_dark_background);
+        }
 
         // Obtain the FirebaseAnalytics instance.
         auth = FirebaseAuth.getInstance();
@@ -79,10 +90,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         graphVisual.setOnClickListener(new View.OnClickListener() {
-
+            View view;
             @Override
             public void onClick(View view) {
-
                 startActivity(new Intent(MainActivity.this, GraphVisual.class));
             }
         });
