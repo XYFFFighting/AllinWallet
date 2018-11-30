@@ -15,12 +15,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -39,16 +36,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -57,8 +53,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
-import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -109,23 +103,6 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
                 View bot =  findViewById(R.id.img_reci);
                 bot.setBackgroundResource(R.color.cardview_dark_background);
                 li.setBackgroundResource(R.color.cardview_dark_background);
-                ActionBar ac;
-                ac = getSupportActionBar();
-                ac.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
-                TextView chooseCategory;
-                chooseCategory = findViewById(R.id.chooseCat);
-                chooseCategory.setTextColor(Color.parseColor("#ffffff"));
-                EditText date,title,amount;
-                date = findViewById(R.id.item_date);
-                date.setHintTextColor(Color.parseColor("#ffffff"));
-                date.setTextColor(Color.parseColor("#ffffff"));
-                title = findViewById(R.id.item_name);
-                title.setHintTextColor(Color.parseColor("#ffffff"));
-                title.setTextColor(Color.parseColor("#ffffff"));
-                amount = findViewById(R.id.item_price);
-                amount.setHintTextColor(Color.parseColor("#ffffff"));
-                amount.setTextColor(Color.parseColor("#ffffff"));
-
             }
         }
 
