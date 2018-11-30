@@ -43,7 +43,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="5dp">
 
@@ -59,8 +59,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".475"
                     android:background="@android:color/transparent"
-                    android:drawableLeft="@drawable/ic_avatar"
                     android:drawableStart="@drawable/ic_avatar"
+                    android:drawableLeft="@drawable/ic_avatar"
                     android:padding="10dp"
                     android:text="@string/avatar_change"
                     android:textColor="@color/black" />
@@ -76,12 +76,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".475"
                     android:background="@android:color/transparent"
-                    android:drawableLeft="@drawable/ic_budget"
                     android:drawableStart="@drawable/ic_budget"
+                    android:drawableLeft="@drawable/ic_budget"
                     android:padding="10dp"
                     android:text="@string/budget"
                     android:textColor="@color/black" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -96,8 +95,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".475"
                     android:background="@android:color/transparent"
-                    android:drawableLeft="@drawable/ic_income"
                     android:drawableStart="@drawable/ic_income"
+                    android:drawableLeft="@drawable/ic_income"
                     android:padding="10dp"
                     android:text="@string/income"
                     android:textColor="@color/black" />
@@ -113,12 +112,47 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".475"
                     android:background="@android:color/transparent"
-                    android:drawableLeft="@drawable/ic_money"
                     android:drawableStart="@drawable/ic_money"
+                    android:drawableLeft="@drawable/ic_money"
                     android:padding="10dp"
                     android:text="@string/currency_change"
                     android:textColor="@color/black" />
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/theme_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".475"
+                    android:background="@android:color/transparent"
+                    android:drawableStart="@drawable/ic_theme"
+                    android:drawableLeft="@drawable/ic_theme"
+                    android:padding="10dp"
+                    android:text="@string/profile_theme_button_text"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="0.05" />
+
+                <Button
+                    android:id="@+id/calendar_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".475"
+                    android:background="@android:color/transparent"
+                    android:drawableStart="@drawable/ic_calendar"
+                    android:drawableLeft="@drawable/ic_calendar"
+                    android:padding="10dp"
+                    android:text="@string/profile_calendar_button_text"
+                    android:textColor="@color/black" />
             </LinearLayout>
 
             <LinearLayout
@@ -133,8 +167,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".475"
                     android:background="@android:color/transparent"
-                    android:drawableLeft="@drawable/ic_logout"
                     android:drawableStart="@drawable/ic_logout"
+                    android:drawableLeft="@drawable/ic_logout"
                     android:padding="10dp"
                     android:text="@string/btn_sign_out"
                     android:textColor="@color/black" />
@@ -150,13 +184,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".475"
                     android:background="@android:color/transparent"
-                    android:drawableLeft="@drawable/ic_delete"
                     android:drawableStart="@drawable/ic_delete"
+                    android:drawableLeft="@drawable/ic_delete"
                     android:padding="10dp"
                     android:text="@string/dlt_account"
                     android:textColor="@color/black" />
-
             </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
