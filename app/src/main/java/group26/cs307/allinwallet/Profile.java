@@ -3,45 +3,30 @@ package group26.cs307.allinwallet;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.io.File;
 
-import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -56,23 +41,19 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class Profile extends AppCompatActivity implements View.OnClickListener {
     private ImageView profileImage;
     private FirebaseAuth auth;
-    private Button logout, btn_dlt_act, budgetBotton,
-            incomeButton, currencyButton, btnChoose;
+    private Button logout, btn_dlt_act, budgetButton, incomeButton,
+            currencyButton, btnChoose, themeButton, calendarButton;
     private TextView userinfo;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "AllinWallet";
@@ -85,6 +66,21 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        auth = FirebaseAuth.getInstance();
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
+        profileImage = (ImageView) findViewById(R.id.profile_img);
+        budgetButton = (Button) findViewById(R.id.budgetButton);
+        incomeButton = (Button) findViewById(R.id.incomeButton);
+        btnChoose = (Button) findViewById(R.id.btn_choose);
+        currencyButton = (Button) findViewById(R.id.currency);
+        logout = (Button) findViewById(R.id.btn_logout);
+        btn_dlt_act = (Button) findViewById(R.id.btn_dlt_account);
+        themeButton = (Button) findViewById(R.id.theme_button);
+        calendarButton = (Button) findViewById(R.id.calendar_button);
+        userinfo = (TextView) findViewById(R.id.user_info);
+
         final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
         final String color = globalVariable.getThemeSelection();
         if (color != null && color.equals("dark")) {
@@ -93,33 +89,15 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
             LinearLayout top = (LinearLayout) findViewById(R.id.profileTopLY);
             top.setBackgroundResource(R.color.black);
             //buttons
-            Button choose,bdgt, income,curr,signout,delete;
-            choose = findViewById(R.id.btn_choose);
-            choose.setTextColor(Color.parseColor("#ffffff"));
-            bdgt = findViewById(R.id.budgetButton);
-            bdgt.setTextColor(Color.parseColor("#ffffff"));
-            income = findViewById(R.id.incomeButton);
-            income.setTextColor(Color.parseColor("#ffffff"));
-            curr = findViewById(R.id.currency);
-            curr.setTextColor(Color.parseColor("#ffffff"));
-            signout = findViewById(R.id.btn_logout);
-            signout.setTextColor(Color.parseColor("#ffffff"));
-            delete = findViewById(R.id.btn_dlt_account);
-            delete.setTextColor(Color.parseColor("#ffffff"));
-
+            budgetButton.setTextColor(Color.parseColor("#ffffff"));
+            incomeButton.setTextColor(Color.parseColor("#ffffff"));
+            btnChoose.setTextColor(Color.parseColor("#ffffff"));
+            currencyButton.setTextColor(Color.parseColor("#ffffff"));
+            logout.setTextColor(Color.parseColor("#ffffff"));
+            btn_dlt_act.setTextColor(Color.parseColor("#ffffff"));
+            themeButton.setTextColor(Color.parseColor("#ffffff"));
+            calendarButton.setTextColor(Color.parseColor("#ffffff"));
         }
-        auth = FirebaseAuth.getInstance();
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
-
-        profileImage = (ImageView) findViewById(R.id.profile_img);
-        budgetBotton = (Button) findViewById(R.id.budgetButton);
-        incomeButton = (Button) findViewById(R.id.incomeButton);
-        btnChoose = (Button) findViewById(R.id.btn_choose);
-        currencyButton = (Button) findViewById(R.id.currency);
-        logout = (Button) findViewById(R.id.btn_logout);
-        btn_dlt_act = (Button) findViewById(R.id.btn_dlt_account);
-        userinfo = (TextView) findViewById(R.id.user_info);
 
         adduserInfo();
         getImage();
@@ -127,9 +105,11 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
         btnChoose.setOnClickListener(this);
         logout.setOnClickListener(this);
         btn_dlt_act.setOnClickListener(this);
-        budgetBotton.setOnClickListener(this);
+        budgetButton.setOnClickListener(this);
         incomeButton.setOnClickListener(this);
         currencyButton.setOnClickListener(this);
+        themeButton.setOnClickListener(this);
+        calendarButton.setOnClickListener(this);
     }
 
     private void uploadImage() {
@@ -280,6 +260,26 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                 }
             }
         });
+    }
+
+    public void exportToCalendar() {
+        Intent intent = new Intent(Intent.ACTION_INSERT);
+        intent.setType("vnd.android.cursor.item/event");
+
+        Calendar cal = Calendar.getInstance();
+        long startTime = cal.getTimeInMillis();
+        long endTime = cal.getTimeInMillis() + 60 * 60 * 1000;
+
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime);
+        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime);
+        intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
+
+        intent.putExtra(CalendarContract.Events.TITLE, "Siddharth Birthday");
+        intent.putExtra(CalendarContract.Events.DESCRIPTION, "This is a description");
+        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, "My Guest House");
+        intent.putExtra(CalendarContract.Events.RRULE, "FREQ=YEARLY");
+
+        startActivity(intent);
     }
 
     @Override
@@ -515,6 +515,14 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+            }
+            break;
+            case R.id.theme_button: {
+                startActivity(new Intent(Profile.this, CustomThemesActivity.class));
+            }
+            break;
+            case R.id.calendar_button: {
+                exportToCalendar();
             }
             break;
             default:

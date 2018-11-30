@@ -82,10 +82,10 @@ public class MainPage extends AppCompatActivity {
             ActionBar ac;
             ac = getSupportActionBar();
             ac.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
-            TextView tv, budget;
+            //TextView tv, budget;
             //tv = findViewById(R.id.welcomeText);
-            budget = findViewById(R.id.budgetText);
-            budget.setTextColor(Color.parseColor("#ffffff"));
+            //budget = findViewById(R.id.budgetText);
+            //budget.setTextColor(Color.parseColor("#ffffff"));
             //tv.setTextColor(Color.parseColor("#ffffff"));
         }
 

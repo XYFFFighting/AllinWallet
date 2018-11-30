@@ -83,6 +83,8 @@
     <string name="budget">Set Budget</string>
     <string name="income">Set Income</string>
     <string name="currency_change">Set Currency</string>
+    <string name="profile_theme_button_text">Choose Theme</string>
+    <string name="profile_calendar_button_text">To Calendar</string>
     <string name="this_week">THIS WEEK</string>
     <string name="this_month">THIS MONTH</string>
     <string name="this_year">THIS YEAR</string>
