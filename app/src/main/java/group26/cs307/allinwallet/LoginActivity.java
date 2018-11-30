@@ -1,9 +1,12 @@
 package group26.cs307.allinwallet;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -84,6 +87,9 @@ public class LoginActivity extends AppCompatActivity {
         if (color != null && color.equals("dark")) {
             li = (LinearLayout) findViewById(R.id.loginLY);
             li.setBackgroundResource(R.color.cardview_dark_background);
+            ActionBar ac;
+            ac = getSupportActionBar();
+            ac.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
         }
 
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

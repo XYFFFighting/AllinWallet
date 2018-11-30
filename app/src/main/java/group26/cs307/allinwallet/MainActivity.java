@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
          GlobalClass globalvariable = (GlobalClass) getApplicationContext();
          String color = globalvariable.getThemeSelection();
          if (color != null && color.equals("dark")) {
-
         }
 
         // Obtain the FirebaseAnalytics instance.

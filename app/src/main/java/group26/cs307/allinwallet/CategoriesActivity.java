@@ -2,13 +2,17 @@ package group26.cs307.allinwallet;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -65,6 +69,25 @@ public class CategoriesActivity extends AppCompatActivity {
         if (color != null && color.equals("dark")) {
             LinearLayout li = (LinearLayout) findViewById(R.id.categoriesLY);
             li.setBackgroundResource(R.color.cardview_dark_background);
+            ActionBar ac;
+            ac = getSupportActionBar();
+            ac.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
+            TextView gT, cT, hT,pT, genT, tranT, funT;
+            gT = (TextView) findViewById(R.id.GroceryText);
+            gT.setTextColor(Color.parseColor("#ffffff"));
+            cT = findViewById(R.id.ClothesText);
+            cT.setTextColor(Color.parseColor("#ffffff"));
+            hT = findViewById(R.id.HousingText);
+            hT.setTextColor(Color.parseColor("#ffffff"));
+            pT = findViewById(R.id.PersonalText);
+            pT.setTextColor(Color.parseColor("#ffffff"));
+            genT = findViewById(R.id.GeneralText);
+            genT.setTextColor(Color.parseColor("#ffffff"));
+            tranT = findViewById(R.id.TransportText);
+            tranT.setTextColor(Color.parseColor("#ffffff"));
+            funT = findViewById(R.id.FunText);
+            funT.setTextColor(Color.parseColor("#ffffff"));
+
         }
         groceryText = (TextView) findViewById(R.id.GroceryText);
         clothesText = (TextView) findViewById(R.id.ClothesText);
@@ -275,5 +298,27 @@ public class CategoriesActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         // TBA
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.share_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.share_menu) {
+            String message = "The content I wish to share.";
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setType("text/plain");
+            share.putExtra(Intent.EXTRA_TEXT, message);
+
+            startActivity(Intent.createChooser(share, "How would you like to share this?"));
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+        return true;
     }
 }

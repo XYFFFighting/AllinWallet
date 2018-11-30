@@ -5,7 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -87,6 +90,23 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
         if (color != null && color.equals("dark")) {
             LinearLayout li = (LinearLayout) findViewById(R.id.profileLY);
             li.setBackgroundResource(R.color.cardview_dark_background);
+            LinearLayout top = (LinearLayout) findViewById(R.id.profileTopLY);
+            top.setBackgroundResource(R.color.black);
+            //buttons
+            Button choose,bdgt, income,curr,signout,delete;
+            choose = findViewById(R.id.btn_choose);
+            choose.setTextColor(Color.parseColor("#ffffff"));
+            bdgt = findViewById(R.id.budgetButton);
+            bdgt.setTextColor(Color.parseColor("#ffffff"));
+            income = findViewById(R.id.incomeButton);
+            income.setTextColor(Color.parseColor("#ffffff"));
+            curr = findViewById(R.id.currency);
+            curr.setTextColor(Color.parseColor("#ffffff"));
+            signout = findViewById(R.id.btn_logout);
+            signout.setTextColor(Color.parseColor("#ffffff"));
+            delete = findViewById(R.id.btn_dlt_account);
+            delete.setTextColor(Color.parseColor("#ffffff"));
+
         }
         auth = FirebaseAuth.getInstance();
         storage = FirebaseStorage.getInstance();

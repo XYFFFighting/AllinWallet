@@ -1,10 +1,17 @@
 package group26.cs307.allinwallet;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -50,6 +57,12 @@ public class GraphVisual extends AppCompatActivity {
         if (color != null && color.equals("dark")) {
             view = this.getWindow().getDecorView();
             view.setBackgroundResource(R.color.cardview_dark_background);
+            ActionBar ac;
+            ac = getSupportActionBar();
+            ac.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
+            TextView view;
+            view = findViewById(R.id.textView);
+            view.setTextColor(Color.parseColor("#ffffff"));
         }
 
 
@@ -162,6 +175,27 @@ public class GraphVisual extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.share_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.share_menu) {
+            String message = "The content I wish to share.";
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setType("text/plain");
+            share.putExtra(Intent.EXTRA_TEXT, message);
+
+            startActivity(Intent.createChooser(share, "How would you like to share this?"));
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
 
 
 }

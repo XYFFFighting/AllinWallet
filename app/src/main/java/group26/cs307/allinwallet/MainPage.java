@@ -2,9 +2,13 @@ package group26.cs307.allinwallet;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -75,6 +79,14 @@ public class MainPage extends AppCompatActivity {
         if (color != null && color.equals("dark")) {
             li = (LinearLayout) findViewById(R.id.mainPageLY);
             li.setBackgroundResource(R.color.cardview_dark_background);
+            ActionBar ac;
+            ac = getSupportActionBar();
+            ac.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
+            TextView tv, budget;
+            //tv = findViewById(R.id.welcomeText);
+            budget = findViewById(R.id.budgetText);
+            budget.setTextColor(Color.parseColor("#ffffff"));
+            //tv.setTextColor(Color.parseColor("#ffffff"));
         }
 
         animation = AnimationUtils.loadAnimation(MainPage.this, R.anim.text_view_animation);
@@ -177,6 +189,14 @@ public class MainPage extends AppCompatActivity {
             case R.id.search_menu:
                 startActivity(new Intent(MainPage.this, Searching.class));
                 return true;
+            case R.id.share_menu:
+                String message = "The content I wish to share.";
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.setType("text/plain");
+                share.putExtra(Intent.EXTRA_TEXT, message);
+                startActivity(Intent.createChooser(share, "How would you like to share this?"));
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
