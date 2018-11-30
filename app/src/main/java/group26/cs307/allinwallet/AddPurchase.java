@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -23,6 +25,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -54,6 +57,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -104,6 +109,23 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
                 View bot =  findViewById(R.id.img_reci);
                 bot.setBackgroundResource(R.color.cardview_dark_background);
                 li.setBackgroundResource(R.color.cardview_dark_background);
+                ActionBar ac;
+                ac = getSupportActionBar();
+                ac.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
+                TextView chooseCategory;
+                chooseCategory = findViewById(R.id.chooseCat);
+                chooseCategory.setTextColor(Color.parseColor("#ffffff"));
+                EditText date,title,amount;
+                date = findViewById(R.id.item_date);
+                date.setHintTextColor(Color.parseColor("#ffffff"));
+                date.setTextColor(Color.parseColor("#ffffff"));
+                title = findViewById(R.id.item_name);
+                title.setHintTextColor(Color.parseColor("#ffffff"));
+                title.setTextColor(Color.parseColor("#ffffff"));
+                amount = findViewById(R.id.item_price);
+                amount.setHintTextColor(Color.parseColor("#ffffff"));
+                amount.setTextColor(Color.parseColor("#ffffff"));
+
             }
         }
 

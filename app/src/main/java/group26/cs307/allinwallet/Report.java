@@ -1,7 +1,10 @@
 package group26.cs307.allinwallet;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -66,6 +69,9 @@ public class Report extends AppCompatActivity {
         if (color != null && color.equals("dark")) {
             LinearLayout li = (LinearLayout) findViewById(R.id.reportLY);
             li.setBackgroundResource(R.color.cardview_dark_background);
+            ActionBar ac;
+            ac = getSupportActionBar();
+            ac.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
         }
         auth = FirebaseAuth.getInstance();
         uid = auth.getUid();

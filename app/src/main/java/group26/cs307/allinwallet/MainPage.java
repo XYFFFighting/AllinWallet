@@ -2,9 +2,13 @@ package group26.cs307.allinwallet;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -67,6 +71,14 @@ public class MainPage extends AppCompatActivity {
         if (color != null && color.equals("dark")) {
             li = (LinearLayout) findViewById(R.id.mainPageLY);
             li.setBackgroundResource(R.color.cardview_dark_background);
+            ActionBar ac;
+            ac = getSupportActionBar();
+            ac.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
+            TextView tv, budget;
+            tv = findViewById(R.id.welcomeText);
+            budget = findViewById(R.id.budgetText);
+            budget.setTextColor(Color.parseColor("#ffffff"));
+            tv.setTextColor(Color.parseColor("#ffffff"));
         }
 
 

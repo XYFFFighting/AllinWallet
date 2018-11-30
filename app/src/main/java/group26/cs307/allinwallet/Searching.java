@@ -1,9 +1,13 @@
 package group26.cs307.allinwallet;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.app.Activity;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -51,6 +55,7 @@ public class Searching extends AppCompatActivity {
     private Calendar startCalendar, endCalendar;
     private SimpleDateFormat formatter;
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +66,19 @@ public class Searching extends AppCompatActivity {
         if (color != null && color.equals("dark")) {
             LinearLayout li = (LinearLayout) findViewById(R.id.searchingLY);
             li.setBackgroundResource(R.color.cardview_dark_background);
+            ActionBar ac;
+            ac = getSupportActionBar();
+            ac.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
+            TextView tv,start,end;
+            Spinner ctpicker;
+            tv = findViewById(R.id.filterCatTV);
+            tv.setTextColor(Color.parseColor("#ffffff"));
+            start = findViewById(R.id.start_date);
+            start.setTextColor(Color.parseColor("#ffffff"));
+            start.setHintTextColor(Color.parseColor("#ffffff"));
+            end = findViewById(R.id.end_date);
+            end.setHintTextColor(Color.parseColor("#ffffff"));
+            end.setTextColor(Color.parseColor("#ffffff"));
         }
         auth = FirebaseAuth.getInstance();
 

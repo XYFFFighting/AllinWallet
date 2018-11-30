@@ -1,10 +1,14 @@
 package group26.cs307.allinwallet;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -50,6 +54,12 @@ public class GraphVisual extends AppCompatActivity {
         if (color != null && color.equals("dark")) {
             view = this.getWindow().getDecorView();
             view.setBackgroundResource(R.color.cardview_dark_background);
+            ActionBar ac;
+            ac = getSupportActionBar();
+            ac.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
+            TextView view;
+            view = findViewById(R.id.textView);
+            view.setTextColor(Color.parseColor("#ffffff"));
         }
 
 
