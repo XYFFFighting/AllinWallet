@@ -321,7 +321,6 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
                 break;
             }
         }
-
     }
 
     private String getCityName(double latitude, double lontitude) {
@@ -372,7 +371,7 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
 
     public void exportToCalendar() {
         String title = inputName.getText().toString();
-        String price = inputPrice.getText().toString();
+        String amount = inputPrice.getText().toString();
         String category = categoryPicker.getSelectedItem().toString();
         String location = locationString;
 
@@ -381,14 +380,14 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
             return;
         }
 
-        if (TextUtils.isEmpty(price)) {
+        if (TextUtils.isEmpty(amount)) {
             inputPrice.setError("Amount cannot be empty");
             return;
         }
 
         String description = String.format(Locale.getDefault(),
-                "AllinWallet Purchase\n Amount: %s\n Category: %s",
-                price, category);
+                "AllinWallet: %s expense of %s%s.",
+                category, MainPage.currencySign, amount);
         Intent intent = new Intent(Intent.ACTION_INSERT);
         intent.setType("vnd.android.cursor.item/event");
 
@@ -397,8 +396,7 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
 
         intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime);
         intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime);
-        intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
-
+        intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
         intent.putExtra(CalendarContract.Events.TITLE, title);
         intent.putExtra(CalendarContract.Events.DESCRIPTION, description);
         intent.putExtra(CalendarContract.Events.EVENT_LOCATION, location);

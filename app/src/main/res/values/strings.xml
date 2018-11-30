@@ -48,8 +48,7 @@
     <string name="action_example">Example action</string>
     <string name="dlt_account">Delete Account</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_search_by_name">Search_by_name</string>
-    <string name="title_activity_search_by_category">Search_by_category</string>
+    <string name="title_activity_graph_visual">Bar Graph</string>
     <string name="title_activity_searching">Search and Filter</string>
     <string name="report_default_spending_text">Your current spending:</string>
     <string name="report_default_budget_text">No budget found</string>

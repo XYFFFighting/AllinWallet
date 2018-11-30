@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/graphVisual_menu"
+        android:title="@string/title_activity_graph_visual"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/issue_menu"
         android:title="@string/title_activity_issue"
         app:showAsAction="never" />
@@ -18,14 +22,11 @@
         android:title="@string/report"
         app:showAsAction="never" />
     <item
-        android:id="@+id/graphVisual_menu"
-        android:title="graphVisual"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/search_menu"
         android:title="@string/search"
         app:showAsAction="never" />
-    <item android:id="@+id/share_menu"
+    <item
+        android:id="@+id/share_menu"
         android:title="@string/sharer"
         app:showAsAction="never" />
 </menu>

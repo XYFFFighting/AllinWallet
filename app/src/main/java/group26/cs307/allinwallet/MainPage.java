@@ -313,19 +313,6 @@ public class MainPage extends AppCompatActivity {
         String uid = auth.getUid();
         PurchaseItem item = purchases.get(position);
         String documentUID = item.getDocumentUID();
-        final double amount = item.getAmount();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(item.getDate());
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH) + 1;
-        String result = String.format(Locale.getDefault(), "%d-%d", year, month);
-
-        spendingNum -= amount;
-        spendingNumText.startAnimation(animation);
-        spendingNumText.setText(String.format(Locale.getDefault(),
-                "%s%.2f", currencySign, spendingNum));
-        purchases.remove(position);
-        purchaseListAdapter.notifyItemRemoved(position);
 
         db.collection("users").document(uid).collection("purchase")
                 .document(documentUID).delete()
@@ -342,29 +329,45 @@ public class MainPage extends AppCompatActivity {
                     }
                 });
 
-        Log.d(TAG, "summary date: " + result);
+        if (Double.compare(item.getAmount(), 0.0) > 0) {
+            final double amount = item.getAmount();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(item.getDate());
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH) + 1;
+            String result = String.format(Locale.getDefault(), "%d-%d", year, month);
+            Log.d(TAG, "summary date: " + result);
 
-        final DocumentReference dRef = db.collection("users").document(uid)
-                .collection("summary").document(result);
+            spendingNum -= amount;
+            spendingNumText.startAnimation(animation);
+            spendingNumText.setText(String.format(Locale.getDefault(),
+                    "%s%.2f", currencySign, spendingNum));
 
-        dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
+            final DocumentReference dRef = db.collection("users").document(uid)
+                    .collection("summary").document(result);
 
-                    if (document.exists()) {
-                        double sum = document.getDouble("amount");
-                        sum -= amount;
-                        Map<String, Object> amount = new HashMap<>();
-                        amount.put("amount", sum);
-                        dRef.update(amount);
+            dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+
+                        if (document.exists()) {
+                            double sum = document.getDouble("amount");
+                            sum -= amount;
+                            Map<String, Object> amount = new HashMap<>();
+                            amount.put("amount", sum);
+                            dRef.update(amount);
+                        }
+                    } else {
+                        Log.e(TAG, "Error getting documents: ", task.getException());
                     }
-                } else {
-                    Log.e(TAG, "Error getting documents: ", task.getException());
                 }
-            }
-        });
+            });
+        }
+
+        purchases.remove(position);
+        purchaseListAdapter.notifyItemRemoved(position);
     }
 
     @Override

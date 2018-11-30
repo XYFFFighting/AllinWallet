@@ -21,19 +21,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity">
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".SignupActivity"
             android:label="@string/title_activity_signup" />
-        <!--<activity-->
-            <!--android:name=".LoginActivity"-->
-            <!--android:label="@string/title_activity_login" />-->
         <activity
             android:name=".MainPage"
             android:label="@string/title_activity_main_page" />
@@ -58,21 +56,14 @@
             android:name=".Report"
             android:label="@string/title_activity_report" />
         <activity
-            android:name=".Search_by_name"
-            android:label="@string/title_activity_search_by_name" />
-        <activity
-            android:name=".Search_by_category"
-            android:label="@string/title_activity_search_by_category" />
-        <activity
             android:name=".ShareActivity"
             android:label="ShareActivity" />
         <activity
             android:name=".Searching"
             android:label="@string/title_activity_searching" />
-        <activity android:name=".UploadActivity" />
         <activity
             android:name=".GraphVisual"
-            android:label="GraphVisual" />
+            android:label="@string/title_activity_graph_visual" />
         <activity
             android:name=".Issue"
             android:label="@string/title_activity_issue" />
