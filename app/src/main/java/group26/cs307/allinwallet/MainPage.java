@@ -31,17 +31,25 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class MainPage extends AppCompatActivity {
     private FloatingActionButton purchaseButton;
-    private TextView dateText, spendingNum, incomeNum;
+    private TextView dateText, budgetNumText, spendingNumText, incomeNumText;
     private Calendar startOfMonth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "MainPage";
     private FirebaseAuth auth;
     public static String currencySign = "$";
+    public static boolean isBudgetUpdated;
+    public static double budgetNum;
+    public static boolean isSpendingUpdated;
+    public static double spendingNum;
+    public static boolean isIncomeUpdated;
+    public static double incomeNum;
 
     private RecyclerView purchaseList;
     private RecyclerView.LayoutManager purchaseListLayoutManager;
@@ -55,9 +63,15 @@ public class MainPage extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         dateText = (TextView) findViewById(R.id.date_text);
-        spendingNum = (TextView) findViewById(R.id.spending_num);
-        incomeNum = (TextView) findViewById(R.id.income_num);
-        setCurrencySign();
+        budgetNumText = (TextView) findViewById(R.id.budget_num);
+        spendingNumText = (TextView) findViewById(R.id.spending_num);
+        incomeNumText = (TextView) findViewById(R.id.income_num);
+        isBudgetUpdated = false;
+        budgetNum = 0.0;
+        isSpendingUpdated = false;
+        spendingNum = 0.0;
+        isIncomeUpdated = false;
+        incomeNum = 0.0;
         setDate();
 
         purchaseButton = (FloatingActionButton) findViewById(R.id.fab);
@@ -154,7 +168,8 @@ public class MainPage extends AppCompatActivity {
 
     public void setDate() {
         startOfMonth = Calendar.getInstance();
-        SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d yyyy", Locale.getDefault());
+        SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d, yyyy",
+                Locale.getDefault());
         dateText.append(formatter.format(startOfMonth.getTime()));
 
         startOfMonth.set(Calendar.DAY_OF_MONTH, 1);
@@ -164,18 +179,33 @@ public class MainPage extends AppCompatActivity {
         startOfMonth.set(Calendar.MILLISECOND, 0);
     }
 
-    public void setCurrencySign() {
+    public void initializeMainPage() {
         String uid = auth.getUid();
+        final DocumentReference dRef = db.collection("users").document(uid);
 
-        db.collection("users").document(uid)
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
+
                     if (document.exists()) {
+                        Log.d(TAG, document.getId() + "-->" + document.getData());
+
                         if (document.contains("Currency")) {
                             currencySign = document.getString("Currency");
+                        }
+
+                        if (document.contains("monthly budget")) {
+                            budgetNum = document.getDouble("monthly budget");
+                            budgetNumText.setText(String.format(Locale.getDefault(),
+                                    "%s%.2f", currencySign, budgetNum));
+                        }
+
+                        if (document.contains("income")) {
+                            incomeNum = document.getDouble("income");
+                            incomeNumText.setText(String.format(Locale.getDefault(),
+                                    "%s%.2f", currencySign, incomeNum));
                         }
                     } else {
                         Log.d(TAG, "No such document");
@@ -183,79 +213,71 @@ public class MainPage extends AppCompatActivity {
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
                 }
+
+                dRef.collection("purchase").whereGreaterThanOrEqualTo("date", startOfMonth.getTime())
+                        .orderBy("date", Query.Direction.DESCENDING)
+                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            double amount;
+
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + "-->" + document.getData());
+                                amount = document.getDouble("price");
+
+                                spendingNum += amount;
+                                purchases.add(new PurchaseItem(document.getString("category"),
+                                        document.getString("name"), amount,
+                                        document.getDate("date"), document.getString("location"), document.getId()));
+                            }
+
+                            purchaseListAdapter.notifyDataSetChanged();
+                            spendingNumText.setText(String.format(Locale.getDefault(),
+                                    "%s%.2f", currencySign, spendingNum));
+                        } else {
+                            Log.e(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
             }
         });
     }
 
-    public void initializeMainPage() {
-        final String uid = auth.getUid();
-        final DocumentReference dRef = db.collection("users").document(uid);
+    public void updateMainPage() {
+        if (isBudgetUpdated) {
+            budgetNumText.setText(String.format(Locale.getDefault(),
+                    "%s%.2f", currencySign, budgetNum));
+            isBudgetUpdated = false;
+        }
 
-        dRef.collection("purchase").whereGreaterThanOrEqualTo("date", startOfMonth.getTime())
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    purchases.clear();
-                    double sum = 0.0, amount;
-                    
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, document.getId() + "-->" + document.getData());
-                        amount = document.getDouble("price");
+        if (isSpendingUpdated) {
+            spendingNumText.setText(String.format(Locale.getDefault(),
+                    "%s%.2f", currencySign, spendingNum));
+            isSpendingUpdated = false;
+        }
 
-                        sum += amount;
-                        purchases.add(new PurchaseItem(document.getString("category"),
-                                document.getString("name"), amount,
-                                document.getDate("date"), document.getString("location"), document.getId()));
-                    }
-
-
-                    purchaseListAdapter.notifyDataSetChanged();
-                    budgetText.append(String.format(Locale.getDefault(),
-                            "%.2f", sum));
-                    // 29 $
-
-                    dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                if (document.exists()) {
-                                    Log.d(TAG, document.getId() + "-->" + document.getData());
-
-                                    if (document.contains("monthly budget")) {
-                                        budgetText.append(String.format(Locale.getDefault(),
-                                                " / %.2f", document.getDouble("monthly budget")));
-                                        //300 $
-                                    }
-                                    if (document.contains("Currency")) {
-                                        currencySign = document.getString("Currency");
-                                    }
-
-                                    if (document.contains("income")) {
-                                        String income = String.format(Locale.getDefault(),
-                                                "\nMonthly income: %.2f",
-                                                document.getDouble("income"));
-                                        budgetText.append(income);
-                                    }
-                                } else {
-                                    Log.d(TAG, "No such document");
-                                }
-                            } else {
-                                Log.d(TAG, "get failed with ", task.getException());
-                            }
-                        }
-                    });
-                } else {
-                    Log.e(TAG, "Error getting documents: ", task.getException());
-                }
-            }
-        });
+        if (isIncomeUpdated) {
+            incomeNumText.setText(String.format(Locale.getDefault(),
+                    "%s%.2f", currencySign, incomeNum));
+            isIncomeUpdated = false;
+        }
     }
 
     public void deletePurchaseItem(int position) {
         String uid = auth.getUid();
-        String documentUID = purchases.get(position).getDocumentUID();
+        PurchaseItem item = purchases.get(position);
+        String documentUID = item.getDocumentUID();
+        final double amount = item.getAmount();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(item.getDate());
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        String result = String.format(Locale.getDefault(), "%d-%d", year, month);
+
+        spendingNum -= amount;
+        spendingNumText.setText(String.format(Locale.getDefault(),
+                "%s%.2f", currencySign, spendingNum));
         purchases.remove(position);
         purchaseListAdapter.notifyItemRemoved(position);
 
@@ -273,18 +295,35 @@ public class MainPage extends AppCompatActivity {
                         Log.d(TAG, "purchase delete unsuccessful");
                     }
                 });
+
+        Log.d(TAG, "summary date: " + result);
+
+        final DocumentReference dRef = db.collection("users").document(uid)
+                .collection("summary").document(result);
+
+        dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+
+                    if (document.exists()) {
+                        double sum = document.getDouble("amount");
+                        sum -= amount;
+                        Map<String, Object> amount = new HashMap<>();
+                        amount.put("amount", sum);
+                        dRef.update(amount);
+                    }
+                } else {
+                    Log.e(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //String uid = auth.getUid();
-        //updateMainPage(uid);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        // TBA
+        updateMainPage();
     }
 }

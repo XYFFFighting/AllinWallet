@@ -99,8 +99,10 @@
     <string name="back">Back</string>
     <string name="next">Next</string>
     <string name="enter_image_name">Enter image name</string>
-    <string name="default_spending_num">N/A</string>
-    <string name="main_page_default_income_text">Your monthly income:</string>
+    <string name="default_num">N/A</string>
+    <string name="main_page_default_spending_text">Spending</string>
+    <string name="main_page_default_budget_text">Budget</string>
+    <string name="main_page_default_income_text">Income</string>
 
     <string-array name="sort_array">
         <item>Date</item>

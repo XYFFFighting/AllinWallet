@@ -334,13 +334,17 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                                 Toast.makeText(getApplicationContext(), "Budget field is empty!",
                                         Toast.LENGTH_SHORT).show();
                             } else {
+                                Double budget = Double.parseDouble(budget_text);
                                 String text;
+
                                 switch (budgetTypeGroup.getCheckedRadioButtonId()) {
                                     case R.id.weekly_budget_type:
                                         text = "weekly budget";
                                         break;
                                     case R.id.monthly_budget_type:
                                         text = "monthly budget";
+                                        MainPage.budgetNum = budget;
+                                        MainPage.isBudgetUpdated = true;
                                         break;
                                     case R.id.annual_budget_type:
                                         text = "annual budget";
@@ -351,7 +355,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                                 }
 
                                 Map<String, Object> budget_info = new HashMap<>();
-                                budget_info.put(text, Double.parseDouble(budget_text));
+                                budget_info.put(text, budget);
 
                                 db.collection("users").document(uid).update(budget_info);
                                 Toast.makeText(getApplicationContext(),
@@ -392,8 +396,11 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                                 Toast.makeText(getApplicationContext(), "Income field is empty!",
                                         Toast.LENGTH_SHORT).show();
                             } else {
+                                Double income = Double.parseDouble(income_text);
+                                MainPage.incomeNum = income;
+                                MainPage.isIncomeUpdated = true;
                                 Map<String, Object> income_info = new HashMap<>();
-                                income_info.put("income", Double.parseDouble(income_text));
+                                income_info.put("income", income);
 
                                 db.collection("users").document(uid).update(income_info);
                                 Toast.makeText(getApplicationContext(), "Income updated successfully",
@@ -445,9 +452,9 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                                 default:
                                     text = "Error";
                                     break;
-
                             }
 
+                            MainPage.currencySign = text;
                             Map<String, Object> budget_info = new HashMap<>();
                             budget_info.put("Currency", text);
 
