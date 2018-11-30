@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,10 +60,12 @@ public class MainPage extends AppCompatActivity {
 
     View view;
     LinearLayout li;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
+        auth = FirebaseAuth.getInstance();
 
         final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
         final String color = globalVariable.getThemeSelection();
@@ -72,11 +73,6 @@ public class MainPage extends AppCompatActivity {
             li = (LinearLayout) findViewById(R.id.mainPageLY);
             li.setBackgroundResource(R.color.cardview_dark_background);
         }
-
-        currencyGroup = findViewById(R.id.currency_type_group);
-        welcomeMessage = (TextView) findViewById(R.id.welcomeText);
-        budgetText = (TextView) findViewById(R.id.budgetText);
-        auth = FirebaseAuth.getInstance();
 
         dateText = (TextView) findViewById(R.id.date_text);
         budgetNumText = (TextView) findViewById(R.id.budget_num);
