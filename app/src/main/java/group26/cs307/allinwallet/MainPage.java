@@ -14,8 +14,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -51,11 +53,23 @@ public class MainPage extends AppCompatActivity {
     private int CurrencyselectedRadioButtonID;
     public static String currencySign = "$";
 
+    View view;
+    LinearLayout li;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         auth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
+
+
+        final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
+        final String color = globalVariable.getThemeSelection();
+        if (color != null && color.equals("dark")) {
+            li = (LinearLayout) findViewById(R.id.mainPageLY);
+            li.setBackgroundResource(R.color.cardview_dark_background);
+        }
+
+
         currencyGroup = findViewById(R.id.currency_type_group);
         welcomeMessage = (TextView) findViewById(R.id.welcomeText);
         budgetText = (TextView) findViewById(R.id.budgetText);

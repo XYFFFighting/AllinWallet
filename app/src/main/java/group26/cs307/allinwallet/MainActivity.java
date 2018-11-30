@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -16,6 +17,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -42,16 +44,16 @@ public class MainActivity extends AppCompatActivity {
     //public boolean themeColor = true;
 
 
-    View view;
+    ConstraintLayout li;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final GlobalClass globalvariable = (GlobalClass) getApplicationContext();
-        final boolean isDark = globalvariable.getThemeSelection();
-        if (isDark) {
-            view = this.getWindow().getDecorView();
-            view.setBackgroundResource(R.color.cardview_dark_background);
+
+         GlobalClass globalvariable = (GlobalClass) getApplicationContext();
+         String color = globalvariable.getThemeSelection();
+         if (color != null && color.equals("dark")) {
+
         }
 
         // Obtain the FirebaseAnalytics instance.
@@ -216,7 +218,6 @@ public class MainActivity extends AppCompatActivity {
                 builder.show();
             }
         });
-
 
     }
 

@@ -13,21 +13,21 @@ public class CustomThemesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cus_themes);
-        view =this.getWindow().getDecorView();
+        view = this.getWindow().getDecorView();
+
         final GlobalClass gv = (GlobalClass) getApplicationContext();
-        final boolean isDark  = gv.getThemeSelection();
-        if (isDark) {
-            view.setBackgroundResource(R.color.cardview_dark_background);
+        final String color = gv.getThemeSelection();
+        //Toast.makeText(getApplicationContext(), color, Toast.LENGTH_SHORT).show();
+        if (color != null && color.equals("dark") ) {
+           view.setBackgroundResource(R.color.cardview_dark_background);
         }
-        //view = this.findViewById(R.id.report_issue);
-       // view = findViewById(R.id.mainView);
-        //view.setBackgroundResource(R.color.cardview_dark_background);
+
     }
 
     public void goDark(View v) {
         view.setBackgroundResource(R.color.cardview_dark_background);
         final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
-        globalVariable.setThemeSelection(true);
+        globalVariable.setThemeSelection("dark");
 
 
     }

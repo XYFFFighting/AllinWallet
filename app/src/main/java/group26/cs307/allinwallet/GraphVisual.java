@@ -46,8 +46,8 @@ public class GraphVisual extends AppCompatActivity {
 
         //added for themes
         final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
-        final boolean isDark = globalVariable.getThemeSelection();
-        if (isDark) {
+        final String color = globalVariable.getThemeSelection();
+        if (color != null && color.equals("dark")) {
             view = this.getWindow().getDecorView();
             view.setBackgroundResource(R.color.cardview_dark_background);
         }

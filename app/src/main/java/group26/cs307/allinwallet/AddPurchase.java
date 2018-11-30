@@ -34,6 +34,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -88,11 +89,23 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
             "Clothes", "Housing", "Personal", "General", "Transport", "Fun"));
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
+    LinearLayout li;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         auth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_purchase);
+
+        final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
+        final String color = globalVariable.getThemeSelection();
+        if (color != null) {
+            if (color.equals("dark")) {
+                LinearLayout li = (LinearLayout) findViewById(R.id.addPurchaseLY);
+                View bot =  findViewById(R.id.img_reci);
+                bot.setBackgroundResource(R.color.cardview_dark_background);
+                li.setBackgroundResource(R.color.cardview_dark_background);
+            }
+        }
 
         passedPurchaseIndex = getIntent().getIntExtra("item_key", -1);
         if (passedPurchaseIndex != -1) {
