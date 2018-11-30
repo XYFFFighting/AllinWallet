@@ -189,6 +189,9 @@ public class MainPage extends AppCompatActivity {
             case R.id.search_menu:
                 startActivity(new Intent(MainPage.this, Searching.class));
                 return true;
+            case R.id.graphVisual_menu:
+                startActivity(new Intent(MainPage.this, GraphVisual.class));
+                return true;
             case R.id.share_menu:
                 String message = "The content I wish to share.";
                 Intent share = new Intent(Intent.ACTION_SEND);
