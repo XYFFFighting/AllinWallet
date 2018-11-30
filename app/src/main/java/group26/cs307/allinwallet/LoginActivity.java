@@ -81,6 +81,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // set the view now
         setContentView(R.layout.activity_login);
+        setTitle(R.string.title_activity_login);
 
         final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
         final String color = globalVariable.getThemeSelection();
