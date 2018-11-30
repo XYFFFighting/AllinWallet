@@ -245,7 +245,7 @@ public class CategoriesActivity extends AppCompatActivity {
 
     protected void addData(){
         ArrayList<Integer> colors = new ArrayList<>();
-        colors.add(Color.BLUE);
+        colors.add(Color.LTGRAY);
         colors.add(Color.RED);
         colors.add(Color.YELLOW);
         colors.add(Color.GRAY);
