@@ -460,8 +460,15 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
 
                             db.collection("users").document(uid).update(budget_info);
                             Toast.makeText(getApplicationContext(),
-                                    "You have successfully updated your currency symbol",
+                                    "You have successfully updated your currency symbol, the app " +
+                                            "will restart now!",
                                     Toast.LENGTH_SHORT).show();
+
+                            Intent intent = getBaseContext().getPackageManager()
+                                    .getLaunchIntentForPackage(getBaseContext().getPackageName());
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            finish();
+                            startActivity(intent);
                         }
 
                         dialog.dismiss();
