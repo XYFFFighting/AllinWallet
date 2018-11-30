@@ -41,11 +41,11 @@ import java.util.Map;
 public class MainPage extends AppCompatActivity {
     private FloatingActionButton purchaseButton;
     private TextView dateText, budgetNumText, spendingNumText, incomeNumText;
-    private Calendar startOfMonth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "MainPage";
     private FirebaseAuth auth;
     public static String currencySign = "$";
+    public static Calendar startOfMonth;
     public static boolean isBudgetUpdated;
     public static double budgetNum;
     public static boolean isSpendingUpdated;

@@ -83,6 +83,7 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     LinearLayout li;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         auth = FirebaseAuth.getInstance();
@@ -94,7 +95,7 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
         if (color != null) {
             if (color.equals("dark")) {
                 LinearLayout li = (LinearLayout) findViewById(R.id.addPurchaseLY);
-                View bot =  findViewById(R.id.img_reci);
+                View bot = findViewById(R.id.img_reci);
                 bot.setBackgroundResource(R.color.cardview_dark_background);
                 li.setBackgroundResource(R.color.cardview_dark_background);
             }
@@ -147,7 +148,6 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
             calendar.setTime(item.getDate());
             locationString = item.getLocation();
             updateReci(item.getDocumentUID());
-            updateSummary(item.getDate(), -item.getAmount());
             categoryPicker.setSelection(categories.indexOf(item.getCategory()));
         } else {
             inputDate.setText(formatter.format(calendar.getTime()));
@@ -167,7 +167,6 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
         purchaselist.put("category", category);
         purchaselist.put("date", date);
         purchaselist.put("location", location);
-        updateSummary(date, price);
 
         db.collection("users").document(uid)
                 .collection("purchase").document(time).set(purchaselist);
@@ -177,14 +176,19 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
             uploadrecipe(time);
         }
 
-        if (Double.compare(price, 0.0) > 0) {
-            MainPage.spendingNum += price;
-            MainPage.isSpendingUpdated = true;
-        }
+        if (date.compareTo(MainPage.startOfMonth.getTime()) >= 0) {
+            if (Double.compare(price, 0.0) > 0) {
+                MainPage.spendingNum += price;
+                MainPage.isSpendingUpdated = true;
+                updateSummary(date, price);
+            }
 
-        MainPage.purchases.add(0, new PurchaseItem(category,
-                name, price, date, location, time));
-        MainPage.purchaseListAdapter.notifyItemInserted(0);
+            MainPage.purchases.add(0, new PurchaseItem(category,
+                    name, price, date, location, time));
+            MainPage.purchaseListAdapter.notifyItemInserted(0);
+        } else if (Double.compare(price, 0.0) > 0) {
+            updateSummary(date, price);
+        }
     }
 
     public void updateSummary(Date date, final double amount) {
@@ -248,8 +252,8 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
         });
     }
 
-    public void updatePurchase(String name, double price, String category, Date date, String location, String
-            documentUID) {
+    public void updatePurchase(String name, double price, String category, Date date,
+                               String location, String documentUID) {
         String uid = auth.getUid();
 
         Map<String, Object> purchaselist = new HashMap<>();
@@ -262,21 +266,36 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
         db.collection("users").document(uid)
                 .collection("purchase").document(documentUID).update(purchaselist);
         Log.d(TAG, uid + " update purchase data");
-        updateSummary(date, price);
 
         if (img_reci.getDrawable() != null) {
             uploadrecipe(documentUID);
         }
 
-        if (Double.compare(item.getAmount(), price) != 0) {
-            MainPage.spendingNum -= item.getAmount();
-            MainPage.spendingNum += price;
-            MainPage.isSpendingUpdated = true;
-        }
+        if (date.compareTo(MainPage.startOfMonth.getTime()) >= 0) {
+            if (Double.compare(item.getAmount(), price) != 0) {
+                double diff = price - item.getAmount();
+                MainPage.spendingNum += diff;
+                MainPage.isSpendingUpdated = true;
+                updateSummary(date, diff);
+            }
 
-        MainPage.purchases.set(passedPurchaseIndex, new PurchaseItem(category,
-                name, price, date, location, documentUID));
-        MainPage.purchaseListAdapter.notifyItemChanged(passedPurchaseIndex);
+            MainPage.purchases.set(passedPurchaseIndex, new PurchaseItem(category,
+                    name, price, date, location, documentUID));
+            MainPage.purchaseListAdapter.notifyItemChanged(passedPurchaseIndex);
+        } else {
+            if (Double.compare(item.getAmount(), 0.0) > 0) {
+                MainPage.spendingNum -= item.getAmount();
+                MainPage.isSpendingUpdated = true;
+                updateSummary(item.getDate(), -item.getAmount());
+            }
+
+            MainPage.purchases.remove(passedPurchaseIndex);
+            MainPage.purchaseListAdapter.notifyItemRemoved(passedPurchaseIndex);
+            
+            if (Double.compare(price, 0.0) > 0) {
+                updateSummary(date, price);
+            }
+        }
     }
 
     @Override
