@@ -83,10 +83,10 @@ public class MainPage extends AppCompatActivity {
             ac = getSupportActionBar();
             ac.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
             TextView tv, budget;
-            tv = findViewById(R.id.welcomeText);
+            //tv = findViewById(R.id.welcomeText);
             budget = findViewById(R.id.budgetText);
             budget.setTextColor(Color.parseColor("#ffffff"));
-            tv.setTextColor(Color.parseColor("#ffffff"));
+            //tv.setTextColor(Color.parseColor("#ffffff"));
         }
 
         animation = AnimationUtils.loadAnimation(MainPage.this, R.anim.text_view_animation);
