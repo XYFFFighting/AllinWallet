@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -45,7 +44,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -260,26 +258,6 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                 }
             }
         });
-    }
-
-    public void exportToCalendar() {
-        Intent intent = new Intent(Intent.ACTION_INSERT);
-        intent.setType("vnd.android.cursor.item/event");
-
-        Calendar cal = Calendar.getInstance();
-        long startTime = cal.getTimeInMillis();
-        long endTime = cal.getTimeInMillis() + 60 * 60 * 1000;
-
-        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime);
-        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime);
-        intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
-
-        intent.putExtra(CalendarContract.Events.TITLE, "Siddharth Birthday");
-        intent.putExtra(CalendarContract.Events.DESCRIPTION, "This is a description");
-        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, "My Guest House");
-        intent.putExtra(CalendarContract.Events.RRULE, "FREQ=YEARLY");
-
-        startActivity(intent);
     }
 
     @Override
@@ -522,7 +500,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
             }
             break;
             case R.id.calendar_button: {
-                exportToCalendar();
+                //exportToCalendar();
             }
             break;
             default:

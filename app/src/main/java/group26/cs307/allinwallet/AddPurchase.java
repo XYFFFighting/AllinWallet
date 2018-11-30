@@ -18,6 +18,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -89,6 +90,7 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     LinearLayout li;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         auth = FirebaseAuth.getInstance();
@@ -100,7 +102,7 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
         if (color != null) {
             if (color.equals("dark")) {
                 LinearLayout li = (LinearLayout) findViewById(R.id.addPurchaseLY);
-                View bot =  findViewById(R.id.img_reci);
+                View bot = findViewById(R.id.img_reci);
                 bot.setBackgroundResource(R.color.cardview_dark_background);
                 li.setBackgroundResource(R.color.cardview_dark_background);
             }
@@ -186,13 +188,13 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
     private void addsummary(final double price) {
         final String uid = auth.getUid();
         String month = inputDate.getText().toString();
-        final String result = month.substring(month.lastIndexOf('/')+ 1, month.length()) + '-' + month.substring(0,month.indexOf('/'));
+        final String result = month.substring(month.lastIndexOf('/') + 1, month.length()) + '-' + month.substring(0, month.indexOf('/'));
         Log.d(TAG, "summary date: " + result);
         DocumentReference dRef = db.collection("users").document(uid);
         dRef.collection("summary").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()) {
+                if (task.isSuccessful()) {
                     boolean find = false;
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         if (document.getId().equals(result)) {
@@ -206,7 +208,7 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
                             break;
                         }
                     }
-                    if(!find) {
+                    if (!find) {
                         Map<String, Object> amount = new HashMap<>();
                         amount.put("amount", price);
                         db.collection("users").document(uid).collection("summary").document(result).set(amount);
@@ -351,6 +353,42 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
         }
     }
 
+    public void exportToCalendar() {
+        String title = inputName.getText().toString();
+        String price = inputPrice.getText().toString();
+        String category = categoryPicker.getSelectedItem().toString();
+        String location = locationString;
+
+        if (TextUtils.isEmpty(title)) {
+            inputName.setError("Title cannot be empty");
+            return;
+        }
+
+        if (TextUtils.isEmpty(price)) {
+            inputPrice.setError("Amount cannot be empty");
+            return;
+        }
+
+        String description = String.format(Locale.getDefault(),
+                "AllinWallet Purchase\n Amount: %s\n Category: %s",
+                price, category);
+        Intent intent = new Intent(Intent.ACTION_INSERT);
+        intent.setType("vnd.android.cursor.item/event");
+
+        long startTime = calendar.getTimeInMillis();
+        long endTime = calendar.getTimeInMillis() + 30 * 60 * 1000;
+
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime);
+        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime);
+        intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
+
+        intent.putExtra(CalendarContract.Events.TITLE, title);
+        intent.putExtra(CalendarContract.Events.DESCRIPTION, description);
+        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, location);
+
+        startActivity(intent);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.add_purchase_menu, menu);
@@ -396,6 +434,9 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
                             .show();
                 }
 
+                return true;
+            case R.id.menu_export_to_calendar:
+                exportToCalendar();
                 return true;
             case R.id.menu_add_receipt:
                 dispatchTakePictureIntent();

@@ -59,6 +59,7 @@
     <string name="add_purchase_menu_get_location">Get Location</string>
     <string name="add_purchase_menu_check_location">Check Location</string>
     <string name="add_purchase_menu_add_receipt">Add Receipt</string>
+    <string name="add_purchase_menu_export_to_calendar">Export to Calendar</string>
     <string name="recurring_expense">Recurring Expense</string>
     <string name="recurring_expense_day">Recurring day:</string>
     <string name="recurring_expense_title">Expense title:</string>
