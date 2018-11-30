@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -44,6 +46,7 @@ public class Report extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "Report";
 
+    private Animation animation;
     private TextView spendingNum, budgetText, budgetNum, remainingBudgetText, remainingBudgetNum;
     private Spinner sortPicker;
     private RadioGroup startDateGroup;
@@ -67,9 +70,11 @@ public class Report extends AppCompatActivity {
             LinearLayout li = (LinearLayout) findViewById(R.id.reportLY);
             li.setBackgroundResource(R.color.cardview_dark_background);
         }
+
         auth = FirebaseAuth.getInstance();
         uid = auth.getUid();
 
+        animation = AnimationUtils.loadAnimation(Report.this, R.anim.text_view_animation);
         spendingNum = (TextView) findViewById(R.id.spending_num);
         budgetText = (TextView) findViewById(R.id.budget_text);
         budgetNum = (TextView) findViewById(R.id.budget_num);
@@ -247,6 +252,7 @@ public class Report extends AppCompatActivity {
                             Log.d(TAG, "get failed with ", task.getException());
                         }
 
+                        spendingNum.startAnimation(animation);
                         spendingNum.setText(String.format(Locale.getDefault(), "%s%.2f",
                                 MainPage.currencySign, tempSum));
                         final double finalSum = tempSum;
@@ -272,6 +278,10 @@ public class Report extends AppCompatActivity {
                                                         "%s0.00", MainPage.currencySign);
                                             }
 
+                                            budgetText.startAnimation(animation);
+                                            budgetNum.startAnimation(animation);
+                                            remainingBudgetText.startAnimation(animation);
+                                            remainingBudgetNum.startAnimation(animation);
                                             budgetText.setText(String.format(Locale.getDefault(),
                                                     "Your %s:", budgetType));
                                             budgetNum.setText(String.format(Locale.getDefault(),
@@ -279,6 +289,8 @@ public class Report extends AppCompatActivity {
                                             remainingBudgetText.setText(R.string.report_remaining_budget_found);
                                             remainingBudgetNum.setText(remainingBudgetNumText);
                                         } else {
+                                            budgetText.startAnimation(animation);
+                                            remainingBudgetText.startAnimation(animation);
                                             budgetText.setText(R.string.report_default_budget_text);
                                             budgetNum.setText(null);
                                             remainingBudgetText.setText(R.string.report_default_remaining_budget_text);

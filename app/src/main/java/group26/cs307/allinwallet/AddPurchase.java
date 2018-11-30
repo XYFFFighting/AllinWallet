@@ -291,7 +291,7 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
 
             MainPage.purchases.remove(passedPurchaseIndex);
             MainPage.purchaseListAdapter.notifyItemRemoved(passedPurchaseIndex);
-            
+
             if (Double.compare(price, 0.0) > 0) {
                 updateSummary(date, price);
             }

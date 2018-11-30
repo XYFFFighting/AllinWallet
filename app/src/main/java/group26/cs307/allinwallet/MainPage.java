@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +43,7 @@ import java.util.Map;
 public class MainPage extends AppCompatActivity {
     private FloatingActionButton purchaseButton;
     private TextView dateText, budgetNumText, spendingNumText, incomeNumText;
+    private Animation animation;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "MainPage";
     private FirebaseAuth auth;
@@ -74,6 +77,7 @@ public class MainPage extends AppCompatActivity {
             li.setBackgroundResource(R.color.cardview_dark_background);
         }
 
+        animation = AnimationUtils.loadAnimation(MainPage.this, R.anim.text_view_animation);
         dateText = (TextView) findViewById(R.id.date_text);
         budgetNumText = (TextView) findViewById(R.id.budget_num);
         spendingNumText = (TextView) findViewById(R.id.spending_num);
@@ -210,12 +214,14 @@ public class MainPage extends AppCompatActivity {
 
                         if (document.contains("monthly budget")) {
                             budgetNum = document.getDouble("monthly budget");
+                            budgetNumText.startAnimation(animation);
                             budgetNumText.setText(String.format(Locale.getDefault(),
                                     "%s%.2f", currencySign, budgetNum));
                         }
 
                         if (document.contains("income")) {
                             incomeNum = document.getDouble("income");
+                            incomeNumText.startAnimation(animation);
                             incomeNumText.setText(String.format(Locale.getDefault(),
                                     "%s%.2f", currencySign, incomeNum));
                         }
@@ -245,6 +251,7 @@ public class MainPage extends AppCompatActivity {
                             }
 
                             purchaseListAdapter.notifyDataSetChanged();
+                            spendingNumText.startAnimation(animation);
                             spendingNumText.setText(String.format(Locale.getDefault(),
                                     "%s%.2f", currencySign, spendingNum));
                         } else {
@@ -258,18 +265,21 @@ public class MainPage extends AppCompatActivity {
 
     public void updateMainPage() {
         if (isBudgetUpdated) {
+            budgetNumText.startAnimation(animation);
             budgetNumText.setText(String.format(Locale.getDefault(),
                     "%s%.2f", currencySign, budgetNum));
             isBudgetUpdated = false;
         }
 
         if (isSpendingUpdated) {
+            spendingNumText.startAnimation(animation);
             spendingNumText.setText(String.format(Locale.getDefault(),
                     "%s%.2f", currencySign, spendingNum));
             isSpendingUpdated = false;
         }
 
         if (isIncomeUpdated) {
+            incomeNumText.startAnimation(animation);
             incomeNumText.setText(String.format(Locale.getDefault(),
                     "%s%.2f", currencySign, incomeNum));
             isIncomeUpdated = false;
@@ -288,6 +298,7 @@ public class MainPage extends AppCompatActivity {
         String result = String.format(Locale.getDefault(), "%d-%d", year, month);
 
         spendingNum -= amount;
+        spendingNumText.startAnimation(animation);
         spendingNumText.setText(String.format(Locale.getDefault(),
                 "%s%.2f", currencySign, spendingNum));
         purchases.remove(position);
