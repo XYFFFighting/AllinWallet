@@ -183,6 +183,14 @@ public class MainPage extends AppCompatActivity {
             case R.id.search_menu:
                 startActivity(new Intent(MainPage.this, Searching.class));
                 return true;
+            case R.id.share_menu:
+                String message = "The content I wish to share.";
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.setType("text/plain");
+                share.putExtra(Intent.EXTRA_TEXT, message);
+                startActivity(Intent.createChooser(share, "How would you like to share this?"));
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
