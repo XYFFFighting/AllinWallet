@@ -5,7 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +19,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -81,7 +85,29 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
+        final String color = globalVariable.getThemeSelection();
+        if (color != null && color.equals("dark")) {
+            LinearLayout li = (LinearLayout) findViewById(R.id.profileLY);
+            li.setBackgroundResource(R.color.cardview_dark_background);
+            LinearLayout top = (LinearLayout) findViewById(R.id.profileTopLY);
+            top.setBackgroundResource(R.color.black);
+            //buttons
+            Button choose,bdgt, income,curr,signout,delete;
+            choose = findViewById(R.id.btn_choose);
+            choose.setTextColor(Color.parseColor("#ffffff"));
+            bdgt = findViewById(R.id.budgetButton);
+            bdgt.setTextColor(Color.parseColor("#ffffff"));
+            income = findViewById(R.id.incomeButton);
+            income.setTextColor(Color.parseColor("#ffffff"));
+            curr = findViewById(R.id.currency);
+            curr.setTextColor(Color.parseColor("#ffffff"));
+            signout = findViewById(R.id.btn_logout);
+            signout.setTextColor(Color.parseColor("#ffffff"));
+            delete = findViewById(R.id.btn_dlt_account);
+            delete.setTextColor(Color.parseColor("#ffffff"));
 
+        }
         auth = FirebaseAuth.getInstance();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -334,13 +360,17 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                                 Toast.makeText(getApplicationContext(), "Budget field is empty!",
                                         Toast.LENGTH_SHORT).show();
                             } else {
+                                Double budget = Double.parseDouble(budget_text);
                                 String text;
+
                                 switch (budgetTypeGroup.getCheckedRadioButtonId()) {
                                     case R.id.weekly_budget_type:
                                         text = "weekly budget";
                                         break;
                                     case R.id.monthly_budget_type:
                                         text = "monthly budget";
+                                        MainPage.budgetNum = budget;
+                                        MainPage.isBudgetUpdated = true;
                                         break;
                                     case R.id.annual_budget_type:
                                         text = "annual budget";
@@ -351,11 +381,11 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                                 }
 
                                 Map<String, Object> budget_info = new HashMap<>();
-                                budget_info.put(text, Double.parseDouble(budget_text));
-                                CollectionReference users = db.collection("users");
-                                users.document(uid).update(budget_info);
-                                Toast.makeText(getApplicationContext(), "You have successfully " +
-                                                "added " + text,
+                                budget_info.put(text, budget);
+
+                                db.collection("users").document(uid).update(budget_info);
+                                Toast.makeText(getApplicationContext(),
+                                        "You have successfully added " + text,
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -392,11 +422,14 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                                 Toast.makeText(getApplicationContext(), "Income field is empty!",
                                         Toast.LENGTH_SHORT).show();
                             } else {
+                                Double income = Double.parseDouble(income_text);
+                                MainPage.incomeNum = income;
+                                MainPage.isIncomeUpdated = true;
                                 Map<String, Object> income_info = new HashMap<>();
-                                income_info.put("income", Double.parseDouble(income_text));
-                                CollectionReference users = db.collection("users");
-                                users.document(uid).update(income_info);
-                                Toast.makeText(getApplicationContext(), "Income added successfully",
+                                income_info.put("income", income);
+
+                                db.collection("users").document(uid).update(income_info);
+                                Toast.makeText(getApplicationContext(), "Income updated successfully",
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -417,7 +450,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
             break;
             case R.id.currency: {
                 AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
-                builder.setTitle("Choose your currency");
+                builder.setTitle("Set a currency symbol");
                 View mView = getLayoutInflater().inflate(R.layout.activity_currency, null);
                 final RadioGroup budgetTypeGroup = (RadioGroup) mView.findViewById(R.id
                         .currency_type_group);
@@ -430,8 +463,8 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                         String uid = auth.getUid();
 
                         if (!TextUtils.isEmpty(uid)) {
-
                             String text;
+
                             switch (budgetTypeGroup.getCheckedRadioButtonId()) {
                                 case R.id.USD_type:
                                     text = "$";
@@ -445,15 +478,15 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                                 default:
                                     text = "Error";
                                     break;
-
                             }
+
+                            MainPage.currencySign = text;
                             Map<String, Object> budget_info = new HashMap<>();
                             budget_info.put("Currency", text);
-                            Object temp = text;
-                            CollectionReference users = db.collection("users");
-                            users.document(uid).update(budget_info);
-                            Toast.makeText(getApplicationContext(), "You have successfully " +
-                                            "added " + text,
+
+                            db.collection("users").document(uid).update(budget_info);
+                            Toast.makeText(getApplicationContext(),
+                                    "You have successfully updated your currency symbol",
                                     Toast.LENGTH_SHORT).show();
                         }
 

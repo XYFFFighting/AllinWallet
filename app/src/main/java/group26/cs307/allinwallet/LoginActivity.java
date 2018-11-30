@@ -1,9 +1,12 @@
 package group26.cs307.allinwallet;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +57,8 @@ public class LoginActivity extends AppCompatActivity {
     String tip4 = "TIP:\n You can download music for free on numerous mp3 websites instead of purchasing via iTunes.";
     String tip5 = "TIP:\n Stream TV shows and movies for free using putlocker.com.";
 
+    View view;
+    LinearLayout li;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -68,7 +74,6 @@ public class LoginActivity extends AppCompatActivity {
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
-
         //       if (auth.getCurrentUser() != null) {
 //            startActivity(new Intent(LoginActivity.this, MainPage.class));
 //            finish();
@@ -76,6 +81,16 @@ public class LoginActivity extends AppCompatActivity {
 
         // set the view now
         setContentView(R.layout.activity_login);
+
+        final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
+        final String color = globalVariable.getThemeSelection();
+        if (color != null && color.equals("dark")) {
+            li = (LinearLayout) findViewById(R.id.loginLY);
+            li.setBackgroundResource(R.color.cardview_dark_background);
+            ActionBar ac;
+            ac = getSupportActionBar();
+            ac.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
+        }
 
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);

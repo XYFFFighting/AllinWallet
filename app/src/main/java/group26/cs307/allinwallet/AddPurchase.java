@@ -9,20 +9,20 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -34,17 +34,17 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -88,11 +88,23 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
             "Clothes", "Housing", "Personal", "General", "Transport", "Fun"));
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
+    LinearLayout li;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         auth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_purchase);
+
+        final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
+        final String color = globalVariable.getThemeSelection();
+        if (color != null) {
+            if (color.equals("dark")) {
+                LinearLayout li = (LinearLayout) findViewById(R.id.addPurchaseLY);
+                View bot =  findViewById(R.id.img_reci);
+                bot.setBackgroundResource(R.color.cardview_dark_background);
+                li.setBackgroundResource(R.color.cardview_dark_background);
+            }
+        }
 
         passedPurchaseIndex = getIntent().getIntExtra("item_key", -1);
         if (passedPurchaseIndex != -1) {

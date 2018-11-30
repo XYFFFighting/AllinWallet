@@ -2,9 +2,11 @@ package group26.cs307.allinwallet;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +64,31 @@ public class CategoriesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categories);
 
+        final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
+        final String color = globalVariable.getThemeSelection();
+        if (color != null && color.equals("dark")) {
+            LinearLayout li = (LinearLayout) findViewById(R.id.categoriesLY);
+            li.setBackgroundResource(R.color.cardview_dark_background);
+            ActionBar ac;
+            ac = getSupportActionBar();
+            ac.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
+            TextView gT, cT, hT,pT, genT, tranT, funT;
+            gT = (TextView) findViewById(R.id.GroceryText);
+            gT.setTextColor(Color.parseColor("#ffffff"));
+            cT = findViewById(R.id.ClothesText);
+            cT.setTextColor(Color.parseColor("#ffffff"));
+            hT = findViewById(R.id.HousingText);
+            hT.setTextColor(Color.parseColor("#ffffff"));
+            pT = findViewById(R.id.PersonalText);
+            pT.setTextColor(Color.parseColor("#ffffff"));
+            genT = findViewById(R.id.GeneralText);
+            genT.setTextColor(Color.parseColor("#ffffff"));
+            tranT = findViewById(R.id.TransportText);
+            tranT.setTextColor(Color.parseColor("#ffffff"));
+            funT = findViewById(R.id.FunText);
+            funT.setTextColor(Color.parseColor("#ffffff"));
+
+        }
         groceryText = (TextView) findViewById(R.id.GroceryText);
         clothesText = (TextView) findViewById(R.id.ClothesText);
         housingText = (TextView) findViewById(R.id.HousingText);

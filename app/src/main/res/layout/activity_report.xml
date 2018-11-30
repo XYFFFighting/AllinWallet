@@ -8,6 +8,7 @@
     tools:context=".Report">
 
     <LinearLayout
+        android:id="@+id/reportLY"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -42,7 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="@string/report_default_spending_num"
+                    android:text="@string/default_num"
                     android:textColor="@color/colorRed"
                     android:textSize="18sp" />
 
@@ -50,8 +51,8 @@
                     android:id="@+id/budget_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/spending_text"
                     android:layout_alignParentLeft="true"
+                    android:layout_below="@id/spending_text"
                     android:layout_toLeftOf="@+id/budget_num"
                     android:text="@string/report_default_budget_text"
                     android:textColor="@color/black"
@@ -61,8 +62,8 @@
                     android:id="@id/budget_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/spending_num"
                     android:layout_alignParentRight="true"
+                    android:layout_below="@id/spending_num"
                     android:textColor="@color/black"
                     android:textSize="18sp" />
 
@@ -70,8 +71,8 @@
                     android:id="@+id/remaining_budget_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/budget_text"
                     android:layout_alignParentLeft="true"
+                    android:layout_below="@id/budget_text"
                     android:layout_toLeftOf="@+id/remaining_budget_num"
                     android:text="@string/report_default_remaining_budget_text"
                     android:textColor="@color/black"
@@ -81,8 +82,8 @@
                     android:id="@id/remaining_budget_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/budget_num"
                     android:layout_alignParentRight="true"
+                    android:layout_below="@id/budget_num"
                     android:textColor="@color/bg_login"
                     android:textSize="18sp" />
             </RelativeLayout>

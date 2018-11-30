@@ -120,7 +120,9 @@
         android:id="@+id/categories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="19dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:text="Categories"
         app:layout_constraintBottom_toTopOf="@+id/report_issue"
         app:layout_constraintStart_toStartOf="@+id/report_issue" />
@@ -139,9 +141,9 @@
         android:id="@+id/report_issue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="59dp"
-        android:layout_marginEnd="73dp"
-        android:layout_marginRight="73dp"
+        android:layout_marginBottom="96dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
         android:text="Report Issue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -156,5 +158,16 @@
         android:text="graph visualization"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/share" />
+
+    <Button
+        android:id="@+id/cus_themes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SELECT THEMES"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/graph_visual_btn"
+        app:layout_constraintTop_toBottomOf="@+id/report_issue" />
 
 </android.support.constraint.ConstraintLayout>

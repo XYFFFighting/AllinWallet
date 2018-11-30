@@ -2,14 +2,18 @@ package group26.cs307.allinwallet;
 
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -35,7 +39,22 @@ public class SignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-
+        final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
+        final String color = globalVariable.getThemeSelection();
+        if (color != null && color.equals("dark")) {
+            LinearLayout li = (LinearLayout) findViewById(R.id.actSignupLY);
+            li.setBackgroundResource(R.color.cardview_dark_background);
+            ActionBar ac;
+            ac = getSupportActionBar();
+            ac.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
+            EditText email,pass;
+            email = findViewById(R.id.email);
+            email.setTextColor(Color.parseColor("#ffffff"));
+            email.setHintTextColor(Color.parseColor("#ffffff"));
+            pass = findViewById(R.id.password);
+            pass.setTextColor(Color.parseColor("#ffffff"));
+            pass.setHintTextColor(Color.parseColor("#ffffff"));
+        }
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();

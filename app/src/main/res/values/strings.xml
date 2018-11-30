@@ -2,7 +2,7 @@
     <string name="app_name">AllinWallet</string>
     <string name="action_sign_in_short">Register</string>
     <string name="email">Email</string>
-    <string name="welcome">Welcome! Today is\u0020</string>
+    <string name="welcome">Today is\u0020</string>
     <string name="categoriesbreakdown">"Categories Breakdown:</string>
     <string name="minimum_password">Password too short, enter minimum 6 characters!</string>
     <string name="auth_failed">Authentication failed, check your email and password or sign up</string>
@@ -52,7 +52,6 @@
     <string name="title_activity_search_by_category">Search_by_category</string>
     <string name="title_activity_searching">Search and Filter</string>
     <string name="report_default_spending_text">Your current spending:</string>
-    <string name="report_default_spending_num">0.0</string>
     <string name="report_default_budget_text">No budget found</string>
     <string name="report_default_remaining_budget_text">Go to the profile page and set a budget</string>
     <string name="report_remaining_budget_found">Your remaining budget:</string>
@@ -74,9 +73,9 @@
     <string name="weekly">Weekly</string>
     <string name="monthly">Monthly</string>
     <string name="annual">Annual</string>
-    <string name="europe_sign">€</string>
-    <string name="dollar_sign">$</string>
-    <string name="yuan_sign">¥</string>
+    <string name="europe_sign">EUR(€)</string>
+    <string name="dollar_sign">USD($)</string>
+    <string name="yuan_sign">CNY(¥)</string>
     <string name="issue_hint">Tell us about your issue</string>
     <string name="submit">submit</string>
     <string name="continue_btn">Continue</string>
@@ -100,6 +99,10 @@
     <string name="back">Back</string>
     <string name="next">Next</string>
     <string name="enter_image_name">Enter image name</string>
+    <string name="default_num">N/A</string>
+    <string name="main_page_default_spending_text">Spending</string>
+    <string name="main_page_default_budget_text">Budget</string>
+    <string name="main_page_default_income_text">Income</string>
 
     <string-array name="sort_array">
         <item>Date</item>
