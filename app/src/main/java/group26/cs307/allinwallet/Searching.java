@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -54,6 +55,13 @@ public class Searching extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_searching);
+
+        final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
+        final String color = globalVariable.getThemeSelection();
+        if (color != null && color.equals("dark")) {
+            LinearLayout li = (LinearLayout) findViewById(R.id.searchingLY);
+            li.setBackgroundResource(R.color.cardview_dark_background);
+        }
         auth = FirebaseAuth.getInstance();
 
         clear = (Button) findViewById(R.id.clear_button);

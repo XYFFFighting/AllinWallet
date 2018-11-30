@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -35,12 +36,21 @@ public class GraphVisual extends AppCompatActivity {
     Random random;
     Vector<String> strV = new Vector<String>();
     Vector<Integer> intV = new Vector<>();
+    //added for themes
+    View view;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         auth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph_visual);
 
+        //added for themes
+        final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
+        final String color = globalVariable.getThemeSelection();
+        if (color != null && color.equals("dark")) {
+            view = this.getWindow().getDecorView();
+            view.setBackgroundResource(R.color.cardview_dark_background);
+        }
 
 
         barChart = (BarChart) findViewById(R.id.bargraph);

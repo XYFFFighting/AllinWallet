@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -16,6 +17,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,18 +32,29 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "AllinWallet";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAnalytics mFirebaseAnalytics;
-    private Button signup, login, main, addpurchase, reset, profile, report, budget, search, categories, reportIssue, graphVisual, shareActivity;
+    private Button signup, login, main, addpurchase, reset, profile, report, budget, search, categories, reportIssue, themes, graphVisual, shareActivity;
     private EditText authtext;
     private FirebaseAuth auth;
 
+    //public boolean themeColor = true;
+
+
+    ConstraintLayout li;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+         GlobalClass globalvariable = (GlobalClass) getApplicationContext();
+         String color = globalvariable.getThemeSelection();
+         if (color != null && color.equals("dark")) {
+
+        }
 
         // Obtain the FirebaseAnalytics instance.
         auth = FirebaseAuth.getInstance();
@@ -58,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         authtext = (EditText) findViewById(R.id.auth_text);
         budget = (Button) findViewById(R.id.btn_budget);
         reportIssue = (Button) findViewById(R.id.report_issue);
+        themes = (Button) findViewById(R.id.cus_themes);
         graphVisual = (Button) findViewById(R.id.graph_visual_btn);
         shareActivity = (Button) findViewById(R.id.share);
 
@@ -78,10 +92,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         graphVisual.setOnClickListener(new View.OnClickListener() {
-
+            View view;
             @Override
             public void onClick(View view) {
-
                 startActivity(new Intent(MainActivity.this, GraphVisual.class));
             }
         });
@@ -131,6 +144,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, ReportIssueActivity.class));
+            }
+        });
+
+        themes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, CustomThemesActivity.class));
             }
         });
 
@@ -198,7 +218,6 @@ public class MainActivity extends AppCompatActivity {
                 builder.show();
             }
         });
-
 
     }
 

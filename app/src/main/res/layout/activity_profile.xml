@@ -8,6 +8,7 @@
     tools:context=".Profile">
 
     <LinearLayout
+        android:id="@+id/profileLY"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -57,8 +58,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".475"
                     android:background="@android:color/transparent"
-                    android:drawableStart="@drawable/ic_avatar"
                     android:drawableLeft="@drawable/ic_avatar"
+                    android:drawableStart="@drawable/ic_avatar"
                     android:padding="10dp"
                     android:text="@string/avatar_change"
                     android:textColor="@color/black" />
@@ -74,8 +75,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".475"
                     android:background="@android:color/transparent"
-                    android:drawableStart="@drawable/ic_budget"
                     android:drawableLeft="@drawable/ic_budget"
+                    android:drawableStart="@drawable/ic_budget"
                     android:padding="10dp"
                     android:text="@string/budget"
                     android:textColor="@color/black" />
@@ -94,8 +95,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".475"
                     android:background="@android:color/transparent"
-                    android:drawableStart="@drawable/ic_income"
                     android:drawableLeft="@drawable/ic_income"
+                    android:drawableStart="@drawable/ic_income"
                     android:padding="10dp"
                     android:text="@string/income"
                     android:textColor="@color/black" />
@@ -111,8 +112,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".475"
                     android:background="@android:color/transparent"
-                    android:drawableStart="@drawable/ic_money"
                     android:drawableLeft="@drawable/ic_money"
+                    android:drawableStart="@drawable/ic_money"
                     android:padding="10dp"
                     android:text="@string/currency_change"
                     android:textColor="@color/black" />
@@ -131,8 +132,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".475"
                     android:background="@android:color/transparent"
-                    android:drawableStart="@drawable/ic_logout"
                     android:drawableLeft="@drawable/ic_logout"
+                    android:drawableStart="@drawable/ic_logout"
                     android:padding="10dp"
                     android:text="@string/btn_sign_out"
                     android:textColor="@color/black" />
@@ -148,8 +149,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".475"
                     android:background="@android:color/transparent"
-                    android:drawableStart="@drawable/ic_delete"
                     android:drawableLeft="@drawable/ic_delete"
+                    android:drawableStart="@drawable/ic_delete"
                     android:padding="10dp"
                     android:text="@string/dlt_account"
                     android:textColor="@color/black" />
