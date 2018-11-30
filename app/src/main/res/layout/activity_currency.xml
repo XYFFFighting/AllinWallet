@@ -8,7 +8,7 @@
         android:id="@+id/currency_type_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_margin="10dp"
         android:orientation="horizontal">
 
         <RadioButton
@@ -32,14 +32,5 @@
             android:layout_weight="1"
             android:text="@string/yuan_sign" />
     </RadioGroup>
-
-    <!--<EditText-->
-    <!--android:id="@+id/budgetText"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="center"-->
-    <!--android:layout_margin="5dp"-->
-    <!--android:hint=""-->
-    <!--android:inputType="numberDecimal" />-->
 
 </LinearLayout>

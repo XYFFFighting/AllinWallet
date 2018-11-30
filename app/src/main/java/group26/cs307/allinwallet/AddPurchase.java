@@ -13,16 +13,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -36,22 +31,20 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -154,6 +147,7 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
             calendar.setTime(item.getDate());
             locationString = item.getLocation();
             updateReci(item.getDocumentUID());
+            updateSummary(item.getDate(), -item.getAmount());
             categoryPicker.setSelection(categories.indexOf(item.getCategory()));
         } else {
             inputDate.setText(formatter.format(calendar.getTime()));
@@ -173,7 +167,7 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
         purchaselist.put("category", category);
         purchaselist.put("date", date);
         purchaselist.put("location", location);
-        addsummary(price);
+        updateSummary(date, price);
 
         db.collection("users").document(uid)
                 .collection("purchase").document(time).set(purchaselist);
@@ -182,36 +176,46 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
         if (img_reci.getDrawable() != null) {
             uploadrecipe(time);
         }
+
+        if (Double.compare(price, 0.0) > 0) {
+            MainPage.spendingNum += price;
+            MainPage.isSpendingUpdated = true;
+        }
+
+        MainPage.purchases.add(0, new PurchaseItem(category,
+                name, price, date, location, time));
+        MainPage.purchaseListAdapter.notifyItemInserted(0);
     }
 
-    private void addsummary(final double price) {
-        final String uid = auth.getUid();
-        String month = inputDate.getText().toString();
-        final String result = month.substring(month.lastIndexOf('/')+ 1, month.length()) + '-' + month.substring(0,month.indexOf('/'));
+    public void updateSummary(Date date, final double amount) {
+        String uid = auth.getUid();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        String result = String.format(Locale.getDefault(), "%d-%d", year, month);
         Log.d(TAG, "summary date: " + result);
-        DocumentReference dRef = db.collection("users").document(uid);
-        dRef.collection("summary").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()) {
-                    boolean find = false;
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        if (document.getId().equals(result)) {
-                            //update sum
-                            find = true;
-                            double sum = document.getDouble("amount");
-                            sum += price;
-                            Map<String, Object> amount = new HashMap<>();
-                            amount.put("amount", sum);
-                            db.collection("users").document(uid).collection("summary").document(document.getId()).update(amount);
-                            break;
-                        }
-                    }
-                    if(!find) {
-                        Map<String, Object> amount = new HashMap<>();
-                        amount.put("amount", price);
-                        db.collection("users").document(uid).collection("summary").document(result).set(amount);
 
+        final DocumentReference dRef = db.collection("users").document(uid)
+                .collection("summary").document(result);
+
+        dRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+
+                    if (document.exists()) {
+                        double sum = document.getDouble("amount");
+                        sum += amount;
+                        Map<String, Object> amount = new HashMap<>();
+                        amount.put("amount", sum);
+                        dRef.update(amount);
+                    } else {
+                        Log.d(TAG, "Creating new document");
+                        Map<String, Object> amountMap = new HashMap<>();
+                        amountMap.put("amount", amount);
+                        dRef.set(amountMap);
                     }
                 } else {
                     Log.e(TAG, "Error getting documents: ", task.getException());
@@ -258,11 +262,21 @@ public class AddPurchase extends AppCompatActivity implements View.OnClickListen
         db.collection("users").document(uid)
                 .collection("purchase").document(documentUID).update(purchaselist);
         Log.d(TAG, uid + " update purchase data");
-        //addsummary(price);
+        updateSummary(date, price);
 
         if (img_reci.getDrawable() != null) {
             uploadrecipe(documentUID);
         }
+
+        if (Double.compare(item.getAmount(), price) != 0) {
+            MainPage.spendingNum -= item.getAmount();
+            MainPage.spendingNum += price;
+            MainPage.isSpendingUpdated = true;
+        }
+
+        MainPage.purchases.set(passedPurchaseIndex, new PurchaseItem(category,
+                name, price, date, location, documentUID));
+        MainPage.purchaseListAdapter.notifyItemChanged(passedPurchaseIndex);
     }
 
     @Override
