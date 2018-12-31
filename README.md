@@ -1,6 +1,6 @@
 # AllinWallet
 
-## A helpful mobile app for people to manage their budget
+A helpful mobile app for people to manage their budget
 
 ## Members:
 - Junyi Zhang -zhan2539@purdue.edu
